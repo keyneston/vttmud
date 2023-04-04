@@ -7,28 +7,23 @@ function CraftTemplate() {
 	const [days, setDays] = useState<number>(4);
 
 	useEffect(function persistForm() {
-		localStorage.setItem("formData", name);
+		localStorage.setItem("craftTemplateForm", name);
 	});
-	// reset(e: any) {
-	// 	console.log("Hello World");
-	// }
 
-	// updateFormat() {
-	// 	console.log("updateFormat called");
-	// 	this.render();
-	// }
+	let date = new Date();
 
-	// format() {
-	// 	return (
-	// 		<div>
-	// 			<em>Name:</em
-	// 		</div>
-	// 	);
-	// }
-
-	// render() {
 	return (
 		<div className="CraftingTemplate">
+			<div id="craftDCOutput">
+				<em>Character: </em> {name} <br></br>
+				<em>Activity: </em> Craft {item} ({level ? level : 0})<br></br>
+				<em>Days: </em> {formatDate(subDate(date, days))}-{formatDate(date)}
+				<br></br>
+				<em>DC: </em> {craftDC(level)}
+				<br></br>
+				<em>Formula Cost: </em> {formulaCost(level)} gp
+			</div>
+
 			<form>
 				<div>
 					<label htmlFor="name">Name</label>
@@ -50,20 +45,27 @@ function CraftTemplate() {
 					<button type="button">Reset</button>
 				</div>
 			</form>
-			<div id="craftDCOutput">
-				<em>Character: </em> {name} <br></br>
-				<em>Activity: </em> Craft {item} ({level})<br></br>
-				<em>Days: </em> {days} <br></br>
-				<em>DC: </em> {craftDC(level)}
-				<br></br>
-				<em>Formula Cost: </em> {formulaCost(level)} gp
-			</div>
 		</div>
 	);
 }
 
+function subDate(date: Date, days: number): Date {
+	if (isNaN(days)) {
+		days = 0;
+	}
+	var d2 = new Date(date);
+
+	d2.setDate(d2.getDate() - days);
+
+	return d2;
+}
+
+function formatDate(date: Date): string {
+	return `${date.getMonth() + 1}/${date.getDate()}`;
+}
+
 function formulaCost(level: number) {
-	if (level < 0) {
+	if (level < 0 || isNaN(level)) {
 		level = 0;
 	}
 	if (level > 20) {
@@ -74,7 +76,7 @@ function formulaCost(level: number) {
 }
 
 function craftDC(level: number) {
-	if (level < 0) {
+	if (level < 0 || isNaN(level)) {
 		level = 0;
 	}
 	if (level > 20) {
