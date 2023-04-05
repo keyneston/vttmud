@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
-const path = require('path');
+const path = require("path");
 
-app.use(express.static(path.resolve(__dirname, '../client/dist')))
+app.use(express.static(path.resolve(__dirname, "public/")));
 
 // Handle GET requests to /api route
 app.get("/api", (req, res) => {
@@ -11,8 +11,8 @@ app.get("/api", (req, res) => {
 });
 
 // All other GET requests not handled before will return our React app
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
 });
 
 app.listen(port, () => console.log(`HelloNode app listening on port ${port}!`));

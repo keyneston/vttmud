@@ -18,7 +18,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node server/serve.js",
+    "start": "node dist/serve.js",
     "build": "webpack build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -26,31 +26,17 @@
   },
   "watch": {
     "build": {
-      "patterns": [
-          "client",
-          "public"
-      ],
+      "patterns": ["client", "public"],
       "quiet": false,
       "extensions": "js,jsx,ts,tsx,css,html"
     }
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "extends": ["react-app", "react-app/jest"]
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   },
   "devDependencies": {
     "@babel/preset-react": "^7.18.6",

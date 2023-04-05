@@ -1,23 +1,27 @@
 const CopyPlugin = require("copy-webpack-plugin");
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  mode: 'development',
-  entry: path.join(__dirname, "client", "index.tsx"),
+  mode: "development",
+  entry: {
+    serve: path.join(__dirname, "server", "serve.js"),
+    "public/main": path.join(__dirname, "client", "index.tsx"),
+  },
   output: {
-    path:path.resolve(__dirname, "client", "dist"),
+    filename: "[name].js",
+    path: path.resolve(__dirname, "dist"),
   },
   module: {
-  rules: [
+    rules: [
       {
         test: /\.tsx?$/,
         use: [
           {
-            "loader": "babel-loader",
+            loader: "babel-loader",
           },
           {
-            "loader": 'ts-loader',
-          }
+            loader: "ts-loader",
+          },
         ],
         exclude: /node_modules/,
       },
@@ -25,16 +29,16 @@ module.exports = {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
       },
-  ],
+    ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js', '.jsx'],
+    extensions: [".tsx", ".ts", ".js", ".jsx"],
   },
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "public", to: "" } //to the dist root directory
-      ], 
-    })
-  ]
-}
+        { from: "public", to: "public" }, //to the dist root directory
+      ],
+    }),
+  ],
+};
