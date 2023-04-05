@@ -1,0 +1,16 @@
+{
+  "name": "vttmud-server",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Backend API for VTTMUD",
+  "main": "serve.js",
+  "scripts": {
+    "serve": "node src/serve.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
