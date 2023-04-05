@@ -1,0 +1,26 @@
+#navbar {
+  height: 50px;
+  width: 100%;
+  background-color: purple;
+  color: white;
+  border: 10px;
+  border-color: black;
+}
+
+#navbar-left {
+  padding: 10px;
+  align-content: left;
+  float: left;
+  height: 100%;
+  width: 50%;
+  text-align: left;
+}
+
+#navbar-right {
+  padding: 10px;
+  align-content: right;
+  float: right;
+  height: 100%;
+  width: 50%;
+  text-align: right;
+}

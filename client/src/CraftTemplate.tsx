@@ -31,10 +31,8 @@ function CraftTemplate() {
 
 			<form>
 				<div className="box">
-					<div>
-						<label htmlFor="name" className="template-label">
-							Character Name
-						</label>
+					<div className="template-label">
+						<label htmlFor="name">Character Name</label>
 					</div>
 					<div>
 						<input
@@ -43,10 +41,8 @@ function CraftTemplate() {
 							onChange={(x) => setName(x.target.value)}
 						></input>
 					</div>
-					<div>
-						<label htmlFor="item" className="template-label">
-							Item Name
-						</label>
+					<div className="template-label">
+						<label htmlFor="item">Item Name</label>
 					</div>
 					<div>
 						<input
@@ -55,10 +51,8 @@ function CraftTemplate() {
 							onChange={(x) => setItem(x.target.value)}
 						></input>
 					</div>
-					<div>
-						<label htmlFor="level" className="template-label">
-							Item Level
-						</label>
+					<div className="template-label">
+						<label htmlFor="level">Item Level</label>
 					</div>
 					<div>
 						<input
@@ -68,10 +62,8 @@ function CraftTemplate() {
 							onChange={(x) => setLevel(x.target.valueAsNumber)}
 						></input>
 					</div>
-					<div>
-						<label htmlFor="endDate" className="template-label">
-							End Date
-						</label>
+					<div className="template-label">
+						<label htmlFor="endDate">End Date</label>
 					</div>
 					<div>
 						<DatePicker
@@ -79,10 +71,8 @@ function CraftTemplate() {
 							onChange={(date) => setEndDate(date || new Date())}
 						/>
 					</div>
-					<div>
-						<label htmlFor="days" className="template-label">
-							Days
-						</label>
+					<div className="template-label">
+						<label htmlFor="days">Days</label>
 					</div>
 					<div>
 						<input
@@ -93,10 +83,10 @@ function CraftTemplate() {
 							onChange={(x) => setDays(x.target.valueAsNumber)}
 						></input>
 					</div>
-					<div>
-						<label className="template-label">Formula Cost</label>
+					<div className="template-label">
+						<label>Formula Cost</label>
 					</div>
-					<div>{formulaCost(level)} gp</div>
+					<div className="template-value">{formulaCost(level)} gp</div>
 				</div>
 			</form>
 		</div>

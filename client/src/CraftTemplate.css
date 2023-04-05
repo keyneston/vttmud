@@ -1,5 +1,5 @@
 .crafting-template {
-  max-width: 500px;
+  max-width: 300px;
   padding: 10px;
 }
 
@@ -7,11 +7,16 @@
   border: 5px;
   border-color: black;
   text-align: left;
+  align-content: left;
 }
 
 .template-label {
   text-align: left;
   font-weight: bold;
+}
+
+.template-value {
+  text-align: right;
 }
 
 .box {
