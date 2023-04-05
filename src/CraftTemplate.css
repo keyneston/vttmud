@@ -1,0 +1,24 @@
+.crafting-template {
+  max-width: 500px;
+}
+
+#template-output {
+  border: 5px;
+  border-color: black;
+  text-align: left;
+}
+
+.template-label {
+  text-align: left;
+  font-weight: bold;
+}
+
+.box {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  gap: 10px 2em;
+}
+
+.box :first-child {
+  align-self: center;
+}

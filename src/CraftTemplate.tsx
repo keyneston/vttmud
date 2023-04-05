@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./CraftTemplate.css";
 
 function CraftTemplate() {
 	const [name, setName] = useState<string>("");
@@ -13,36 +14,75 @@ function CraftTemplate() {
 	let date = new Date();
 
 	return (
-		<div className="CraftingTemplate">
-			<div id="craftDCOutput">
+		<div className="crafting-template">
+			<div id="template-output">
 				<em>Character: </em> {name} <br></br>
 				<em>Activity: </em> Craft {item} ({level ? level : 0})<br></br>
 				<em>Days: </em> {formatDate(subDate(date, days))}-{formatDate(date)}
 				<br></br>
 				<em>DC: </em> {craftDC(level)}
 				<br></br>
-				<em>Formula Cost: </em> {formulaCost(level)} gp
+				<em>Result: Success Assurance</em>
+				<br></br>
+				<br></br>
 			</div>
 
 			<form>
-				<div>
-					<label htmlFor="name">Name</label>
-					<input type="Text" id="name" onChange={(x) => setName(x.target.value)}></input>
-				</div>
-				<div>
-					<label htmlFor="item">Item</label>
-					<input type="Text" id="Item" onChange={(x) => setItem(x.target.value)}></input>
-				</div>
-				<div>
-					<label htmlFor="level">Item Level</label>
-					<input type="number" min="-1" max="20" onChange={(x) => setLevel(x.target.valueAsNumber)}></input>
-				</div>
-				<div>
-					<label htmlFor="days">Days</label>
-					<input type="number" min="0" max="7" onChange={(x) => setDays(x.target.valueAsNumber)}></input>
-				</div>
-				<div>
-					<button type="button">Reset</button>
+				<div className="box">
+					<div>
+						<label htmlFor="name" className="template-label">
+							Character Name
+						</label>
+					</div>
+					<div>
+						<input
+							type="Text"
+							id="name"
+							onChange={(x) => setName(x.target.value)}
+						></input>
+					</div>
+					<div>
+						<label htmlFor="item" className="template-label">
+							Item Name
+						</label>
+					</div>
+					<div>
+						<input
+							type="Text"
+							id="Item"
+							onChange={(x) => setItem(x.target.value)}
+						></input>
+					</div>
+					<div>
+						<label htmlFor="level" className="template-label">
+							Item Level
+						</label>
+					</div>
+					<div>
+						<input
+							type="number"
+							min="-1"
+							max="20"
+							onChange={(x) => setLevel(x.target.valueAsNumber)}
+						></input>
+					</div>
+					<div>
+						<label htmlFor="days" className="template-label">
+							Days
+						</label>
+					</div>
+					<div>
+						<input
+							type="number"
+							min="0"
+							max="7"
+							onChange={(x) => setDays(x.target.valueAsNumber)}
+						></input>
+					</div>
+					<div>
+						<label className="template-label">Formula Cost</label>
+					</div>
+					<div>{formulaCost(level)} gp</div>
 				</div>
 			</form>
 		</div>
