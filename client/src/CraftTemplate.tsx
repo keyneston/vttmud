@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
 import "./CraftTemplate.css";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 function CraftTemplate() {
 	const [name, setName] = useState<string>("");
 	const [item, setItem] = useState<string>("");
 	const [level, setLevel] = useState<number>(0);
 	const [days, setDays] = useState<number>(4);
+	const [endDate, setEndDate] = useState<Date>(new Date());
 
 	useEffect(function persistForm() {
 		localStorage.setItem("craftTemplateForm", name);
 	});
-
-	let date = new Date();
 
 	return (
 		<div className="crafting-template">
 			<div id="template-output">
 				<em>Character: </em> {name} <br></br>
 				<em>Activity: </em> Craft {item} ({level ? level : 0})<br></br>
-				<em>Days: </em> {formatDate(subDate(date, days))}-{formatDate(date)}
+				<em>Days: </em> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
 				<br></br>
 				<em>DC: </em> {craftDC(level)}
 				<br></br>
@@ -67,6 +69,17 @@ function CraftTemplate() {
 						></input>
 					</div>
 					<div>
+						<label htmlFor="endDate" className="template-label">
+							End Date
+						</label>
+					</div>
+					<div>
+						<DatePicker
+							selected={endDate}
+							onChange={(date) => setEndDate(date || new Date())}
+						/>
+					</div>
+					<div>
 						<label htmlFor="days" className="template-label">
 							Days
 						</label>
@@ -75,6 +88,7 @@ function CraftTemplate() {
 						<input
 							type="number"
 							min="0"
+							value="4"
 							max="7"
 							onChange={(x) => setDays(x.target.valueAsNumber)}
 						></input>

@@ -13,7 +13,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install && npm run build
+RUN make build
 
 
 FROM debian:bullseye-slim
@@ -21,10 +21,11 @@ FROM debian:bullseye-slim
 LABEL fly_launch_runtime="nodejs"
 
 COPY --from=builder /usr/local/node /usr/local/node
-COPY --from=builder /app /app
+COPY --from=builder /app/server/dist/ /app
+COPY --from=builder /app/client/build /app/public/
 
 WORKDIR /app
 ENV NODE_ENV production
 ENV PATH /usr/local/node/bin:$PATH
 
-CMD [ "npm", "run", "start" ]
+CMD [ "node",  "./serve.js" ]

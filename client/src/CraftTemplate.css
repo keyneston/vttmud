@@ -1,5 +1,6 @@
 .crafting-template {
   max-width: 500px;
+  padding: 10px;
 }
 
 #template-output {
