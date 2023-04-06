@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./CraftTemplate.css";
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
+import { Calendar } from "primereact/calendar";
+import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
+import { Panel } from "primereact/panel";
+import { Divider } from "primereact/divider";
 
 function CraftTemplate() {
 	const [name, setName] = useState<string>("");
@@ -16,8 +18,8 @@ function CraftTemplate() {
 	});
 
 	return (
-		<div className="crafting-template">
-			<div id="template-output">
+		<Panel header="Crafting Template">
+			<p className="m-0">
 				<em>Character: </em> {name} <br></br>
 				<em>Activity: </em> Craft {item} ({level ? level : 0})<br></br>
 				<em>Days: </em> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
@@ -27,69 +29,66 @@ function CraftTemplate() {
 				<em>Result: Success Assurance</em>
 				<br></br>
 				<br></br>
+			</p>
+
+			<Divider />
+
+			<div className="box">
+				<div>
+					<span className="p-float-label">
+						<InputText
+							id="character"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+						/>
+						<label htmlFor="character">Character Name</label>
+					</span>
+				</div>
+				<span className="p-float-label">
+					<InputText id="item" value={item} onChange={(e) => setItem(e.target.value)} />
+					<label htmlFor="item">Item Description</label>
+				</span>
+				<span className="p-float-label">
+					<InputNumber
+						value={level}
+						onValueChange={(e) => setLevel(e.value || 0)}
+						min={-1}
+						max={20}
+						id="level"
+					/>
+					<label htmlFor="level">Item Level</label>
+				</span>
+
+				<div>
+					<Calendar
+						value={endDate}
+						onChange={(e) => {
+							let d = Array.isArray(e.value) ? e.value[0] : e.value;
+							setEndDate(new Date(d || new Date()));
+						}}
+					/>
+				</div>
+				<span className="p-float-label">
+					<InputNumber
+						value={days}
+						onValueChange={(e) => setDays(e.value || 0)}
+						min={0}
+						max={7}
+						id="days"
+					/>
+					<label htmlFor="days">Number of Days</label>
+				</span>
 			</div>
 
-			<form>
-				<div className="box">
-					<div className="template-label">
-						<label htmlFor="name">Character Name</label>
-					</div>
-					<div>
-						<input
-							type="Text"
-							id="name"
-							onChange={(x) => setName(x.target.value)}
-						></input>
-					</div>
-					<div className="template-label">
-						<label htmlFor="item">Item Name</label>
-					</div>
-					<div>
-						<input
-							type="Text"
-							id="Item"
-							onChange={(x) => setItem(x.target.value)}
-						></input>
-					</div>
-					<div className="template-label">
-						<label htmlFor="level">Item Level</label>
-					</div>
-					<div>
-						<input
-							type="number"
-							min="-1"
-							max="20"
-							onChange={(x) => setLevel(x.target.valueAsNumber)}
-						></input>
-					</div>
-					<div className="template-label">
-						<label htmlFor="endDate">End Date</label>
-					</div>
-					<div>
-						<DatePicker
-							selected={endDate}
-							onChange={(date) => setEndDate(date || new Date())}
-						/>
-					</div>
-					<div className="template-label">
-						<label htmlFor="days">Days</label>
-					</div>
-					<div>
-						<input
-							type="number"
-							min="0"
-							value="4"
-							max="7"
-							onChange={(x) => setDays(x.target.valueAsNumber)}
-						></input>
-					</div>
-					<div className="template-label">
-						<label>Formula Cost</label>
-					</div>
-					<div className="template-value">{formulaCost(level)} gp</div>
+			<Divider />
+
+			<div className="box">
+				<div className="template-label">
+					<label>Formula Cost</label>
 				</div>
-			</form>
-		</div>
+				<div className="template-value">{formulaCost(level)} gp</div>
+			</div>
+		</Panel>
 	);
 }
 
