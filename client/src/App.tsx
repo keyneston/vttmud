@@ -12,10 +12,12 @@ function App() {
 			<div className="AppHeader">
 				<NavBar />
 			</div>
-			<div className="CenterLeft">
-				<CraftTemplate></CraftTemplate>
+			<div className="Content">
+				<div className="CenterLeft">
+					<CraftTemplate></CraftTemplate>
+				</div>
+				<div className="CenterRight"></div>
 			</div>
-			<div className="CenterRight"></div>
 		</div>
 	);
 }
