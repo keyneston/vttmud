@@ -1,0 +1,32 @@
+var fs = require('fs');
+var path = require('path');
+const { Client } = require('pg')
+
+var argv = require('minimist')(process.argv.slice(2));
+
+if (!argv.dir) {
+    console.error("must set --dir <directory to foundry datapack to import>");
+    process.exit(1);
+}
+
+const client = new Client()
+client.connect()
+
+const output = fs.readdirSync(argv.dir)
+
+output.forEach((dirNext) => {
+    let data = JSON.parse(fs.readFileSync(path.join(argv.dir, dirNext)))
+
+    var level = data?.system?.level?.value || 0
+    var gp = data?.system?.price?.value?.gp || 0 
+    var sp = data?.system?.price?.value?.sp || 0 
+    var cp = data?.system?.price?.value?.cp || 0 
+
+    var cost = gp + (sp / 10) + (cp / 100)
+
+    console.log(`${data.name}: id: ${data._id} level: ${level} cost: ${cost}`)
+
+    client.query("INSERT into items(id, name, level, cost) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE set name = $2, level = $3, cost = $4;", [
+        data._id, data.name, level, cost
+    ])
+})

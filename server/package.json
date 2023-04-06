@@ -8,11 +8,16 @@
     "serve": "node src/serve.js",
     "build": "webpack build",
     "watch": "npm-watch serve",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "import_items": "node src/scripts/import_items.ts",
+    "migrate": "node-pg-migrate"
   },
   "watch": {
     "build": {
-      "patterns": ["src", "../public"],
+      "patterns": [
+        "src",
+        "../public"
+      ],
       "quiet": false,
       "extensions": "js,jsx,ts,tsx,css,html"
     }
@@ -20,7 +25,10 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "minimist": "^1.2.8",
+    "node-pg-migrate": "^6.2.2",
+    "pg": "^8.10.0"
   },
   "devDependencies": {
     "babel-loader": "^9.1.2",
