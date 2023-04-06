@@ -5,6 +5,7 @@ import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Panel } from "primereact/panel";
 import { Divider } from "primereact/divider";
+import { MinItemLevel, MaxItemLevel } from "./constants";
 
 function CraftTemplate() {
 	const [name, setName] = useState<string>("");
@@ -21,7 +22,7 @@ function CraftTemplate() {
 		<Panel header="Crafting Template">
 			<p className="m-0">
 				<em>Character: </em> {name} <br></br>
-				<em>Activity: </em> Craft {item} ({level ? level : 0})<br></br>
+				<em>Activity: </em> Craft {item} ({level || 0})<br></br>
 				<em>Days: </em> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
 				<br></br>
 				<em>DC: </em> {craftDC(level)}
@@ -52,8 +53,8 @@ function CraftTemplate() {
 					<InputNumber
 						value={level}
 						onValueChange={(e) => setLevel(e.value || 0)}
-						min={-1}
-						max={20}
+						min={MinItemLevel}
+						max={MaxItemLevel}
 						id="level"
 					/>
 					<label htmlFor="level">Item Level</label>
@@ -108,10 +109,10 @@ function formatDate(date: Date): string {
 }
 
 function formulaCost(level: number) {
-	if (level < 0 || isNaN(level)) {
+	if (level < MinItemLevel || isNaN(level)) {
 		level = 0;
 	}
-	if (level > 20) {
+	if (level > MaxItemLevel) {
 		level = 20;
 	}
 
@@ -119,10 +120,10 @@ function formulaCost(level: number) {
 }
 
 function craftDC(level: number) {
-	if (level < 0 || isNaN(level)) {
+	if (level < MinItemLevel || isNaN(level)) {
 		level = 0;
 	}
-	if (level > 20) {
+	if (level > MaxItemLevel) {
 		level = 20;
 	}
 
