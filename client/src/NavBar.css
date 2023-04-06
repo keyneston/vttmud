@@ -1,7 +1,9 @@
+@use "primereact/resources/themes/lara-light-indigo/theme";
+
 #navbar {
   height: 85px;
   width: 100%;
-  background-color: purple;
+  background-color: var(--primary-600);
   color: white;
   border: 10px;
   border-color: black;

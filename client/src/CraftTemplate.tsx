@@ -34,7 +34,7 @@ function CraftTemplate() {
 
 			<Divider />
 
-			<div className="box">
+			<div className="box card">
 				<div>
 					<span className="p-float-label">
 						<InputText

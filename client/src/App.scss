@@ -1,0 +1,31 @@
+@use "primereact/resources/themes/lara-light-indigo/theme";
+
+body {
+	background: var(--surface-50);
+}
+
+.App {
+	text-align: left;
+	display: grid;
+	grid-auto-columns: 10% 40% 40% 10%;
+	grid-auto-rows: 20px content 20px;
+	height: 100%;
+}
+
+.AppHeader {
+	grid-column: span 4;
+}
+
+.Content {
+	grid-column: 2 / 3;
+	gap: 20px 2em;
+	padding: 20px;
+}
+
+.CenterLeft {
+	grid-column: 2;
+}
+
+.CenterRight {
+	grid-column: 3;
+}
