@@ -4,3 +4,6 @@ Dockerfile
 node_modules
 .git
 node_modules
+tags
+tags.temp
+tags.lock
