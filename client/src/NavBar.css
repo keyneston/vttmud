@@ -18,8 +18,8 @@
 
 #navbar-right {
   padding: 10px;
-  align-content: right;
-  float: right;
+  align-content: left;
+  float: left;
   height: 100%;
   width: 50%;
   text-align: right;

@@ -20,11 +20,11 @@
 }
 
 .box {
+  width: 90%;
   display: grid;
   grid-template-columns: 50% 50%;
   gap: 25px 2em;
   padding-top: 15px;
-  padding: 20px;
 }
 
 .box :first-child {
