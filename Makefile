@@ -1,7 +1,9 @@
 .PHONY: run
 run:
-	cd client && npm run start &
-	cd server && npm watch
+	cd client && npm run start 
+
+run-backend:
+	cd server && npm run watch
 
 .PHONY: build
 build:

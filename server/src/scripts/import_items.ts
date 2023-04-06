@@ -14,7 +14,11 @@ client.connect()
 
 const output = fs.readdirSync(argv.dir)
 
+var count = 0
+
 output.forEach((dirNext) => {
+    count+=1
+
     let data = JSON.parse(fs.readFileSync(path.join(argv.dir, dirNext)))
 
     var level = data?.system?.level?.value || 0
@@ -24,9 +28,14 @@ output.forEach((dirNext) => {
 
     var cost = gp + (sp / 10) + (cp / 100)
 
-    console.log(`${data.name}: id: ${data._id} level: ${level} cost: ${cost}`)
-
     client.query("INSERT into items(id, name, level, cost) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO UPDATE set name = $2, level = $3, cost = $4;", [
         data._id, data.name, level, cost
-    ])
+    ]).catch((e) => {console.error(e)})
 })
+
+console.log(`Added ${count} items`)
+
+client
+  .end()
+  .then(() => console.log('client has disconnected'))
+  .catch((err) => console.error('error during disconnection', err.stack))
