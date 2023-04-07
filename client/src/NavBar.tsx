@@ -4,10 +4,12 @@ import { Avatar } from "primereact/avatar";
 import { Menu } from "primereact/menu";
 import { Button } from "primereact/button";
 import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
 function NavBar() {
+	const navigate = useNavigate()
 	const menu = useRef<Menu>(null);
-	const items = loggedOutMenu();
+	const items = loggedOutMenu(navigate);
 
 	return (
 		<div className="navbar">
@@ -26,7 +28,7 @@ function NavBar() {
 	);
 }
 
-function loggedOutMenu() {
+function loggedOutMenu(navigate: any) {
 	return [
 		{
 			label: "Account",
@@ -35,15 +37,7 @@ function loggedOutMenu() {
 					label: "Login",
 					icon: "pi pi-user",
 					command: () => {
-						fetch("http://localhost:3001/api/v1/login") // TODO: something here to sort out the hostname
-							.then((response) => response.json())
-							.catch((error) => {
-								console.log(error);
-							})
-							.then((parsed) => {
-								console.log("redirecting to: ", parsed.redirect_url);
-								redirect(parsed.redirect_url);
-							});
+						navigate('/login')
 					},
 				},
 			],

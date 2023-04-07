@@ -1,5 +1,5 @@
 import { NavBar } from "../NavBar";
-import { CraftTemplate } from "../CraftTemplate";
+import { Outlet } from "react-router-dom";
 import "./root.scss";
 
 export default function Root() {
@@ -11,7 +11,7 @@ export default function Root() {
 				</div>
 				<div className="centerLeft">
 					<div className="content">
-						<CraftTemplate></CraftTemplate>
+						<Outlet />
 					</div>
 				</div>
 				<div className="centerRight"></div>
