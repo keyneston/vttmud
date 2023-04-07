@@ -5,6 +5,8 @@ export interface Item {
     name: string;
     cost: Gold;
     level: number;
+    type: string;
+    traits: {rarity: string, value: string[]};
 }
 
 export interface Gold {

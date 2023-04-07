@@ -19,6 +19,7 @@ function CraftTemplate() {
 		return character_name || ""
 	});
 	const [item, setItem] = useState<Item|void>();
+	const [itemCount, setItemCount] = useState<number>(1);
 	const [level, setLevel] = useState<number>(0);
 	const [days, setDays] = useState<number>(4);
 	const [endDate, setEndDate] = useState<Date>(new Date());
@@ -27,7 +28,7 @@ function CraftTemplate() {
 
 	return (
 		<Panel header="Crafting Template">
-			<Output name={name} item={item} days={days} endDate={endDate} level={level} />
+			<Output name={name} item={item} days={days} endDate={endDate} level={level} itemCount={itemCount}/>
 
 			<Divider />
 
@@ -73,20 +74,21 @@ function CraftTemplate() {
 					/>
 					<label htmlFor="days">Number of Days</label>
 				</span>
+				<ItemCount itemCount={itemCount} item={item} setItemCount={setItemCount}/>
 			</div>
 
 			<Divider />
-			<ItemInformation item={item} level={level||0} />
+			<ItemInformation item={item} level={level||0} itemCount={itemCount} />
 		</Panel>
 	);
 }
 
 
-function Output({name, item, days, endDate, level}: {name: string; item: void|Item|undefined; days: number; endDate: Date; level: number; }) {
+function Output({name, item, days, endDate, level, itemCount}: {name: string; item: void|Item|undefined; days: number; endDate: Date; level: number; itemCount: number;}) {
 		return (
 			<p className="m-0">
 				<b>Character: </b> {name} <br></br>
-				<b>Activity: </b> Craft {item ? item.name : ""}<br></br>
+				<b>Activity: </b>  Craft {itemCount > 1 ? ` ${itemCount} x ` : ""} {item ? item.name : ""}<br></br>
 				<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
 				<br></br>
 				<b>Item Level:</b> {level || 0} <b>DC:</b> {craftDC(level)}
@@ -95,6 +97,33 @@ function Output({name, item, days, endDate, level}: {name: string; item: void|It
 				<br></br>
 				<br></br>
 			</p>
+		)
+}
+
+function ItemCount({itemCount, setItemCount, item}: {itemCount: number, setItemCount: (itemCount: number) => void, item: Item|void|undefined}) {
+		var consumable = false
+		item?.traits?.value.forEach((t: string) => {
+				if (t === "consumable") {
+						consumable = true
+				}
+		})
+
+		if (consumable === false) {
+				setItemCount(1)
+		}
+
+		return (
+				<span className="p-float-label">
+						<InputNumber
+								value={itemCount}
+								onChange={(e) => setItemCount(e.value || 1)}
+								id="itemCount"
+								min={1}
+								max={4}
+								disabled={!consumable}
+						/>
+						<label htmlFor="itemCount">Item Count</label>
+				</span>
 		)
 }
 
@@ -137,22 +166,27 @@ function ItemAutoComplete({item, setLevel, setItem}: ItemAutoCompleteProps) {
 type ItemInformationProps = {
 		item: void|Item|undefined;
 		level: number;
+		itemCount: number;
 }
 
-function ItemInformation({item, level}: ItemInformationProps) {
+function ItemInformation({item, level, itemCount}: ItemInformationProps) {
+	var itemCost = item ? simplifyGold(item.cost) : 0
+	var formula = formulaCost(level)
+
+
 	return (
 		<div className="box">
 			<div className="template-label"> <label>Item Cost</label>
 			</div>
-			<div className="template-value">{item ? simplifyGold(item.cost) : 0} gp</div>
+			<div className="template-value">{itemCount > 1 ? `${itemCount} x ` : ""} {itemCost} gp</div>
 			<div className="template-label">
 					<label>Formula Cost</label>
 			</div>
-			<div className="template-value">{formulaCost(level)} gp</div>
+			<div className="template-value">{formula} gp</div>
 			<div className="template-label">
 					<label>Total Cost</label>
 			</div>
-			<div className="template-value">{(item ? simplifyGold(item.cost) : 0) + formulaCost(level)} gp</div>
+			<div className="template-value">{itemCost*itemCount} + {formula} = {itemCost*itemCount + formulaCost(level)} gp</div>
 		</div>
 	)
 }
