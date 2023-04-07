@@ -56,13 +56,17 @@ function CraftTemplate() {
 				</span>
 
 				<div>
+					<span className="p-float-label">
 					<Calendar
 						value={endDate}
 						onChange={(e) => {
 							let d = Array.isArray(e.value) ? e.value[0] : e.value;
 							setEndDate(new Date(d || new Date()));
 						}}
+						id="endDate"
 					/>
+					<label htmlFor="endDate">End Date</label>
+				</span>
 				</div>
 				<span className="p-float-label">
 					<InputNumber
