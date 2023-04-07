@@ -1,6 +1,13 @@
 @use "primereact/resources/themes/lara-light-indigo/theme";
 
-#navbar {
+button.avatar {
+  border: 0;
+  cursor: pointer;
+  appearance: none;
+  background-color: inherit;
+}
+
+.navbar {
   height: 85px;
   width: 100%;
   background-color: var(--primary-600);
@@ -9,7 +16,7 @@
   border-color: black;
 }
 
-#navbar-left {
+.navbar-left {
   padding: 10px;
   align-content: left;
   float: left;
@@ -18,7 +25,7 @@
   text-align: left;
 }
 
-#navbar-right {
+.navbar-right {
   padding: 10px;
   align-content: left;
   float: left;

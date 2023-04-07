@@ -4,7 +4,7 @@ body {
 	background: var(--surface-50);
 }
 
-.App {
+.root {
 	text-align: left;
 	display: grid;
 	grid-auto-columns: 10% 40% 40% 10%;
@@ -12,20 +12,20 @@ body {
 	height: 100%;
 }
 
-.AppHeader {
+.header{
 	grid-column: span 4;
 }
 
-.Content {
+.content {
 	grid-column: 2 / 3;
 	gap: 20px 2em;
 	padding: 20px;
 }
 
-.CenterLeft {
+.centerLeft {
 	grid-column: 2;
 }
 
-.CenterRight {
+.centerRight {
 	grid-column: 3;
 }

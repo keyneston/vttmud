@@ -282,7 +282,6 @@ function craftDC(level: number) {
 
 function simplifyGold(input: Gold): number {
 	var value = 0;
-	console.log(`simplifyGold(${JSON.stringify(input)})`);
 
 	if (!input) {
 		return value;
