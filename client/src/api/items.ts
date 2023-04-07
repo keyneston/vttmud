@@ -20,7 +20,7 @@ export interface Gold {
 class Client {
     getItems = async (filter: string | undefined): Promise<Item[] | void> => {
         var filterString = (filter ? `?filter=${filter}` : "");
-        var url = `http://localhost:3001/api/v1/items${filterString}`;
+        var url = `/api/v1/items${filterString}`;
 
         return axios.get(url).then((response) => {
             return response.data
