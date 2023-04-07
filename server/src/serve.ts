@@ -1,12 +1,10 @@
+import "./env";
 import express, { Express, Request, Response } from "express";
 import path from "path";
 import cors from "cors";
 import Client from "pg";
-import { loginEndpoint } from "./login";
-import dotenv from "dotenv";
+import { callbackEndpoint, loginEndpoint } from "./login";
 import { fileURLToPath } from "url";
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +21,9 @@ app.use(cors());
 app.get("/api", (req: Request, res: Response) => {
     res.json({ message: "Hello from server!" });
 });
+
+app.get("/api/v1/login", loginEndpoint);
+app.get("/api/v1/login/callback", callbackEndpoint);
 
 /*
 app.get("/api/v1/items", (req: Request, res: Response) => {

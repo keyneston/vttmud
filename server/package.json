@@ -15,7 +15,7 @@
   },
   "watch": {
     "serve": {
-      "patterns": ["src", "../public"],
+      "patterns": ["**/*.ts", "../public/*"],
       "quiet": false,
       "extensions": "js,jsx,ts,tsx,css,html"
     }
