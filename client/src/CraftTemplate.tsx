@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./CraftTemplate.css";
 import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
@@ -14,30 +14,20 @@ var itemsDB: Item[] = []
 getItemsDB()
 
 function CraftTemplate() {
-	const [name, setName] = useState<string>("");
+	const [name, setName] = useState<string>(() => {
+		const character_name = localStorage.getItem("character_name");
+		return character_name || ""
+	});
 	const [item, setItem] = useState<Item|void>();
 	const [level, setLevel] = useState<number>(0);
 	const [days, setDays] = useState<number>(4);
 	const [endDate, setEndDate] = useState<Date>(new Date());
-	const [searchEntries, setSearchEntires] = useState<Item[]|void>()
 
-	useEffect(function persistForm() {
-		localStorage.setItem("craftTemplateForm", name);
-	});
+	localStorage.setItem("character_name", name)
 
 	return (
 		<Panel header="Crafting Template">
-			<p className="m-0">
-				<b>Character: </b> {name} <br></br>
-				<b>Activity: </b> Craft {item ? item.name : ""}<br></br>
-				<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
-				<br></br>
-				<b>Item Level:</b> {level || 0} <b>DC:</b> {craftDC(level)}
-				<br></br>
-				<b>Result: Success Assurance</b>
-				<br></br>
-				<br></br>
-			</p>
+			<Output name={name} item={item} days={days} endDate={endDate} level={level} />
 
 			<Divider />
 
@@ -52,29 +42,7 @@ function CraftTemplate() {
 						<label htmlFor="character">Character Name</label>
 					</span>
 				</div>
-				<span className="p-float-label">
-						<AutoComplete
-								id="item"
-								value={item}
-								suggestions={searchEntries || undefined}
-								completeMethod={(e: any) => {
-									var term = e.query.toLowerCase()
-									var results = itemsDB.filter((entry) => entry.name.toLowerCase().includes(term))
-									setSearchEntires(results)
-								}}
-								field="name"
-								onChange={(e) => {
-										setItem(e.value)
-								}} 
-								onSelect={(e) => {
-										setLevel(e.value.level)
-								}}
-								itemTemplate={(e) => {
-										return `${e.name} [${e.level}]`
-								}}
-								forceSelection />
-					<label htmlFor="item">Item</label>
-				</span>
+				<ItemAutoComplete item={item} setLevel={setLevel} setItem={setItem}/>
 				<span className="p-float-label">
 					<InputNumber
 						value={level}
@@ -108,23 +76,85 @@ function CraftTemplate() {
 			</div>
 
 			<Divider />
-
-			<div className="box">
-				<div className="template-label">
-					<label>Item Cost</label>
-				</div>
-				<div className="template-value">{item ? simplifyGold(item.cost) : 0} gp</div>
-				<div className="template-label">
-					<label>Formula Cost</label>
-				</div>
-				<div className="template-value">{formulaCost(level)} gp</div>
-				<div className="template-label">
-					<label>Total Cost</label>
-				</div>
-				<div className="template-value">{(item ? simplifyGold(item.cost) : 0) + formulaCost(level)} gp</div>
-			</div>
+			<ItemInformation item={item} level={level||0} />
 		</Panel>
 	);
+}
+
+
+function Output({name, item, days, endDate, level}: {name: string; item: void|Item|undefined; days: number; endDate: Date; level: number; }) {
+		return (
+			<p className="m-0">
+				<b>Character: </b> {name} <br></br>
+				<b>Activity: </b> Craft {item ? item.name : ""}<br></br>
+				<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
+				<br></br>
+				<b>Item Level:</b> {level || 0} <b>DC:</b> {craftDC(level)}
+				<br></br>
+				<b>Result: Success Assurance</b>
+				<br></br>
+				<br></br>
+			</p>
+		)
+}
+
+type ItemAutoCompleteProps = {
+		item: void|Item|undefined;
+		setLevel: (level: number)=>void;
+		setItem: (item: void|Item|undefined)=> void;
+}
+
+function ItemAutoComplete({item, setLevel, setItem}: ItemAutoCompleteProps) {
+		const [searchEntries, setSearchEntires] = useState<Item[]|void>()
+
+		return (
+				<span className="p-float-label">
+						<AutoComplete
+								id="item"
+								value={item}
+								suggestions={searchEntries || undefined}
+								completeMethod={(e: any) => {
+										var term = e.query.toLowerCase()
+										var results = itemsDB.filter((entry) => entry.name.toLowerCase().includes(term))
+										setSearchEntires(results)
+								}}
+								field="name"
+								onChange={(e) => {
+										setItem(e.value)
+								}}
+								onSelect={(e) => {
+										setLevel(e.value.level)
+								}}
+								itemTemplate={(e) => {
+										return `${e.name} [${e.level}]`
+								}}
+								forceSelection />
+						<label htmlFor="item">Item</label>
+				</span>
+		)
+}
+
+type ItemInformationProps = {
+		item: void|Item|undefined;
+		level: number;
+}
+
+function ItemInformation({item, level}: ItemInformationProps) {
+	return (
+		<div className="box">
+			<div className="template-label"> <label>Item Cost</label>
+			</div>
+			<div className="template-value">{item ? simplifyGold(item.cost) : 0} gp</div>
+			<div className="template-label">
+					<label>Formula Cost</label>
+			</div>
+			<div className="template-value">{formulaCost(level)} gp</div>
+			<div className="template-label">
+					<label>Total Cost</label>
+			</div>
+			<div className="template-value">{(item ? simplifyGold(item.cost) : 0) + formulaCost(level)} gp</div>
+		</div>
+	)
 }
 
 function getItemsDB() {
