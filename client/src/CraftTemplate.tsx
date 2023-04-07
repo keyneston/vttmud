@@ -7,9 +7,8 @@ import { AutoComplete } from "primereact/autocomplete";
 import { Panel } from "primereact/panel";
 import { Divider } from "primereact/divider";
 import { MinItemLevel, MaxItemLevel } from "./constants";
-import { Client, Item } from './api/items';
+import { Item, Gold } from './api/items';
 
-const client = new Client();
 var itemsDB: Item[] = []
 
 getItemsDB()
@@ -112,9 +111,17 @@ function CraftTemplate() {
 
 			<div className="box">
 				<div className="template-label">
+					<label>Item Cost</label>
+				</div>
+				<div className="template-value">{item ? simplifyGold(item.cost) : 0} gp</div>
+				<div className="template-label">
 					<label>Formula Cost</label>
 				</div>
 				<div className="template-value">{formulaCost(level)} gp</div>
+				<div className="template-label">
+					<label>Total Cost</label>
+				</div>
+				<div className="template-value">{(item ? simplifyGold(item.cost) : 0) + formulaCost(level)} gp</div>
 			</div>
 		</Panel>
 	);
@@ -169,6 +176,30 @@ function craftDC(level: number) {
 	}
 
 	return [14, 15, 16, 18, 19, 20, 22, 23, 24, 26, 27, 28, 30, 31, 32, 34, 35, 36, 38, 39, 40][level];
+}
+
+function simplifyGold(input: Gold): number {
+		var value = 0
+		console.log(`simplifyGold(${JSON.stringify(input)})`)
+
+		if (!input) {
+				return value
+		}
+
+		if (input.pp) {
+				value += input.pp* 10
+		}
+		if (input.gp) {
+				value += input.gp
+		}
+		if (input.sp) {
+				value += input.sp/ 10
+		}
+		if (input.cp) {
+				value += input.cp/ 100
+		}
+
+		return value
 }
 
 export { CraftTemplate };

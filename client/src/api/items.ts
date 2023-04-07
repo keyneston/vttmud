@@ -8,12 +8,13 @@ export interface Item {
 }
 
 export interface Gold {
-    platinum: number;
-    gold: number;
-    silver: number;
-    copper: number;
+    pp: number;
+    gp: number;
+    sp: number;
+    cp: number;
 }
 
+// TODO: remove this
 class Client {
     getItems = async (filter: string | undefined): Promise<Item[] | void> => {
         var filterString = (filter ? `?filter=${filter}` : "");
