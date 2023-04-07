@@ -10,6 +10,9 @@ import { MinItemLevel, MaxItemLevel } from "./constants";
 import { Client, Item } from './api/items';
 
 const client = new Client();
+var itemsDB: Item[] = []
+
+getItemsDB()
 
 function CraftTemplate() {
 	const [name, setName] = useState<string>("");
@@ -55,12 +58,12 @@ function CraftTemplate() {
 								id="item"
 								value={item}
 								suggestions={searchEntries || undefined}
+								completeMethod={(e: any) => {
+									var term = e.query.toLowerCase()
+									var results = itemsDB.filter((entry) => entry.name.toLowerCase().includes(term))
+									setSearchEntires(results)
+								}}
 								field="name"
-								completeMethod={(e) => {
-										client.getItems(e.query).then(
-										(data) => {
-												setSearchEntires(data)
-								})}}
 								onChange={(e) => {
 										setItem(e.value)
 								}} 
@@ -115,6 +118,19 @@ function CraftTemplate() {
 			</div>
 		</Panel>
 	);
+}
+
+function getItemsDB() {
+	console.log("itemsDB: Starting fetch")
+	return fetch('/items.db.json')
+   .then((response) => response.json())
+   .then((responseJson) => {
+	 console.log("itemsDB: Updated")
+     itemsDB = responseJson
+   })
+   .catch((error) => {
+     console.error(error);
+   });
 }
 
 

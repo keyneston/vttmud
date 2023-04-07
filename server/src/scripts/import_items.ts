@@ -10,7 +10,9 @@ if (!argv.dir) {
 }
 
 const client = new Client()
-client.connect()
+client.connect().then(() => console.log('connected'))
+  .catch((err) => {
+      console.error('connection error', err.stack); process.exit(1)})
 
 const output = fs.readdirSync(argv.dir)
 

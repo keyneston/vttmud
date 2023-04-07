@@ -6,7 +6,7 @@ var cors = require('cors');
 const { Client } = require('pg')
 
 const client = new Client({query_timeout: 1000})
-client.connect()
+// client.connect()
 
 app.use(express.static(path.resolve(__dirname, "public/")));
 app.use(cors());

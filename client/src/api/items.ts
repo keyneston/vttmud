@@ -3,8 +3,15 @@ import axios from 'axios';
 export interface Item {
     id: string;
     name: string;
-    cost: number;
+    cost: Gold;
     level: number;
+}
+
+export interface Gold {
+    platinum: number;
+    gold: number;
+    silver: number;
+    copper: number;
 }
 
 class Client {
