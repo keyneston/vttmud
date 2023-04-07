@@ -32,4 +32,4 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV PATH /usr/local/node/bin:$PATH
 
-CMD [ "node",  "./serve.js" ]
+CMD [ "node",  "./serve.ts" ]
