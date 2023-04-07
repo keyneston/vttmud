@@ -109,18 +109,16 @@ function Output({
 	level: number;
 	itemCount: number;
 }) {
+	var itemCountString = itemCount > 1 ? ` ${itemCount} x ` : "";
+
 	return (
 		<p className="m-0">
-			<b>Character: </b> {name} <br></br>
-			<b>Activity: </b> Craft {itemCount > 1 ? ` ${itemCount} x ` : ""} {item ? item.name : ""}
-			<br></br>
-			<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
-			<br></br>
-			<b>Item Level:</b> {level || 0} <b>DC:</b> {craftDC(level)}
-			<br></br>
+			<b>Character: </b> {name} <br />
+			<b>Activity: </b> Craft {itemCountString}
+			{item ? item.name : ""} <br />
+			<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)} <br />
+			<b>Item Level:</b> {level || 0} <b>DC:</b> {craftDC(level)} <br />
 			<b>Result: Success Assurance</b>
-			<br></br>
-			<br></br>
 		</p>
 	);
 }
