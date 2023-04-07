@@ -150,7 +150,7 @@ function ItemCount({
 				onChange={(e) => setItemCount(e.value || 1)}
 				id="itemCount"
 				min={1}
-				max={4}
+				max={10}
 				disabled={!consumable}
 			/>
 			<label htmlFor="itemCount">Item Count</label>
