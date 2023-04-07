@@ -2,12 +2,14 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3001;
 const path = require("path");
+var cors = require('cors');
 const { Client } = require('pg')
 
 const client = new Client({query_timeout: 1000})
 client.connect()
 
 app.use(express.static(path.resolve(__dirname, "public/")));
+app.use(cors());
 
 // Handle GET requests to /api route
 app.get("/api", (req, res) => {
@@ -15,10 +17,10 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/api/v1/items", (req, res) => {
-  var filter = `%${req.query.filter}%` || '%'
+  var filter = req.query.filter ? `%${req.query.filter}%` : '%'
 
   client.query(
-  "SELECT id, name, level, cost FROM items WHERE name like $1 LIMIT 50;",
+  "SELECT id, name, level, cost FROM items WHERE name ilike $1 LIMIT 50;",
     [filter]
   ).then((results) => {
     res.json(results.rows)

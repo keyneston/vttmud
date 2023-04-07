@@ -3,16 +3,21 @@ import "./CraftTemplate.css";
 import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
+import { AutoComplete } from "primereact/autocomplete";
 import { Panel } from "primereact/panel";
 import { Divider } from "primereact/divider";
 import { MinItemLevel, MaxItemLevel } from "./constants";
+import { Client, Item } from './api/items';
+
+const client = new Client();
 
 function CraftTemplate() {
 	const [name, setName] = useState<string>("");
-	const [item, setItem] = useState<string>("");
+	const [item, setItem] = useState<Item|void>();
 	const [level, setLevel] = useState<number>(0);
 	const [days, setDays] = useState<number>(4);
 	const [endDate, setEndDate] = useState<Date>(new Date());
+	const [searchEntries, setSearchEntires] = useState<Item[]|void>()
 
 	useEffect(function persistForm() {
 		localStorage.setItem("craftTemplateForm", name);
@@ -21,13 +26,13 @@ function CraftTemplate() {
 	return (
 		<Panel header="Crafting Template">
 			<p className="m-0">
-				<em>Character: </em> {name} <br></br>
-				<em>Activity: </em> Craft {item} ({level || 0})<br></br>
-				<em>Days: </em> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
+				<b>Character: </b> {name} <br></br>
+				<b>Activity: </b> Craft {item ? item.name : ""}<br></br>
+				<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)}
 				<br></br>
-				<em>DC: </em> {craftDC(level)}
+				<b>Item Level:</b> {level || 0} <b>DC:</b> {craftDC(level)}
 				<br></br>
-				<em>Result: Success Assurance</em>
+				<b>Result: Success Assurance</b>
 				<br></br>
 				<br></br>
 			</p>
@@ -46,8 +51,27 @@ function CraftTemplate() {
 					</span>
 				</div>
 				<span className="p-float-label">
-					<InputText id="item" value={item} onChange={(e) => setItem(e.target.value)} />
-					<label htmlFor="item">Item Description</label>
+						<AutoComplete
+								id="item"
+								value={item}
+								suggestions={searchEntries || undefined}
+								field="name"
+								completeMethod={(e) => {
+										client.getItems(e.query).then(
+										(data) => {
+												setSearchEntires(data)
+								})}}
+								onChange={(e) => {
+										setItem(e.value)
+								}} 
+								onSelect={(e) => {
+										setLevel(e.value.level)
+								}}
+								itemTemplate={(e) => {
+										return `${e.name} [${e.level}]`
+								}}
+								forceSelection />
+					<label htmlFor="item">Item</label>
 				</span>
 				<span className="p-float-label">
 					<InputNumber
@@ -92,6 +116,7 @@ function CraftTemplate() {
 		</Panel>
 	);
 }
+
 
 function subDate(date: Date, days: number): Date {
 	if (isNaN(days)) {
