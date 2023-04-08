@@ -11,6 +11,7 @@ import "primeicons/primeicons.css";
 import Root from "./routes/root";
 import Templates from "./routes/templates";
 import Home from "./routes/home";
+import CharacterLog from "./routes/log";
 
 const router = createBrowserRouter([
 	{
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
 			{
 				path: "logout",
 				loader: logoutAction,
+			},
+			{
+				path: "character/:id",
+				element: <CharacterLog />,
 			},
 		],
 	},

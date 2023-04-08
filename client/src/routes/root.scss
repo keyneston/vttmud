@@ -12,11 +12,12 @@ body {
 	height: 100%;
 }
 
-.header{
+.header {
 	grid-column: span 4;
 }
 
 .content {
+	display: grid;
 	grid-column: 2 / 3;
 	gap: 20px 2em;
 	padding: 20px;

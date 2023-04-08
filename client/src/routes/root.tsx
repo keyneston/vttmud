@@ -11,12 +11,9 @@ export default function Root() {
 					<div className="header">
 						<NavBar />
 					</div>
-					<div className="centerLeft">
-						<div className="content">
-							<Outlet />
-						</div>
+					<div className="content">
+						<Outlet />
 					</div>
-					<div className="centerRight"></div>
 				</CookiesProvider>
 			</div>
 		</>
