@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./CraftTemplate.css";
 import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
@@ -7,17 +6,17 @@ import { AutoComplete } from "primereact/autocomplete";
 import { Panel } from "primereact/panel";
 import { Divider } from "primereact/divider";
 import { MinItemLevel, MaxItemLevel } from "./constants";
-import { Item, Gold } from "./api/items";
+import { simplifyGold, Item } from "./api/items";
+import { subDate, formatDate } from "./date";
+import { formulaCost, craftDC } from "./pf2e/income";
+
+import "./CraftTemplate.css";
 
 var itemsDB: Item[] = [];
 
 getItemsDB();
 
-function CraftTemplate() {
-	const [name, setName] = useState<string>(() => {
-		const character_name = localStorage.getItem("character_name");
-		return character_name || "";
-	});
+function CraftTemplate({ name, setName }: { name: string; setName: (name: string) => void }) {
 	const [item, setItem] = useState<Item | void>();
 	const [itemCount, setItemCount] = useState<number>(1);
 	const [level, setLevel] = useState<number>(0);
@@ -241,66 +240,6 @@ function getItemsDB() {
 		.catch((error) => {
 			console.error(error);
 		});
-}
-
-function subDate(date: Date, days: number): Date {
-	if (isNaN(days)) {
-		days = 0;
-	}
-	var d2 = new Date(date);
-
-	d2.setDate(d2.getDate() - days);
-
-	return d2;
-}
-
-function formatDate(date: Date): string {
-	return `${date.getMonth() + 1}/${date.getDate()}`;
-}
-
-function formulaCost(level: number) {
-	if (level < MinItemLevel || isNaN(level)) {
-		level = 0;
-	}
-	if (level > MaxItemLevel) {
-		level = 20;
-	}
-
-	return [0.5, 1, 2, 3, 5, 8, 13, 18, 25, 35, 50, 70, 100, 150, 225, 325, 500, 750, 1200, 2000, 3500][level];
-}
-
-function craftDC(level: number) {
-	if (level < MinItemLevel || isNaN(level)) {
-		level = 0;
-	}
-	if (level > MaxItemLevel) {
-		level = 20;
-	}
-
-	return [14, 15, 16, 18, 19, 20, 22, 23, 24, 26, 27, 28, 30, 31, 32, 34, 35, 36, 38, 39, 40][level];
-}
-
-function simplifyGold(input: Gold): number {
-	var value = 0;
-
-	if (!input) {
-		return value;
-	}
-
-	if (input.pp) {
-		value += input.pp * 10;
-	}
-	if (input.gp) {
-		value += input.gp;
-	}
-	if (input.sp) {
-		value += input.sp / 10;
-	}
-	if (input.cp) {
-		value += input.cp / 100;
-	}
-
-	return value;
 }
 
 export { CraftTemplate };

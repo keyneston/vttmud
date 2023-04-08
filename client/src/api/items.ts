@@ -36,6 +36,29 @@ export function formatGold(g: Gold): string {
     return `${10 * (g.pp || 0) + (g.gp || 0)} gp ${g.sp || 0} sp ${g.cp || 0} cp`;
 }
 
+export function simplifyGold(input: Gold): number {
+    var value = 0;
+
+    if (!input) {
+        return value;
+    }
+
+    if (input.pp) {
+        value += input.pp * 10;
+    }
+    if (input.gp) {
+        value += input.gp;
+    }
+    if (input.sp) {
+        value += input.sp / 10;
+    }
+    if (input.cp) {
+        value += input.cp / 100;
+    }
+
+    return value;
+}
+
 // TODO: remove this
 class Client {
     getItems = async (filter: string | undefined): Promise<Item[] | void> => {

@@ -42,7 +42,7 @@ export default function CharacterLog() {
 
 			<div className="character-log">
 				<Dialog
-					header="Header"
+					header="Log New Income/Expense"
 					visible={visible}
 					style={{ width: "70vw" }}
 					breakpoints={{ "960px": "100vw", "641px": "120vw" }}
@@ -79,11 +79,11 @@ function NewEntry() {
 	return (
 		<>
 			<div className="new-entry">
-				<form action="/api/v1/log">
+				<form action="/api/v1/log" method="POST">
 					<div>
 						<span className="p-float-label">
 							<InputText id="desc" style={{ width: "100%" }} />
-							<label htmlFor="desc">description</label>
+							<label htmlFor="desc">Description</label>
 						</span>
 					</div>
 					<div className="money">

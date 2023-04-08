@@ -4,6 +4,7 @@ import path from "path";
 import cors from "cors";
 import Client from "pg";
 import { callbackEndpoint, loginEndpoint } from "./login";
+import { appendLogEndpoint } from "./log";
 import url, { URL, fileURLToPath } from "url";
 import audit from "express-requests-logger";
 
@@ -30,6 +31,7 @@ app.get("/api", (req: Request, res: Response) => {
 
 app.get("/api/v1/login", loginEndpoint);
 app.get("/api/v1/login/callback", callbackEndpoint);
+app.post("/api/v1/log", appendLogEndpoint);
 
 /*
 app.get("/api/v1/items", (req: Request, res: Response) => {
