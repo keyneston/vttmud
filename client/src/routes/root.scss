@@ -17,10 +17,10 @@ body {
 }
 
 .content {
-	display: grid;
-	grid-column: 2 / 3;
+	grid-column: 2 / 4;
 	gap: 20px 2em;
 	padding: 20px;
+	width: 100%;
 }
 
 .centerLeft {

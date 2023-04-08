@@ -1,5 +1,47 @@
 .character-log {
-	display: grid;
 	grid-column: 2 span 2;
 	width: 100%;
+}
+
+.log-header {
+	display: grid;
+	width: 100%;
+	padding: 20px;
+}
+
+.log-header-right {
+	grid-column: 3;
+	float: right;
+	text-align: right;
+}
+
+.log-header-left {
+	grid-column: 2;
+	float: left;
+}
+
+.new-entry {
+	width: 90%;
+	padding-top: 20px;
+	height: 90%;
+	gap: 25px 2em;
+}
+
+.money {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 25% 25% 25% 25%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.money-input > input {
+	width: 5rem;
+}
+
+.exp {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 25% 25% 25% 25%;
+	padding-bottom: 20px;
 }

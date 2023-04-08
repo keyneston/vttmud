@@ -56,7 +56,6 @@ button.avatar {
 
 .navbar-left {
   padding: 10px;
-  align-content: left;
   float: left;
   height: 100%;
   width: 50%;
@@ -65,8 +64,7 @@ button.avatar {
 
 .navbar-right {
   padding: 10px;
-  align-content: left;
-  float: left;
+  float: right;
   height: 100%;
   width: 50%;
   text-align: right;

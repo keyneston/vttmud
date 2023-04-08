@@ -27,6 +27,11 @@
   padding-top: 15px;
 }
 
+.money {
+  grid-column: 1/2;
+  display: grid;
+}
+
 .box :first-child {
   align-self: center;
 }
