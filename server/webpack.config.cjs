@@ -6,7 +6,7 @@ module.exports = {
   entry: "./src/serve.ts",
   target: "node",
   output: {
-    filename: "serve.js",
+    filename: "serve.ts",
     path: path.resolve(__dirname, "dist"),
   },
   module: {
@@ -33,7 +33,7 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js", ".jsx"],
   },
   node: {
-    __dirname: false
+    __dirname: true
   },
   plugins: [
     new CopyPlugin({

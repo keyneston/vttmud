@@ -9,6 +9,8 @@ run-backend:
 
 .PHONY: build
 build:
+	rm -rf client/build/*
+	rm -rf server/dist/*
 	cd client && npm run build
 	cd server && npm run build
 
