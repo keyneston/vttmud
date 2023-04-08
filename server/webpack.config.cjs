@@ -6,13 +6,13 @@ module.exports = {
   entry: "./src/serve.ts",
   target: "node",
   output: {
-    filename: "serve.ts",
+    filename: "serve.js",
     path: path.resolve(__dirname, "dist"),
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.[tj]sx?$/,
         use: [
           {
             loader: "babel-loader",

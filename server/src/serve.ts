@@ -5,7 +5,7 @@ import cors from "cors";
 import Client from "pg";
 import { callbackEndpoint, loginEndpoint } from "./login";
 import { fileURLToPath } from "url";
-import audit from 'express-requests-logger'
+import audit from "express-requests-logger";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,9 +17,11 @@ const port = process.env.PORT || 3001;
 
 app.use(express.static(path.resolve(__dirname, "public/")));
 app.use(cors());
-app.use(audit({
-    excludeURLs: ['0']
-}))
+app.use(
+    audit({
+        excludeURLs: ["0"],
+    })
+);
 
 // Handle GET requests to /api route
 app.get("/api", (req: Request, res: Response) => {
