@@ -4,11 +4,9 @@ import path from "path";
 import cors from "cors";
 import Client from "pg";
 import { callbackEndpoint, loginEndpoint } from "./login";
-import { fileURLToPath } from "url";
+import url, { URL, fileURLToPath } from "url";
 import audit from "express-requests-logger";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3001;
 

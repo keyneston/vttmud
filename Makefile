@@ -18,3 +18,6 @@ foundry_dir:
 items.db.json:
 	cd $(FOUNDRY_DIR) && git pull
 	cat $(FOUNDRY_DIR)/packs/data/equipment.db/* | jq -s '[.[] | {id: ."_id", name: .name, level: .system.level.value, cost: {gp: .system.price.value.gp, sp: .system.price.value.sp, cp: .system.price.value.sp}, traits: .system.traits, type: .type}]' > ./client/public/items.db.json
+
+deploy:
+	flyctl deploy
