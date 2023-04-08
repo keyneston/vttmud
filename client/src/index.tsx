@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { loginAction, logoutAction } from "./routes/login";
 import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Link, createBrowserRouter, RouterProvider } from "react-router-dom";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -16,8 +16,12 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Root />,
-		action: Home,
 		children: [
+			{
+				path: "",
+				element: <Link to="/templates">Templates</Link>,
+				loader: Home,
+			},
 			{
 				path: "templates",
 				element: <Templates />,

@@ -1,5 +1,5 @@
-import { redirect } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 
 export default function Home() {
-	redirect("/templates");
+	return redirect("/templates");
 }
