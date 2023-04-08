@@ -10,21 +10,16 @@ const cookies = new Cookies();
 function NavBar() {
 	const navigate = useNavigate();
 	const menu = useRef<Menu>(null);
-	const items = loggedIn() ? loggedInMenu() : loggedOutMenu(navigate);
-	const image = loggedIn() ? avatarImage() : "";
+	const items = loggedIn() ? loggedInMenu(navigate) : loggedOutMenu(navigate);
+	const image = avatarImage();
+	const style = loggedIn() ? {} : { backgroundColor: "#2196F3", color: "#ffffff" };
 
 	return (
 		<div className="navbar">
 			<div className="navbar-left">VTTMUD</div>
 			<div className="navbar-right">
 				<button className="avatar" onClick={(e) => menu.current!.toggle(e)}>
-					<Avatar
-						label="U"
-						size="xlarge"
-						style={{ backgroundColor: "#2196F3", color: "#ffffff" }}
-						image={image}
-						shape="circle"
-					/>
+					<Avatar label="U" size="xlarge" style={style} image={image} shape="circle" />
 				</button>
 				<Menu model={items} popup ref={menu} />
 			</div>
@@ -44,7 +39,7 @@ function loggedIn(): boolean {
 
 function avatarImage(): string {
 	let user = cookies.get("discord-user");
-	return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+	return user?.username ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : "";
 }
 
 function loggedOutMenu(navigate: any) {
@@ -64,7 +59,7 @@ function loggedOutMenu(navigate: any) {
 	];
 }
 
-function loggedInMenu() {
+function loggedInMenu(navigate: any) {
 	return [
 		{
 			label: "Account",
@@ -72,7 +67,9 @@ function loggedInMenu() {
 				{
 					label: "Logout",
 					icon: "pi pi-cancel",
-					command: () => {},
+					command: () => {
+						navigate("/logout");
+					},
 				},
 			],
 		},

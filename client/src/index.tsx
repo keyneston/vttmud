@@ -1,19 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import Root from "./routes/root";
-import Templates from "./routes/templates";
-import loginAction from "./routes/login";
+import { loginAction, logoutAction } from "./routes/login";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
+import Root from "./routes/root";
+import Templates from "./routes/templates";
+import Home from "./routes/home";
+
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <Root />,
+		action: Home,
 		children: [
 			{
 				path: "templates",
@@ -22,6 +25,10 @@ const router = createBrowserRouter([
 			{
 				path: "login",
 				loader: loginAction,
+			},
+			{
+				path: "logout",
+				loader: logoutAction,
 			},
 		],
 	},
