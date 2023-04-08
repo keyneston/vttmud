@@ -46,7 +46,6 @@ app.get("/api/v1/items", (req: Request, res: Response) => {
 */
 
 // All other GET requests not handled before will return our React app
-// TODO: Better handle static files rather than routing everything to index.html
 app.get("*", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "public", "index.html"));
 });

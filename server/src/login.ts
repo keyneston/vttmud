@@ -25,24 +25,27 @@ export const loginEndpoint = (req: Request, res: Response) => {
     res.json({ redirect_url: authURL });
 };
 
-export const callbackEndpoint = (req: Request, res: Response) => {
+export const callbackEndpoint = async (req: Request, res: Response) => {
     let code = req.query.code as string;
 
-    oauth2
-        .tokenRequest({
+    try {
+        let response = await oauth2.tokenRequest({
             code: code,
             scope: "identify guilds",
             grantType: "authorization_code",
-        })
-        .then((response: any) => {
-            console.log(response);
-            res.status(200);
-            res.json({ status: "success" });
-        })
-        .catch((e: any) => {
-            res.status(500);
-            res.json({ error: e.message, description: e.response.error_description });
         });
+
+        res.cookie("discord", response);
+
+        let user = await oauth2.getUser(response.access_token);
+        res.cookie("discord-user", user);
+    } catch (e: any) {
+        res.status(500);
+        res.json({ error: e.message, description: e.response.error_description });
+        return;
+    }
+
+    res.redirect(302, "/");
 };
 
 export {};
