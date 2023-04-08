@@ -6,19 +6,29 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
+import { sumGold, Gold, formatGold } from "../api/items";
 import "./log.scss";
 
 export default function CharacterLog() {
 	const [visible, setVisible] = useState(false);
 	var products = [
-		{ date: "4/16", money: "2gp 5sp", exp: "500", desc: "Ran dungeon Foo" },
-		{ date: "4/17", money: "-5gp", exp: "", desc: "Bought sugar" },
+		{ date: "4/16", gold: { gp: 50 }, exp: 500, desc: "Ran dungeon Foo" },
+		{ date: "4/17", gold: { gp: 7 }, exp: null, desc: "Bought sugar" },
 	];
+	var sum: Gold = sumGold(
+		...products.map((e): Gold => {
+			return e.gold;
+		})
+	);
 
 	return (
 		<>
 			<div className="log-header">
-				<div className="log-header-left"> </div>
+				<div className="log-header-left">
+					<p>
+						<strong>Sum Gold:</strong> {formatGold(sum)}
+					</p>
+				</div>
 				<div className="log-header-right">
 					<Button
 						icon="pi pi-plus"
@@ -37,7 +47,6 @@ export default function CharacterLog() {
 					style={{ width: "70vw" }}
 					breakpoints={{ "960px": "100vw", "641px": "120vw" }}
 					onHide={() => {
-						// TODO: clear form here if closed.
 						setVisible(false);
 					}}
 				>
@@ -54,7 +63,7 @@ export default function CharacterLog() {
 					rowsPerPageOptions={[20, 50, 100]}
 				>
 					<Column field="date" header="Date" />
-					<Column field="money" header="Money" />
+					<Column field="money" header="Money" body={(e) => formatGold(e.gold)} />
 					<Column field="exp" header="Experience" />
 					<Column field="desc" header="Description" />
 				</DataTable>
