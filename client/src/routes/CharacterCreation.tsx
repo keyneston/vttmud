@@ -64,6 +64,14 @@ export default function CharacterCreation() {
 		return isFormFieldValid(name) && <small className="p-error">{error}</small>;
 	};
 
+	// const uploadHandler = async (event: any) => {
+	// 	fetch("/upload", {
+	// 		method: "POST",
+	// 		body: event,
+	// 		headers: { "Content-Type": "multipart/form-data" },
+	// 	});
+	// };
+
 	return (
 		<>
 			<Card title="Character Creator">
@@ -100,9 +108,12 @@ export default function CharacterCreation() {
 							/>
 							<FileUpload
 								accept="image/*"
+								name="character"
 								maxFileSize={MaximumImageSize}
 								mode="basic"
 								chooseOptions={chooseOptions}
+								url="/upload"
+								auto
 							/>
 						</div>
 

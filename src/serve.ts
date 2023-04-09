@@ -72,6 +72,20 @@ app.post("/api/v1/log", appendLogEndpoint);
 app.get("/api/v1/character/:id", characterEndpoint);
 app.post("/api/v1/character", characterCreationEndpoint);
 
+app.post("/upload", function (request: Request, response: Response, next: any) {
+    // TODO: authenticate user
+    // TODO: find way to tie uploaded image to character creation
+    upload.single("character")(request, response, function (error: any) {
+        if (error) {
+            console.log(error);
+            response.status(500);
+            return response.json({ error: error });
+        }
+        console.log("File uploaded successfully.");
+        response.redirect("/success");
+    });
+});
+
 // All other GET requests not handled before will return our React app
 app.get("*", (req: Request, res: Response) => {
     // TODO: don't hardcode these paths in incase the location changes from /app/
