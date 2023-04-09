@@ -8,3 +8,5 @@ tags
 tags.temp
 tags.lock
 /build/
+dist
+client/build

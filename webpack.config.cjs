@@ -38,7 +38,7 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "../public", to: "public" }, //to the dist root directory
+        { from: "public", to: "public" }, //to the dist root directory
       ],
     }),
   ],

@@ -1,18 +1,23 @@
 FOUNDRY_DIR=build/foundryvtt-pf2e
+.PHONY: build run build-client build-server foundry_dir
 
-.PHONY: run
 run:
 	cd client && npm run start 
 
 run-backend:
 	cd server && npm run watch
 
-.PHONY: build
-build:
+clean:
 	rm -rf client/build/*
-	rm -rf server/dist/*
+	rm -rf dist/*
+
+build: clean build-client build-server
+
+build-client:
 	cd client && npm run build
-	cd server && npm run build
+
+build-server:
+	npm run build
 
 foundry_dir:
 	test -d $(FOUNDRY_DIR) || git clone --depth=1 https://github.com/foundryvtt/pf2e.git $(FOUNDRY_DIR)
@@ -23,3 +28,6 @@ items.db.json:
 
 deploy:
 	flyctl deploy
+
+docker:
+	docker build . -t keyneston/vttmud
