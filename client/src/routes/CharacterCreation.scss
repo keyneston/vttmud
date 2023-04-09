@@ -1,0 +1,33 @@
+.cc-image-holder {
+	border: 0.1rem;
+	padding: 20px;
+	background-color: var(--surface-300);
+	border-color: var(--primary-600);
+	border-style: solid;
+	max-width: 25rem;
+	max-height: 25rem;
+	margin: 0 auto;
+}
+
+.cc-left-top {
+	text-align: center;
+}
+
+.cc-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 75% 25%;
+}
+
+.cc-left-bottom {
+	padding-top: 1rem;
+	grid-column: 1;
+	grid-row: 2;
+	text-align: center;
+}
+
+.cc-right-bottom {
+	grid-column: 3;
+	grid-row: 2;
+	text-align: center;
+}

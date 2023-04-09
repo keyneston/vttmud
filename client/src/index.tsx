@@ -12,6 +12,8 @@ import Root from "./routes/root";
 import Templates from "./routes/templates";
 import Home from "./routes/home";
 import CharacterLog from "./routes/log";
+import CharacterSheet from "./routes/CharacterSheet";
+import CharacterCreation from "./routes/CharacterCreation";
 
 const router = createBrowserRouter([
 	{
@@ -37,6 +39,14 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "character/:id",
+				element: <CharacterSheet />,
+			},
+			{
+				path: "character/creation",
+				element: <CharacterCreation />,
+			},
+			{
+				path: "character/:id/log",
 				element: <CharacterLog />,
 			},
 		],
@@ -53,4 +63,4 @@ root.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals(console.log);
+reportWebVitals();

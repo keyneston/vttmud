@@ -1,4 +1,4 @@
-const MaxItemLevel = 20;
-const MinItemLevel = 0;
+export const MaxItemLevel = 20;
+export const MinItemLevel = 0;
 
-export { MaxItemLevel, MinItemLevel };
+export const MaximumImageSize: number = 4 * 1000000;

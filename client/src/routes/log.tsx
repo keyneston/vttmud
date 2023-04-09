@@ -80,7 +80,7 @@ function NewEntry() {
 		<>
 			<div className="new-entry">
 				<form action="/api/v1/log" method="POST">
-					<div>
+					<div className="field">
 						<span className="p-float-label">
 							<InputText id="desc" style={{ width: "100%" }} />
 							<label htmlFor="desc">Description</label>
@@ -119,7 +119,7 @@ function NewEntry() {
 							<label htmlFor="exp">Experience</label>
 						</span>
 					</div>
-					<Button label="Submit" severity="success" />
+					<Button label="Record" severity="success" />
 				</form>
 			</div>
 		</>

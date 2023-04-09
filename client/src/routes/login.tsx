@@ -1,11 +1,12 @@
 import { redirect } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { DiscordCookie, DiscordUserCookie } from "../cookies/discord";
 
 const cookies = new Cookies();
 
 export async function loginAction() {
 	try {
-		const response = await fetch("/api/v1/login"); // TODO: something here to sort out the hostname
+		const response = await fetch("/api/v1/login");
 		const parsed: { redirect_url: string } = await response.json();
 		return redirect(parsed.redirect_url);
 	} catch (error) {
@@ -15,8 +16,8 @@ export async function loginAction() {
 }
 
 export async function logoutAction() {
-	cookies.remove("discord");
-	cookies.remove("discord-user");
+	cookies.remove(DiscordCookie);
+	cookies.remove(DiscordUserCookie);
 
 	return redirect("/");
 }

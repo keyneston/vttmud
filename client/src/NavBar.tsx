@@ -3,9 +3,7 @@ import React, { useRef } from "react";
 import { Avatar } from "primereact/avatar";
 import { Menu } from "primereact/menu";
 import { Link, useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
-
-const cookies = new Cookies();
+import { loggedIn, avatarImage } from "./cookies/discord";
 
 function NavBar() {
 	const navigate = useNavigate();
@@ -42,21 +40,6 @@ function NavBar() {
 	);
 }
 
-// function getCookie(name: string) {
-// 	const value = `; ${document.cookie}`;
-// 	const parts = value.split(`; ${name}=`);
-// 	if (parts.length === 2) return cookieParser.JSONCookie(parts!.pop()!.split(";").shift() || "");
-// }
-
-function loggedIn(): boolean {
-	return cookies.get("discord-user")?.username ? true : false;
-}
-
-function avatarImage(): string {
-	let user = cookies.get("discord-user");
-	return user?.username ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : "";
-}
-
 function loggedOutMenu(navigate: any) {
 	return [
 		{
@@ -84,6 +67,18 @@ function loggedInMenu(navigate: any) {
 					icon: "pi pi-cancel",
 					command: () => {
 						navigate("/logout");
+					},
+				},
+			],
+		},
+		{
+			label: "Character",
+			items: [
+				{
+					label: "Create",
+					icon: "pi pi-plus",
+					command: () => {
+						navigate("/character/creation");
 					},
 				},
 			],
