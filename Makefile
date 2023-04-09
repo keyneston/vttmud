@@ -2,10 +2,14 @@ FOUNDRY_DIR=build/foundryvtt-pf2e
 .PHONY: build run build-client build-server foundry_dir
 
 run:
-	cd client && npm run start 
+	npm run serve
+
+run-frontend:
+	cd client && npm run start
+	
 
 run-backend:
-	cd server && npm run watch
+	npm run watch
 
 clean:
 	rm -rf client/build/*
