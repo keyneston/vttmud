@@ -35,10 +35,10 @@ export const callbackEndpoint = async (req: Request, res: Response) => {
             grantType: "authorization_code",
         });
 
-        res.cookie("discord", response);
+        res.cookie("discord", response, { signed: true, sameSite: true });
 
         let user = await oauth2.getUser(response.access_token);
-        res.cookie("discord-user", user);
+        res.cookie("discord-user", user, { signed: true, sameSite: true });
     } catch (e: any) {
         res.status(500);
         res.json({ error: e.message, description: e.response.error_description });

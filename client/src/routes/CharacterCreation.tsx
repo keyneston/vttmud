@@ -8,8 +8,11 @@ import { FileUpload } from "primereact/fileupload";
 import { Tooltip } from "primereact/tooltip";
 import { MaximumImageSize } from "../constants";
 import "./CharacterCreation.scss";
+import { useNavigate } from "react-router-dom";
 
 export default function CharacterCreation() {
+	const navigate = useNavigate();
+
 	const formik = useFormik({
 		initialValues: {
 			character_name: "",
@@ -32,7 +35,12 @@ export default function CharacterCreation() {
 				headers: { "Content-Type": "application/json" },
 				body: jData,
 			};
-			fetch("/api/v1/character", requestOptions);
+
+			var results = await fetch("/api/v1/character", requestOptions).then((d) => {
+				return d.json();
+			});
+
+			navigate(`/character/${results.id}`);
 
 			formik.resetForm();
 		},

@@ -2,27 +2,32 @@ import "./env";
 import express, { Express, Request, Response } from "express";
 import path from "path";
 import cors from "cors";
-import Client from "pg";
-import { callbackEndpoint, loginEndpoint } from "./login";
-import { appendLogEndpoint } from "./log";
 import url, { URL, fileURLToPath } from "url";
 import audit from "express-requests-logger";
+import cookieParser from "cookie-parser";
+
+import { appendLogEndpoint } from "./log";
+import { callbackEndpoint, loginEndpoint } from "./login";
+import { characterCreationEndpoint } from "./character";
+import { pool } from "./db";
 
 const app = express();
 const port = process.env.PORT || 3001;
 const publicFolder = process.env.PUBLIC_FOLDER || "/app/public";
-
-//const client = new Client({ query_timeout: 1000 });
-// client.connect()
+const cookiePassword = process.env.COOKIE_PASSWORD || "development";
 
 // TODO: don't hardcode these paths in incase the location changes from /app/
 app.use(express.static(publicFolder));
+app.use(express.json());
 app.use(cors());
+app.use(cookieParser(cookiePassword));
 app.use(
     audit({
         excludeURLs: ["0"],
     })
 );
+
+pool.ready();
 
 // Handle GET requests to /api route
 app.get("/api", (req: Request, res: Response) => {
@@ -32,22 +37,7 @@ app.get("/api", (req: Request, res: Response) => {
 app.get("/api/v1/login", loginEndpoint);
 app.get("/api/v1/login/callback", callbackEndpoint);
 app.post("/api/v1/log", appendLogEndpoint);
-
-/*
-app.get("/api/v1/items", (req: Request, res: Response) => {
-    var filter = req.query.filter ? `%${req.query.filter}%` : "%";
-    client
-        .query("SELECT id, name, level, cost FROM items WHERE name ilike $1 LIMIT 50;", [filter])
-        .then((results) => {
-            res.json(results.rows);
-        })
-        .catch((e) => {
-            console.error(e);
-            res.status(500);
-            res.json({ error: e.message });
-        });
-});
-*/
+app.post("/api/v1/character", characterCreationEndpoint);
 
 // All other GET requests not handled before will return our React app
 app.get("*", (req: Request, res: Response) => {
