@@ -5,6 +5,9 @@ import cors from "cors";
 import url, { URL, fileURLToPath } from "url";
 import audit from "express-requests-logger";
 import cookieParser from "cookie-parser";
+import multer from "multer";
+import multerS3 from "multer-s3";
+import { S3 } from "@aws-sdk/client-s3";
 
 import { appendLogEndpoint } from "./log";
 import { callbackEndpoint, loginEndpoint } from "./login";
@@ -15,6 +18,34 @@ const app = express();
 const port = process.env.PORT || 3001;
 const publicFolder = process.env.PUBLIC_FOLDER || "/app/public";
 const cookiePassword = process.env.COOKIE_PASSWORD || "development";
+const s3Bucket = process.env.S3_BUCKET || "";
+const s3endpoint = process.env.S3_ENDPOINT || "ams3.digitaloceanspaces.com";
+const s3keyID = process.env.S3_KEY_ID || "";
+const s3accessKey = process.env.S3_ACCESS_KEY || "";
+
+if (s3Bucket === "" || s3keyID === "" || s3accessKey === "") {
+    console.error("S3_BUCKET, S3_KEY_ID and S3_ACCESS_KEY must be set.");
+    process.exit(1);
+}
+
+const s3Client = new S3({
+    credentials: {
+        accessKeyId: s3keyID,
+        secretAccessKey: s3accessKey,
+    },
+    endpoint: s3endpoint,
+});
+
+const upload = multer({
+    storage: multerS3({
+        s3: s3Client,
+        bucket: s3Bucket,
+        acl: "public-read",
+        key: function (req: Request, file: any, cb: any) {
+            cb(null, file.originalname);
+        },
+    }),
+});
 
 // TODO: don't hardcode these paths in incase the location changes from /app/
 app.use(express.static(publicFolder));
@@ -47,4 +78,4 @@ app.get("*", (req: Request, res: Response) => {
     res.sendFile(path.resolve(publicFolder, "index.html"));
 });
 
-app.listen(port, () => console.log(`HelloNode app listening on port ${port}!`));
+app.listen(port, () => console.log(`vttmud-backend listening on port ${port}!`));
