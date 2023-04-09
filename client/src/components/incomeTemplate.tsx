@@ -12,6 +12,7 @@ import "./incomeTemplate.scss";
 const mutliplierKey = "earn_income_multiplier";
 const levelKey = "earn_income_level";
 const proficiencyKey = "character_proficiency";
+const descriptionKey = "earn_income_description";
 
 export default function IncomeTemplate({ name, setName }: { name: string; setName: (name: string) => void }) {
 	const [days, setDays] = useState<number>(1);
@@ -28,6 +29,10 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 		const character_proficiency = localStorage.getItem(proficiencyKey);
 		return character_proficiency || "Untrained";
 	});
+	const [description, setDescription] = useState<string>(() => {
+		const item = localStorage.getItem(descriptionKey);
+		return item || "";
+	});
 	const [level, setLevel] = useState<number>(() => {
 		const earn_income_level = localStorage.getItem(levelKey);
 		return parseInt(earn_income_level || "1") || 1;
@@ -36,6 +41,7 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 	localStorage.setItem(proficiencyKey, proficiency);
 	localStorage.setItem(levelKey, `${level}`);
 	localStorage.setItem(mutliplierKey, `${multiplier}`);
+	localStorage.setItem(descriptionKey, description);
 
 	return (
 		<Panel header="Earn Income Template">
@@ -49,6 +55,7 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 				endDate={endDate}
 				level={level}
 				proficiency={proficiency}
+				description={description}
 				total={calcTotal({
 					level: level,
 					success: success,
@@ -78,6 +85,15 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 						placeholder="Select a Proficiency"
 					/>
 					<label htmlFor="proficiency">Proficiency Level</label>
+				</span>
+				<span className="p-float-label" style={{ gridColumn: "1/3" }}>
+					<InputText
+						id="description"
+						value={description}
+						style={{ width: "95%" }}
+						onChange={(e) => setDescription(e.target.value)}
+					/>
+					<label htmlFor="description">Description</label>
 				</span>
 				<div>
 					<span className="p-float-label">
@@ -239,6 +255,7 @@ function Output({
 	level,
 	proficiency,
 	total,
+	description,
 }: {
 	name: string;
 	success: number;
@@ -249,6 +266,7 @@ function Output({
 	endDate: Date;
 	level: number;
 	proficiency: string;
+	description: string;
 	total: string;
 }) {
 	var summaryParts: string[] = [];
@@ -262,6 +280,8 @@ function Output({
 	return (
 		<p className="m-0">
 			<b>Character:</b> {name} <br />
+			<b>Description:</b> {description}
+			<br />
 			<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)} <br />
 			<b>Attempted:</b> {proficiency} Level {level}; DC {dc}
 			<br />
