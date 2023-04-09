@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 
 import { appendLogEndpoint } from "./log";
 import { callbackEndpoint, loginEndpoint } from "./login";
-import { characterCreationEndpoint } from "./character";
+import { characterEndpoint, characterCreationEndpoint } from "./character";
 import { pool } from "./db";
 
 const app = express();
@@ -37,6 +37,8 @@ app.get("/api", (req: Request, res: Response) => {
 app.get("/api/v1/login", loginEndpoint);
 app.get("/api/v1/login/callback", callbackEndpoint);
 app.post("/api/v1/log", appendLogEndpoint);
+
+app.get("/api/v1/character/:id", characterEndpoint);
 app.post("/api/v1/character", characterCreationEndpoint);
 
 // All other GET requests not handled before will return our React app
