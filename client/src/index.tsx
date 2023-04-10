@@ -13,7 +13,6 @@ import Templates from "./routes/templates";
 import Home from "./routes/home";
 import CharacterLog from "./routes/log";
 import CharacterSheet from "./routes/CharacterSheet";
-import CharacterCreation from "./routes/CharacterCreation";
 
 const router = createBrowserRouter([
 	{
@@ -40,10 +39,6 @@ const router = createBrowserRouter([
 			{
 				path: "character/:id",
 				element: <CharacterSheet />,
-			},
-			{
-				path: "character/creation",
-				element: <CharacterCreation />,
 			},
 			{
 				path: "character/:id/log",

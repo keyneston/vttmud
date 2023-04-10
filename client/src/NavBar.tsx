@@ -1,14 +1,16 @@
 import "./NavBar.css";
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Avatar } from "primereact/avatar";
 import { Menu } from "primereact/menu";
 import { Link, useNavigate } from "react-router-dom";
 import { loggedIn, avatarImage } from "./cookies/discord";
+import CharacterCreation from "./components/CharacterCreation";
 
 function NavBar() {
+	const [ccVisible, setCCVisible] = useState(false);
 	const navigate = useNavigate();
 	const menu = useRef<Menu>(null);
-	const items = loggedIn() ? loggedInMenu(navigate) : loggedOutMenu(navigate);
+	const items = loggedIn() ? loggedInMenu(navigate, setCCVisible) : loggedOutMenu(navigate);
 	const image = avatarImage();
 	const style = loggedIn() ? {} : { backgroundColor: "#2196F3", color: "#ffffff" };
 
@@ -36,6 +38,7 @@ function NavBar() {
 				</div>
 			</div>
 			<div className="navbar-divider" />
+			<CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
 		</>
 	);
 }
@@ -57,7 +60,7 @@ function loggedOutMenu(navigate: any) {
 	];
 }
 
-function loggedInMenu(navigate: any) {
+function loggedInMenu(navigate: any, setCCVisible: (x: boolean) => void) {
 	return [
 		{
 			label: "Account",
@@ -78,7 +81,7 @@ function loggedInMenu(navigate: any) {
 					label: "Create",
 					icon: "pi pi-plus",
 					command: () => {
-						navigate("/character/creation");
+						setCCVisible(true);
 					},
 				},
 			],

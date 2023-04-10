@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
-import { Card } from "primereact/card";
+import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Image } from "primereact/image";
 import { FileUpload } from "primereact/fileupload";
 import { Tooltip } from "primereact/tooltip";
 import { MaximumImageSize } from "../constants";
-import "./CharacterCreation.scss";
 import { useNavigate } from "react-router-dom";
 
-export default function CharacterCreation() {
+import "./CharacterCreation.scss";
+
+export default function CharacterCreation({
+	visible = false,
+	setVisible,
+}: {
+	visible: boolean;
+	setVisible: (x: boolean) => void;
+}) {
 	const navigate = useNavigate();
 
 	const formik = useFormik({
@@ -46,14 +53,9 @@ export default function CharacterCreation() {
 		},
 	});
 
-	const chooseOptions = {
-		icon: "pi pi-fw pi-cloud-upload",
-		iconOnly: true,
-		className: "custom-upload-btn p-button-success p-button-rounded p-button-outlined",
+	const itemTemplate = (file: any, props: any) => {
+		return <Image src={file.objectURL} width="360" height="360" />;
 	};
-
-	const imageURL =
-		"https://keyneston-foundry.s3.eu-central-1.amazonaws.com/tokenizer/cleric.AvatarO58TTG7ayoY1qkBr.webp?1680301573868";
 
 	const errors: { [key: string]: string } = formik.errors;
 	const touched: FormikTouched<FormikValues> = formik.touched;
@@ -64,30 +66,19 @@ export default function CharacterCreation() {
 		return isFormFieldValid(name) && <small className="p-error">{error}</small>;
 	};
 
-	// const uploadHandler = async (event: any) => {
-	// 	fetch("/upload", {
-	// 		method: "POST",
-	// 		body: event,
-	// 		headers: { "Content-Type": "multipart/form-data" },
-	// 	});
-	// };
-
 	return (
 		<>
-			<Card title="Character Creator">
+			<Dialog
+				header="Character Creator"
+				visible={visible}
+				style={{ width: "50vw" }}
+				onHide={() => {
+					setVisible(false);
+				}}
+			>
 				<form onSubmit={formik.handleSubmit} className="p-fluid">
 					<div className="cc-grid">
 						<div className="cc-left-top">
-							<div className="cc-image-holder">
-								<Image
-									src={imageURL}
-									width="360"
-									height="360"
-									preview
-								/>
-							</div>
-						</div>
-						<div className="cc-center">
 							<span className="p-float-label p-input-icon-right">
 								<InputText
 									id="character_name"
@@ -96,33 +87,18 @@ export default function CharacterCreation() {
 								/>
 								<label htmlFor="character_name">Character Name</label>
 							</span>
-							{getFormErrorMessage("character_name")}
 						</div>
+						<div className="cc-center">{getFormErrorMessage("character_name")}</div>
 						<div className="cc-right"></div>
 
-						<div className="cc-left-bottom">
-							<Tooltip
-								target=".custom-upload-btn"
-								content="Upload"
-								position="bottom"
-							/>
-							<FileUpload
-								accept="image/*"
-								name="character"
-								maxFileSize={MaximumImageSize}
-								mode="basic"
-								chooseOptions={chooseOptions}
-								url="/upload"
-								auto
-							/>
-						</div>
+						<div className="cc-left-bottom"></div>
 
 						<div className="cc-right-bottom">
 							<Button label="Submit" severity="success" type="submit" />
 						</div>
 					</div>
 				</form>
-			</Card>
+			</Dialog>
 		</>
 	);
 }
