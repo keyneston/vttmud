@@ -35,3 +35,7 @@ deploy:
 
 docker:
 	docker build . -t keyneston/vttmud
+
+docker-shell:
+	docker run -it keyneston/vttmud /bin/bash
+

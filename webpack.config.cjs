@@ -3,11 +3,14 @@ const path = require("path");
 
 module.exports = {
   mode: "development",
-  entry: "./src/serve.ts",
+  entry: {
+    "serve": "./src/serve.ts",
+    "node-pg-migrate": "./node_modules/.bin/node-pg-migrate"
+  },
   target: "node",
   output: {
-    filename: "serve.ts",
-    path: path.resolve(__dirname, "dist"),
+    filename: "[name].ts",
+    path: path.resolve(__dirname, "build"),
   },
   module: {
     rules: [

@@ -27,8 +27,13 @@ FROM debian:bullseye-slim
 LABEL fly_launch_runtime="nodejs"
 
 COPY --from=builder /usr/local/node /usr/local/node
-COPY --from=builder /app/dist/ /app
+COPY --from=builder /app/build/ /app
 COPY --from=builder /app/client/build /app/public/
+COPY --from=builder /app/migrations /app/migrations
+COPY --from=builder /app/node_modules/.bin/node-pg-migrate /app/
+
+# webpack is set to .ts but this needs to run as a common javascript
+RUN mv /app/node-pg-migrate.ts /app/node-pg-migrate.cjs
 
 WORKDIR /app
 ENV NODE_ENV production
