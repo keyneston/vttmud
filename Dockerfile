@@ -38,4 +38,6 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV PATH /usr/local/node/bin:$PATH
 
+USER 1001:1001
+
 CMD [ "node",  "./serve.ts" ]

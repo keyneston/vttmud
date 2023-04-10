@@ -6,16 +6,16 @@ export default function CharacterSheet() {
 	const [loading, setLoading] = useState(true);
 	const urlParams = useParams();
 
-	const fetchData = async () => {
-		const resp = await fetch(`/api/v1/character/${urlParams.id}`);
-		const data = await resp.json();
-		setData(data);
-		setLoading(false);
-	};
-
 	useEffect(() => {
+		const fetchData = async () => {
+			const resp = await fetch(`/api/v1/character/${urlParams.id}`);
+			const data = await resp.json();
+			setData(data);
+			setLoading(false);
+		};
+
 		fetchData();
-	}, [fetchData, urlParams]);
+	}, [urlParams]);
 
 	return (
 		<div>
