@@ -47,3 +47,7 @@ export const characterEndpoint = async (req: Request, res: Response) => {
 
     res.json(data);
 };
+
+export const listCharacters = async (req: Request, res: Response) => {
+    const query = new Query("SELECT owner, name FROM characters WHERE id=$1 limit 1;", [req.params.id]);
+};
