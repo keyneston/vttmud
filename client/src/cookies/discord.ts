@@ -34,6 +34,7 @@ export interface DiscordUser {
 
 export function discordUser(): DiscordUser | null {
     var c = cookies.get(DiscordUserCookie);
+    if (!c) return null;
     c = c.replace(/^([sj]:)+/, "").replace(/\..*$/, "");
     console.log(c);
 
