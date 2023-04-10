@@ -15,7 +15,7 @@ export default function CharacterSheet() {
 
 	useEffect(() => {
 		fetchData();
-	}, [urlParams]);
+	}, [fetchData, urlParams]);
 
 	return (
 		<div>

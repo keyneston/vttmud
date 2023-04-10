@@ -8,18 +8,14 @@
   "scripts": {
     "serve": "concurrently 'npm run watch' 'cd client && npm run start'",
     "run-backend": "ts-node src/serve.ts",
-    "build": "webpack --env production build",
+    "build": "npm i && webpack --env production build",
     "watch": "npm-watch run-backend",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "node-pg-migrate"
   },
   "watch": {
     "run-backend": {
-      "patterns": [
-        "src/**/*.ts",
-        "client/public/*",
-        ".env"
-      ],
+      "patterns": ["src/**/*.ts", "client/public/*", ".env"],
       "quiet": false,
       "extensions": "js,jsx,ts,tsx,css,html,env"
     }

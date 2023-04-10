@@ -1,12 +1,10 @@
 fly.toml
 Dockerfile
 .dockerignore
-node_modules
+/client/node_modules/
 .git
-node_modules
+/node_modules/
 tags
 tags.temp
 tags.lock
-/build/
-dist
-client/build
+foundryvtt-pf2e
