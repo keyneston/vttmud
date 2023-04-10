@@ -3,7 +3,7 @@ import path from "path";
 
 import { appendLogEndpoint } from "./log";
 import { callbackEndpoint, loginEndpoint } from "./login";
-import { characterEndpoint, characterCreationEndpoint } from "./character";
+import { listCharacters, characterEndpoint, characterCreationEndpoint } from "./character";
 import { uploadArt } from "./uploads";
 import { requireAuthorization } from "./auth";
 
@@ -27,6 +27,7 @@ function registerRestrictedRoutes(app: express.Application) {
     app.post("/api/v1/log", requireAuthorization(appendLogEndpoint));
     app.get("/api/v1/character/:id", requireAuthorization(characterEndpoint));
     app.post("/api/v1/character", requireAuthorization(characterCreationEndpoint));
+    app.get("/api/v1/characters", requireAuthorization(listCharacters));
     app.post("/upload", requireAuthorization(uploadArt));
 }
 

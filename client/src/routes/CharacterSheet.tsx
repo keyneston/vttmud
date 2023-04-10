@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function CharacterSheet() {
 	const [data, setData] = useState<{ owner: number; name: string }>({ owner: 0, name: "" });
@@ -16,7 +15,7 @@ export default function CharacterSheet() {
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [urlParams]);
 
 	return (
 		<div>

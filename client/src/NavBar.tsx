@@ -5,6 +5,7 @@ import { Menu } from "primereact/menu";
 import { Link, useNavigate } from "react-router-dom";
 import { loggedIn, avatarImage } from "./cookies/discord";
 import CharacterCreation from "./components/CharacterCreation";
+import { listCharacters } from "./api/characters";
 
 function NavBar() {
 	const [ccVisible, setCCVisible] = useState(false);
@@ -61,7 +62,7 @@ function loggedOutMenu(navigate: any) {
 }
 
 function loggedInMenu(navigate: any, setCCVisible: (x: boolean) => void) {
-	return [
+	const menu = [
 		{
 			label: "Account",
 			items: [
@@ -87,6 +88,21 @@ function loggedInMenu(navigate: any, setCCVisible: (x: boolean) => void) {
 			],
 		},
 	];
+
+	// TODO: cleaner way of doing this?
+	listCharacters().then((characters) => {
+		characters.forEach((x) => {
+			menu[1].items.unshift({
+				label: x.name,
+				icon: "",
+				command: () => {
+					navigate(`/character/${x.id}`);
+				},
+			});
+		});
+	});
+
+	return menu;
 }
 
 export { NavBar };

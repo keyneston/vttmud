@@ -47,6 +47,7 @@ export default function CharacterCreation({
 				return d.json();
 			});
 
+			setVisible(false);
 			navigate(`/character/${results.id}`);
 
 			formik.resetForm();
