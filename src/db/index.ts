@@ -2,6 +2,7 @@ import { Client } from "ts-postgres";
 import { createPool } from "generic-pool";
 
 const config = {
+    // TODO: these can be replaced with PGHOST, etc env variables.
     host: process.env.DATABASE_HOST ?? "localhost",
     port: parseInt(process.env.DATABASE_PORT ?? "5432"),
     database: process.env.DATABASE_NAME ?? "tabitha", // TODO: better generic db name

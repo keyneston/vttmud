@@ -1,12 +1,7 @@
-import { useState, useRef } from "react";
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { Image } from "primereact/image";
-import { FileUpload } from "primereact/fileupload";
-import { Tooltip } from "primereact/tooltip";
-import { MaximumImageSize } from "../constants";
 import { useNavigate } from "react-router-dom";
 
 import "./CharacterCreation.scss";
@@ -53,10 +48,6 @@ export default function CharacterCreation({
 			formik.resetForm();
 		},
 	});
-
-	const itemTemplate = (file: any, props: any) => {
-		return <Image src={file.objectURL} width="360" height="360" />;
-	};
 
 	const errors: { [key: string]: string } = formik.errors;
 	const touched: FormikTouched<FormikValues> = formik.touched;

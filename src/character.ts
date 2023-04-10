@@ -30,7 +30,7 @@ export const characterCreationEndpoint = async (req: Request, res: Response) => 
 export const characterEndpoint = async (req: Request, res: Response, next: any) => {
     const user = req.signedCookies["discord-user"];
 
-    const query = new Query("SELECT owner, name FROM characters WHERE id=$1 and owner=$2 limit 1;", [
+    const query = new Query("SELECT id, owner, name, avatar FROM characters WHERE id=$1 and owner=$2 limit 1;", [
         req.params.id,
         user.id,
     ]);
@@ -38,15 +38,17 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
         const results = await c.execute(query);
         return results;
     });
-    var data = { owner: "", name: "" };
+    var data: Character = { id: 0, owner: "", name: "" };
 
     if (results.rows.length == 0) {
         return next(new StatusError("Not Found", 404));
     }
 
     for (const row of results.rows) {
-        data.owner = row[0] as string;
-        data.name = row[1] as string;
+        data.id = row[0] as number;
+        data.owner = row[1] as string;
+        data.name = row[2] as string;
+        data.avatar = row[3] as string;
         break;
     }
 
@@ -56,7 +58,7 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
 export const listCharacters = async (req: Request, res: Response) => {
     const user = req.signedCookies["discord-user"];
 
-    const query = new Query("SELECT id, owner, name FROM characters WHERE owner=$1 limit 50;", [user.id]);
+    const query = new Query("SELECT id, owner, name, avatar FROM characters WHERE owner=$1 limit 50;", [user.id]);
 
     var data: Character[] = [];
     var results = await pool.use(async (c) => {
@@ -69,6 +71,7 @@ export const listCharacters = async (req: Request, res: Response) => {
             id: row[0] as number,
             owner: row[1] as string,
             name: row[2] as string,
+            avatar: row[3] as string,
         });
     }
 

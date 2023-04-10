@@ -59,16 +59,4 @@ export function simplifyGold(input: Gold): number {
     return value;
 }
 
-// TODO: remove this
-class Client {
-    getItems = async (filter: string | undefined): Promise<Item[] | void> => {
-        var filterString = filter ? `?filter=${filter}` : "";
-        var url = `/api/v1/items${filterString}`;
-
-        return axios.get(url).then((response) => {
-            return response.data;
-        });
-    };
-}
-
-export { Client };
+export {};
