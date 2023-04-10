@@ -5,7 +5,6 @@ module.exports = {
   mode: "development",
   entry: {
     "serve": "./src/serve.ts",
-    "node-pg-migrate": "./node_modules/.bin/node-pg-migrate"
   },
   target: "node",
   output: {

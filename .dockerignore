@@ -3,6 +3,7 @@ Dockerfile
 .dockerignore
 /client/node_modules/
 .git
+build
 /node_modules/
 tags
 tags.temp

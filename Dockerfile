@@ -30,10 +30,9 @@ COPY --from=builder /usr/local/node /usr/local/node
 COPY --from=builder /app/build/ /app
 COPY --from=builder /app/client/build /app/public/
 COPY --from=builder /app/migrations /app/migrations
-COPY --from=builder /app/node_modules/.bin/node-pg-migrate /app/
 
-# webpack is set to .ts but this needs to run as a common javascript
-RUN mv /app/node-pg-migrate.ts /app/node-pg-migrate.cjs
+# necessary to run node-pg-migrate
+COPY --from=builder /app/node_modules /app/node_modules 
 
 WORKDIR /app
 ENV NODE_ENV production
