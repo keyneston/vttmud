@@ -36,6 +36,9 @@ export default function CharacterLog() {
 	}, []);
 
 	const formatCharGold = (e: CharacterLogEntry): ReactNode => {
+		if (!e.gold && !e.silver && !e.copper) {
+			return "";
+		}
 		return `${e.spend ? "-" : ""}${e.gold || 0} gp ${e.silver || 0} sp ${e.copper || 0} cp`;
 	};
 
@@ -132,6 +135,9 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 			if (posExp === "-") {
 				data.experience *= -1;
 			}
+			if (spend === "-") {
+				data.spend = true;
+			}
 
 			var results = await updateLog(data);
 
@@ -167,6 +173,7 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 					</div>
 					<div className="money">
 						<SelectButton
+							id="spend"
 							options={["-", "+"]}
 							unselectable={false}
 							value={spend}
