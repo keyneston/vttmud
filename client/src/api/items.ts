@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export interface Item {
     id: string;
     name: string;

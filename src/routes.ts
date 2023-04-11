@@ -24,11 +24,11 @@ function registerRotues(app: express.Application) {
 }
 
 function registerRestrictedRoutes(app: express.Application) {
-    app.post("/api/v1/log", requireAuthorization(appendLogEndpoint));
+    app.post("/api/v1/character/:id/log", requireAuthorization(appendLogEndpoint));
     app.get("/api/v1/character/:id", requireAuthorization(characterEndpoint));
     app.post("/api/v1/character", requireAuthorization(characterCreationEndpoint));
     app.get("/api/v1/characters", requireAuthorization(listCharacters));
-    app.get("/api/v1/character/:id/logs", requireAuthorization(getLogEntriesEndpoint));
+    app.get("/api/v1/character/:id/log", requireAuthorization(getLogEntriesEndpoint));
     app.post("/upload", requireAuthorization(uploadArt));
 }
 

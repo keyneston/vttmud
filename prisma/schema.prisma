@@ -23,6 +23,7 @@ model CharacterLogEntry {
 	gold         Int?
 	silver       Int?
 	copper       Int?
+	description  String?
 	createdAt    DateTime  @default(now())
 	updatedAt    DateTime  @updatedAt
 }
