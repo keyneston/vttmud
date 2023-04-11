@@ -51,7 +51,7 @@ function loggedOutMenu(navigate: any) {
 			items: [
 				{
 					label: "Login",
-					icon: "pi pi-user",
+					icon: "pi pi-sign-in",
 					command: () => {
 						navigate("/login");
 					},
@@ -67,22 +67,17 @@ function loggedInMenu(navigate: any, setCCVisible: (x: boolean) => void) {
 			label: "Account",
 			items: [
 				{
-					label: "Logout",
-					icon: "pi pi-cancel",
-					command: () => {
-						navigate("/logout");
-					},
-				},
-			],
-		},
-		{
-			label: "Character",
-			items: [
-				{
-					label: "Create",
+					label: "Create Character",
 					icon: "pi pi-plus",
 					command: () => {
 						setCCVisible(true);
+					},
+				},
+				{
+					label: "Logout",
+					icon: "pi pi-sign-out",
+					command: () => {
+						navigate("/logout");
 					},
 				},
 			],
@@ -92,12 +87,24 @@ function loggedInMenu(navigate: any, setCCVisible: (x: boolean) => void) {
 	// TODO: cleaner way of doing this?
 	listCharacters().then((characters) => {
 		characters.forEach((x) => {
-			menu[1].items.unshift({
+			menu.push({
 				label: x.name,
-				icon: "",
-				command: () => {
-					navigate(`/character/${x.id}`);
-				},
+				items: [
+					{
+						label: "Sheet",
+						icon: "pi pi-user",
+						command: () => {
+							navigate(`/character/${x.id}`);
+						},
+					},
+					{
+						label: `Log`,
+						icon: "pi pi-book",
+						command: () => {
+							navigate(`/character/${x.id}/log`);
+						},
+					},
+				],
 			});
 		});
 	});
