@@ -11,29 +11,32 @@ import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
 import { Gold, formatGold } from "../api/items";
 import { updateLog, getLog, CharacterLogEntry } from "../api/characters";
+import { GoldEntry } from "../components/GoldEntry";
 import "./log.scss";
 
 export default function CharacterLog() {
 	const urlParams = useParams();
 	const [visible, setVisible] = useState(false);
 	const [logEntries, setLogEntries] = useState<CharacterLogEntry[]>([]);
-	const [sum, setSum] = useState<Gold>({});
+	const [sum, setSum] = useState<Gold>({ spend: false });
 
 	const id = parseInt(urlParams.id || "0");
 
 	useEffect(() => {
 		getLog(id).then((data: CharacterLogEntry[]) => {
 			setLogEntries(data);
-
-			var newSum: Gold = { gp: 0, sp: 0, cp: 0 };
-			data.forEach((e) => {
-				newSum.gp! += (e.gold || 0) * (e.spend ? -1 : 1);
-				newSum.sp! += (e.silver || 0) * (e.spend ? -1 : 1);
-				newSum.cp! += (e.copper || 0) * (e.spend ? -1 : 1);
-			});
-			setSum(newSum);
 		});
 	}, [id]);
+
+	useEffect(() => {
+		var newSum: Gold = { spend: false, gold: 0, silver: 0, copper: 0 };
+		logEntries.forEach((e) => {
+			newSum.gold! += (e.gold || 0) * (e.spend ? -1 : 1);
+			newSum.silver! += (e.silver || 0) * (e.spend ? -1 : 1);
+			newSum.copper! += (e.copper || 0) * (e.spend ? -1 : 1);
+		});
+		setSum(newSum);
+	}, [id, logEntries]);
 
 	const appendEntry = (logEntry: CharacterLogEntry) => {
 		setLogEntries([logEntry, ...logEntries]);
@@ -125,7 +128,7 @@ function NewEntry({
 	setVisible: (visible: boolean) => void;
 	appendEntry: (x: CharacterLogEntry) => void;
 }) {
-	const [spend, setSpend] = useState<string>("+");
+	const [money, setMoney] = useState<Gold>({ spend: false });
 	const [posExp, setPosExp] = useState<string>("+");
 	const navigate = useNavigate();
 
@@ -146,9 +149,6 @@ function NewEntry({
 		onSubmit: async (data) => {
 			if (posExp === "-") {
 				data.experience *= -1;
-			}
-			if (spend === "-") {
-				data.spend = true;
 			}
 
 			var results = await updateLog(data);
@@ -184,51 +184,16 @@ function NewEntry({
 							<label htmlFor="description">Description</label>
 						</span>
 					</div>
-					<div className="money">
-						<SelectButton
-							id="spend"
-							options={["-", "+"]}
-							unselectable={false}
-							value={spend}
-							onChange={(e) => setSpend(e.value)}
-						/>
-						<span className="p-float-label">
-							<InputNumber
-								className="money-input"
-								id="gold"
-								value={formik.values.gold}
-								onChange={(event) => {
-									formik.values["gold"] = event.value || 0;
-								}}
-							/>
-							<label htmlFor="gold">Gold</label>
-						</span>
-						{getFormErrorMessage("gold")}
-						<span className="p-float-label">
-							<InputNumber
-								className="money-input"
-								id="silver"
-								value={formik.values.silver}
-								onChange={(event) => {
-									formik.values["silver"] = event.value || 0;
-								}}
-							/>
-							<label htmlFor="silver">Silver</label>
-						</span>
-						{getFormErrorMessage("silver")}
-						<span className="p-float-label">
-							<InputNumber
-								className="money-input"
-								id="copper"
-								value={formik.values.copper}
-								onChange={(event) => {
-									formik.values["copper"] = event.value || 0;
-								}}
-							/>
-							<label htmlFor="copper">Copper</label>
-						</span>
-						{getFormErrorMessage("copper")}
-					</div>
+					<GoldEntry
+						value={money}
+						setValue={(g: Gold) => {
+							formik.values.spend = g.spend;
+							formik.values.gold = g.gold || 0;
+							formik.values.silver = g.silver || 0;
+							formik.values.copper = g.copper || 0;
+							setMoney(g);
+						}}
+					/>
 
 					<div className="exp">
 						<SelectButton
@@ -241,6 +206,7 @@ function NewEntry({
 							<InputNumber
 								className="exp-input"
 								id="exp"
+								min={0}
 								value={formik.values.experience}
 								onChange={(event) => {
 									formik.values["experience"] = event.value || 0;

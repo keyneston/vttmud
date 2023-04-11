@@ -1,0 +1,11 @@
+.money {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 25% 25% 25% 25%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.money-input > input {
+	width: 5rem;
+}
