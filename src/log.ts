@@ -19,10 +19,11 @@ export const appendLogEndpoint = async (req: Request, res: Response) => {
             silver: req.body.silver,
             copper: req.body.copper,
             experience: req.body.experience,
+            description: req.body.description,
         },
     });
 
-    res.json({});
+    res.json(data);
 };
 
 export const getLogEntriesEndpoint = async (req: Request, res: Response, next: any) => {
@@ -30,6 +31,7 @@ export const getLogEntriesEndpoint = async (req: Request, res: Response, next: a
 
     var data = await prisma.characterLogEntry.findMany({
         where: { characterID: parseInt(req.params.id) },
+        orderBy: [{ createdAt: "desc" }],
     });
 
     res.json(data);

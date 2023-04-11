@@ -1,7 +1,8 @@
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DataTable } from "primereact/datatable";
+import { ReactNode } from "react";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
@@ -9,22 +10,49 @@ import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
 import { sumGold, Gold, formatGold } from "../api/items";
+import { updateLog, getLog, CharacterLogEntry } from "../api/characters";
 import "./log.scss";
 
 export default function CharacterLog() {
 	const urlParams = useParams();
 	const [visible, setVisible] = useState(false);
+	const [logEntries, setLogEntries] = useState<CharacterLogEntry[]>([]);
+	const [sum, setSum] = useState<Gold>({});
 
-	var products = [
-		{ date: "4/16", gold: { gp: 50 }, exp: 500, desc: "Ran dungeon Foo" },
-		{ date: "4/17", gold: { gp: 7 }, exp: null, desc: "Bought sugar" },
-	];
+	const id = parseInt(urlParams.id || "0");
 
-	var sum: Gold = sumGold(
-		...products.map((e): Gold => {
-			return e.gold;
-		})
-	);
+	useEffect(() => {
+		getLog(id).then((data: CharacterLogEntry[]) => {
+			setLogEntries(data);
+
+			var newSum: Gold = { gp: 0, sp: 0, cp: 0 };
+			data.forEach((e) => {
+				newSum.gp! += (e.gold || 0) * (e.spend ? -1 : 1);
+				newSum.sp! += (e.silver || 0) * (e.spend ? -1 : 1);
+				newSum.cp! += (e.copper || 0) * (e.spend ? -1 : 1);
+			});
+			setSum(newSum);
+		});
+	}, []);
+
+	const formatCharGold = (e: CharacterLogEntry): ReactNode => {
+		return `${e.spend ? "-" : ""}${e.gold || 0} gp ${e.silver || 0} sp ${e.copper || 0} cp`;
+	};
+
+	const formatDate = (e: CharacterLogEntry): ReactNode => {
+		if (!e.createdAt) {
+			return "";
+		}
+		const createdAt = new Date(e.createdAt);
+
+		return `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}-${createdAt.getDate()}`;
+	};
+
+	// var sum: Gold = sumGold(
+	// 	...products.map((e): Gold => {
+	// 		return e.gold;
+	// 	})
+	// );
 
 	return (
 		<>
@@ -55,29 +83,33 @@ export default function CharacterLog() {
 						setVisible(false);
 					}}
 				>
-					<NewEntry id={urlParams.id || "0"} setVisible={setVisible} />
+					<NewEntry id={id} setVisible={setVisible} />
 				</Dialog>
 
 				<DataTable
 					className="character-log"
-					value={products}
+					value={logEntries}
 					tableStyle={{ minWidth: "50rem" }}
 					stripedRows
 					paginator
 					rows={20}
 					rowsPerPageOptions={[20, 50, 100]}
 				>
-					<Column field="date" header="Date" />
-					<Column field="money" header="Money" body={(e) => formatGold(e.gold)} />
-					<Column field="exp" header="Experience" />
-					<Column field="desc" header="Description" />
+					<Column field="date" header="Date" body={formatDate} />
+					<Column field="money" header="Money" body={formatCharGold} />
+					<Column
+						field="exp"
+						header="Experience"
+						body={(e) => (e.experience != 0 ? e.experience : "")}
+					/>
+					<Column field="desc" header="Description" body={(e) => e.description} />
 				</DataTable>
 			</div>
 		</>
 	);
 }
 
-function NewEntry({ id, setVisible }: { id: number | string; setVisible: (visible: boolean) => void }) {
+function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolean) => void }) {
 	const [spend, setSpend] = useState<string>("+");
 	const [posExp, setPosExp] = useState<string>("+");
 	const navigate = useNavigate();
@@ -90,21 +122,18 @@ function NewEntry({ id, setVisible }: { id: number | string; setVisible: (visibl
 			copper: 0,
 			spend: false,
 			experience: 0,
-			description: undefined,
+			description: "",
 		},
 		validate: (data) => {
 			let errors: FormikErrors<FormikValues> = {};
-
 			return errors;
 		},
 		onSubmit: async (data) => {
-			var results = await fetch(`/api/v1/character/${id}/log`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(data),
-			}).then((d) => {
-				return d.json();
-			});
+			if (posExp === "-") {
+				data.experience *= -1;
+			}
+
+			var results = await updateLog(data);
 
 			setVisible(false);
 			formik.resetForm();
@@ -128,12 +157,12 @@ function NewEntry({ id, setVisible }: { id: number | string; setVisible: (visibl
 					<div className="field">
 						<span className="p-float-label">
 							<InputText
-								id="desc"
+								id="description"
 								style={{ width: "100%" }}
 								value={formik.values.description}
 								onChange={formik.handleChange}
 							/>
-							<label htmlFor="desc">Description</label>
+							<label htmlFor="description">Description</label>
 						</span>
 					</div>
 					<div className="money">
