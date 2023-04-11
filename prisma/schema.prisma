@@ -1,0 +1,28 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Character {
+    id Int     @id @default(autoincrement())
+    owner String
+    name String
+    avatar String?
+}
+
+model CharacterLogEntry {
+	id           Int       @id @default(autoincrement())
+	characterID  Int
+	experience   Int?
+	spend        Boolean?  @default(false)
+	platinum     Int?
+	gold         Int?
+	silver       Int?
+	copper       Int?
+	createdAt    DateTime  @default(now())
+	updatedAt    DateTime  @updatedAt
+}

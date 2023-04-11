@@ -6,8 +6,6 @@ import url, { URL, fileURLToPath } from "url";
 import audit from "express-requests-logger";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./error";
-
-import { pool } from "./db";
 import { registerRotues } from "./routes";
 
 const app = express();
@@ -26,7 +24,6 @@ app.use(
     })
 );
 
-pool.ready();
 registerRotues(app);
 
 app.use(errorMiddleware);

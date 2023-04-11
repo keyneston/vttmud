@@ -29,7 +29,7 @@ LABEL fly_launch_runtime="nodejs"
 COPY --from=builder /usr/local/node /usr/local/node
 COPY --from=builder /app/build/ /app
 COPY --from=builder /app/client/build /app/public/
-COPY --from=builder /app/migrations /app/migrations
+COPY --from=builder /app/prisma /app/prisma
 
 # necessary to run node-pg-migrate
 COPY --from=builder /app/node_modules /app/node_modules 
@@ -38,6 +38,6 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV PATH /usr/local/node/bin:$PATH
 
-USER 1001:1001
+RUN npx prisma generate
 
 CMD [ "node",  "./serve.ts" ]

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { Query } from "ts-postgres";
-import { pool } from "./db";
 import { StatusError } from "./error";
-import { Character } from "./types";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const characterCreationEndpoint = async (req: Request, res: Response) => {
     const user = req.signedCookies["discord-user"];
@@ -12,68 +12,44 @@ export const characterCreationEndpoint = async (req: Request, res: Response) => 
         return;
     }
 
-    const query = new Query("INSERT into characters (owner, name) VALUES ($1, $2) RETURNING id", [
-        user.id,
-        req.body.character_name,
-    ]);
-
-    var results = await pool.use(async (c) => {
-        const results = await c.execute(query);
-        return results;
+    var results = await prisma.character.create({
+        data: {
+            owner: user.id,
+            name: req.body.character_name ?? "",
+        },
     });
-    for (const row of results.rows) {
-        res.json({ id: row[0] });
-        return;
-    }
+
+    res.json(results);
+    return;
 };
 
 export const characterEndpoint = async (req: Request, res: Response, next: any) => {
     const user = req.signedCookies["discord-user"];
 
-    const query = new Query("SELECT id, owner, name, avatar FROM characters WHERE id=$1 and owner=$2 limit 1;", [
-        req.params.id,
-        user.id,
-    ]);
-    var results = await pool.use(async (c) => {
-        const results = await c.execute(query);
-        return results;
+    var result = await prisma.character.findUnique({
+        where: {
+            id: parseInt(req.params.id),
+        },
     });
-    var data: Character = { id: 0, owner: "", name: "" };
 
-    if (results.rows.length == 0) {
+    if (result == null) {
         return next(new StatusError("Not Found", 404));
     }
-
-    for (const row of results.rows) {
-        data.id = row[0] as number;
-        data.owner = row[1] as string;
-        data.name = row[2] as string;
-        data.avatar = row[3] as string;
-        break;
+    if (result.owner != user.id) {
+        return next(new StatusError("unauthorized", 403));
     }
 
-    res.json(data);
+    res.json(result);
 };
 
 export const listCharacters = async (req: Request, res: Response) => {
     const user = req.signedCookies["discord-user"];
 
-    const query = new Query("SELECT id, owner, name, avatar FROM characters WHERE owner=$1 limit 50;", [user.id]);
-
-    var data: Character[] = [];
-    var results = await pool.use(async (c) => {
-        const results = await c.execute(query);
-        return results;
+    var result = await prisma.character.findMany({
+        where: {
+            owner: user.id,
+        },
     });
 
-    for (const row of results.rows) {
-        data.push({
-            id: row[0] as number,
-            owner: row[1] as string,
-            name: row[2] as string,
-            avatar: row[3] as string,
-        });
-    }
-
-    res.json(data);
+    res.json(result);
 };

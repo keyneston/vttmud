@@ -7,13 +7,12 @@ run:
 run-frontend:
 	cd client && npm run start
 	
-
 run-backend:
 	npm run watch
 
 clean:
 	rm -rf client/build/*
-	rm -rf dist/*
+	rm -rf build/*
 
 build: clean build-client build-server
 
@@ -39,3 +38,5 @@ docker:
 docker-shell:
 	docker run -it keyneston/vttmud /bin/bash
 
+generate:
+	npm run generate
