@@ -9,7 +9,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
-import { sumGold, Gold, formatGold } from "../api/items";
+import { Gold, formatGold } from "../api/items";
 import { updateLog, getLog, CharacterLogEntry } from "../api/characters";
 import "./log.scss";
 
@@ -33,7 +33,11 @@ export default function CharacterLog() {
 			});
 			setSum(newSum);
 		});
-	}, []);
+	}, [id]);
+
+	const appendEntry = (logEntry: CharacterLogEntry) => {
+		setLogEntries([logEntry, ...logEntries]);
+	};
 
 	const formatCharGold = (e: CharacterLogEntry): ReactNode => {
 		if (!e.gold && !e.silver && !e.copper) {
@@ -86,7 +90,7 @@ export default function CharacterLog() {
 						setVisible(false);
 					}}
 				>
-					<NewEntry id={id} setVisible={setVisible} />
+					<NewEntry id={id} setVisible={setVisible} appendEntry={appendEntry} />
 				</Dialog>
 
 				<DataTable
@@ -103,7 +107,7 @@ export default function CharacterLog() {
 					<Column
 						field="exp"
 						header="Experience"
-						body={(e) => (e.experience != 0 ? e.experience : "")}
+						body={(e) => (e.experience !== 0 ? e.experience : "")}
 					/>
 					<Column field="desc" header="Description" body={(e) => e.description} />
 				</DataTable>
@@ -112,7 +116,15 @@ export default function CharacterLog() {
 	);
 }
 
-function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolean) => void }) {
+function NewEntry({
+	id,
+	setVisible,
+	appendEntry,
+}: {
+	id: number;
+	setVisible: (visible: boolean) => void;
+	appendEntry: (x: CharacterLogEntry) => void;
+}) {
 	const [spend, setSpend] = useState<string>("+");
 	const [posExp, setPosExp] = useState<string>("+");
 	const navigate = useNavigate();
@@ -140,6 +152,7 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 			}
 
 			var results = await updateLog(data);
+			appendEntry(results);
 
 			setVisible(false);
 			formik.resetForm();
