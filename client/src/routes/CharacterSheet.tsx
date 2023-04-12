@@ -42,7 +42,16 @@ function DisplayCharacter({ character }: { character: Character }) {
 				<div className="cs-avatar-holder">
 					<div className="cs-avatar">{(character.avatar && avatar) || imageMissing}</div>
 				</div>
-				<h1>{character.name}</h1>
+				<div className="cs-headline-info">
+					<h1>{character.name}</h1>
+					<h3>
+						Level {Math.floor(character.experience / 1000)} Experience{" "}
+						{character.experience % 1000}
+					</h3>
+					<h3>
+						{character.gold} gp {character.silver} sp {character.copper} cp
+					</h3>
+				</div>
 			</div>
 		</>
 	);

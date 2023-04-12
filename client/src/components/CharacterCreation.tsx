@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
+import { GoldEntry } from "./GoldEntry";
+import { Gold } from "../api/items";
 
 import "./CharacterCreation.scss";
 
@@ -14,10 +17,15 @@ export default function CharacterCreation({
 	setVisible: (x: boolean) => void;
 }) {
 	const navigate = useNavigate();
+	const [money, setMoney] = useState<Gold>({ spend: false });
 
 	const formik = useFormik({
 		initialValues: {
 			character_name: "",
+			spend: false,
+			gold: 0,
+			silver: 0,
+			copper: 0,
 		},
 		validate: (data) => {
 			let errors: FormikErrors<FormikValues> = {};
@@ -83,7 +91,19 @@ export default function CharacterCreation({
 						<div className="cc-center">{getFormErrorMessage("character_name")}</div>
 						<div className="cc-right"></div>
 
-						<div className="cc-left-bottom"></div>
+						<div className="cc-left-bottom">
+							<h2>Initial Money</h2>
+							<GoldEntry
+								value={money}
+								setValue={(g: Gold) => {
+									formik.values.spend = g.spend;
+									formik.values.gold = g.gold || 0;
+									formik.values.silver = g.silver || 0;
+									formik.values.copper = g.copper || 0;
+									setMoney(g);
+								}}
+							/>
+						</div>
 
 						<div className="cc-right-bottom">
 							<Button label="Submit" severity="success" type="submit" />

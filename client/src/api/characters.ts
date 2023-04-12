@@ -3,6 +3,10 @@ export interface Character {
     owner: string;
     name: string;
     avatar?: string;
+    gold: number;
+    silver: number;
+    copper: number;
+    experience: number;
 }
 
 export interface CharacterLogEntry {

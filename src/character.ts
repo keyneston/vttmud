@@ -25,10 +25,11 @@ export const characterCreationEndpoint = async (req: Request, res: Response) => 
 
 export const characterEndpoint = async (req: Request, res: Response, next: any) => {
     const user = req.signedCookies["discord-user"];
+    const id = parseInt(req.params.id);
 
     var result = await prisma.character.findUnique({
         where: {
-            id: parseInt(req.params.id),
+            id: id,
         },
     });
 
@@ -39,7 +40,34 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
         return next(new StatusError("unauthorized", 403));
     }
 
-    res.json(result);
+    var sums = await prisma.characterLogEntry.groupBy({
+        by: ["spend"],
+        _sum: {
+            gold: true,
+            silver: true,
+            copper: true,
+            platinum: true,
+            experience: true,
+        },
+        where: {
+            characterID: id,
+        },
+    });
+
+    var ret: { [key: string]: any } = { ...result };
+    var pos: any;
+    var neg: any;
+
+    sums.forEach((x) => (x.spend ? (neg = x) : (pos = x)));
+
+    ret.gold = pos._sum.gold - neg._sum.gold;
+    ret.platinum = pos._sum.platinum - neg._sum.platinum;
+    ret.silver = pos._sum.silver - neg._sum.silver;
+    ret.copper = pos._sum.copper - neg._sum.silver;
+    // experience is signed so simply add it all together.
+    ret.experience = pos._sum.experience + neg._sum.experience;
+
+    res.json(ret);
 };
 
 export const listCharacters = async (req: Request, res: Response) => {

@@ -184,6 +184,7 @@ function NewEntry({
 							<label htmlFor="description">Description</label>
 						</span>
 					</div>
+					<h2>Initial Money</h2>
 					<GoldEntry
 						value={money}
 						setValue={(g: Gold) => {
