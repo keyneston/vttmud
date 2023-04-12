@@ -26,6 +26,8 @@ export default function CharacterCreation({
 			gold: 0,
 			silver: 0,
 			copper: 0,
+			level: 1,
+			experience: 0,
 		},
 		validate: (data) => {
 			let errors: FormikErrors<FormikValues> = {};

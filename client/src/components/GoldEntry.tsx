@@ -21,56 +21,45 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 					onChange={(e: any) => {
 						setValue({ ...value, spend: e.value === "-" });
 					}}
-					style={{ height: "2rem" }}
+					style={{ height: "3rem" }}
 				/>
-				<span className="p-float-label">
+				<div className="ge-label-set">
+					<label htmlFor="gold">Gold</label>
 					<InputNumber
 						className="money-input"
 						id="gold"
 						value={value.gold}
-						buttonLayout="vertical"
-						showButtons
-						decrementButtonClassName="p-button-secondary"
-						incrementButtonClassName="p-button-secondary"
 						style={{ width: "5rem" }}
 						onChange={(event: any) => {
 							setValue({ ...value, gold: event.value });
 						}}
 					/>
-					<label htmlFor="gold">Gold</label>
-				</span>
-				<span className="p-float-label">
+				</div>
+				<div className="ge-label-set">
+					<label htmlFor="silver">Silver</label>
 					<InputNumber
 						className="money-input"
 						id="silver"
 						value={value.silver}
-						buttonLayout="vertical"
-						showButtons
-						decrementButtonClassName="p-button-secondary"
-						incrementButtonClassName="p-button-secondary"
 						style={{ width: "5rem" }}
 						onChange={(event: any) => {
 							setValue({ ...value, silver: event.value });
 						}}
 					/>
-					<label htmlFor="silver">Silver</label>
-				</span>
-				<span className="p-float-label">
+				</div>
+				<div className="ge-label-set">
+					<label htmlFor="copper">Copper</label>
 					<InputNumber
 						className="money-input"
 						id="copper"
 						value={value.copper}
 						buttonLayout="vertical"
-						showButtons
-						decrementButtonClassName="p-button-secondary"
-						incrementButtonClassName="p-button-secondary"
 						style={{ width: "5rem" }}
 						onChange={(event: any) => {
 							setValue({ ...value, copper: event.value });
 						}}
 					/>
-					<label htmlFor="copper">Copper</label>
-				</span>
+				</div>
 			</div>
 		</>
 	);
