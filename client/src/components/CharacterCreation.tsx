@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
 import { useNavigate } from "react-router-dom";
 import { GoldEntry } from "./GoldEntry";
@@ -40,8 +41,17 @@ export default function CharacterCreation({
 		},
 		onSubmit: async (data) => {
 			var gold = (data.spend ? -1 : 1) * (data.gold + data.silver / 10 + data.copper / 100);
+			var exp = (data.level - 1) * 1000 + data.experience;
 
-			let jData = JSON.stringify({ ...data, gold: gold, spend: null, silver: null, copper: null });
+			let jData = JSON.stringify({
+				...data,
+				gold: gold,
+				spend: null,
+				silver: null,
+				copper: null,
+				level: null,
+				experience: exp,
+			});
 			console.log(`submitting: ${jData}`);
 
 			const requestOptions = {
@@ -75,7 +85,7 @@ export default function CharacterCreation({
 			<Dialog
 				header="Character Creator"
 				visible={visible}
-				style={{ width: "50vw" }}
+				style={{ width: "60vw" }}
 				onHide={() => {
 					setVisible(false);
 				}}
@@ -107,6 +117,34 @@ export default function CharacterCreation({
 									setMoney(g);
 								}}
 							/>
+						</div>
+						<div className="cc-middle-middle">
+							<span className="p-float-label">
+								<label htmlFor="level">Level</label>
+								<InputNumber
+									id="level"
+									showButtons
+									min={1}
+									max={20}
+									value={formik.values.level}
+									onChange={(e) => {
+										formik.values.level = e.value || 1;
+									}}
+								/>
+							</span>
+							<span className="p-float-label">
+								<label htmlFor="experience">Experience</label>
+								<InputNumber
+									id="experience"
+									showButtons
+									min={0}
+									max={1000}
+									value={formik.values.experience}
+									onChange={(e) => {
+										formik.values.experience = e.value || 1;
+									}}
+								/>
+							</span>
 						</div>
 
 						<div className="cc-right-bottom">

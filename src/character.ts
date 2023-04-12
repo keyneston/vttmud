@@ -23,7 +23,7 @@ export const characterCreationEndpoint = async (req: Request, res: Response) => 
             characterID: results.id,
             gold: req.body.gold,
             description: "Character Creation",
-            experience: 0,
+            experience: req.body.experience,
         },
     });
 
