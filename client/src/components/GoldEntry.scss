@@ -1,11 +1,12 @@
 .money {
 	width: 100%;
-	display: grid;
+	display: flex;
 	grid-template-columns: 25% 25% 25% 25%;
 	padding-top: 20px;
 	padding-bottom: 20px;
+	justify-content: space-evenly;
+	align-content: center;
 }
 
 .money-input > input {
-	width: 5rem;
 }

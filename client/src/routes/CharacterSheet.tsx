@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Character, fetchCharacter } from "../api/characters";
+import { money2string } from "../api/items";
 
 import { Image } from "primereact/image";
 
@@ -48,9 +49,7 @@ function DisplayCharacter({ character }: { character: Character }) {
 						Level {Math.floor(character.experience / 1000)} Experience{" "}
 						{character.experience % 1000}
 					</h3>
-					<h3>
-						{character.gold} gp {character.silver} sp {character.copper} cp
-					</h3>
+					<h3>{money2string(character.gold)}</h3>
 				</div>
 			</div>
 		</>

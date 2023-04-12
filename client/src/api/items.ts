@@ -28,11 +28,12 @@ export function sumGold(...inputs: Gold[]): Gold {
     return total;
 }
 
-export function formatGold(g: Gold): string {
-    if (g === undefined) {
-        return "";
-    }
-    return `${10 * (g.platinum || 0) + (g.gold || 0)} gold ${g.silver || 0} silver ${g.copper || 0} copper`;
+export function money2string(i: number): string {
+    var gold = Math.floor(i);
+    var silver = Math.floor((i * 10) % 10);
+    var copper = Math.floor((i * 100) % 10);
+
+    return `${gold} gp ${silver} sp ${copper} cp`;
 }
 
 export function simplifyGold(input: Gold): number {

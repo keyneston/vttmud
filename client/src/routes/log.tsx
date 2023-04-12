@@ -9,7 +9,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
-import { Gold, formatGold } from "../api/items";
+import { money2string, Gold } from "../api/items";
 import { updateLog, getLog, CharacterLogEntry } from "../api/characters";
 import { GoldEntry } from "../components/GoldEntry";
 import "./log.scss";
@@ -18,7 +18,7 @@ export default function CharacterLog() {
 	const urlParams = useParams();
 	const [visible, setVisible] = useState(false);
 	const [logEntries, setLogEntries] = useState<CharacterLogEntry[]>([]);
-	const [sum, setSum] = useState<Gold>({ spend: false });
+	const [sum, setSum] = useState<number>(0);
 
 	const id = parseInt(urlParams.id || "0");
 
@@ -29,24 +29,15 @@ export default function CharacterLog() {
 	}, [id]);
 
 	useEffect(() => {
-		var newSum: Gold = { spend: false, gold: 0, silver: 0, copper: 0 };
+		var newSum = 0;
 		logEntries.forEach((e) => {
-			newSum.gold! += (e.gold || 0) * (e.spend ? -1 : 1);
-			newSum.silver! += (e.silver || 0) * (e.spend ? -1 : 1);
-			newSum.copper! += (e.copper || 0) * (e.spend ? -1 : 1);
+			newSum += e.gold || 0 + (e.silver || 0) / 10 + (e.copper || 0) / 100;
 		});
 		setSum(newSum);
 	}, [id, logEntries]);
 
 	const appendEntry = (logEntry: CharacterLogEntry) => {
 		setLogEntries([logEntry, ...logEntries]);
-	};
-
-	const formatCharGold = (e: CharacterLogEntry): ReactNode => {
-		if (!e.gold && !e.silver && !e.copper) {
-			return "";
-		}
-		return `${e.spend ? "-" : ""}${e.gold || 0} gp ${e.silver || 0} sp ${e.copper || 0} cp`;
 	};
 
 	const formatDate = (e: CharacterLogEntry): ReactNode => {
@@ -58,18 +49,12 @@ export default function CharacterLog() {
 		return `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}-${createdAt.getDate()}`;
 	};
 
-	// var sum: Gold = sumGold(
-	// 	...products.map((e): Gold => {
-	// 		return e.gold;
-	// 	})
-	// );
-
 	return (
 		<>
 			<div className="log-header">
 				<div className="log-header-left">
 					<p>
-						<strong>Sum Gold:</strong> {formatGold(sum)}
+						<strong>Sum Gold:</strong> {money2string(sum)}
 					</p>
 				</div>
 				<div className="log-header-right">
@@ -106,7 +91,7 @@ export default function CharacterLog() {
 					rowsPerPageOptions={[20, 50, 100]}
 				>
 					<Column field="date" header="Date" body={formatDate} />
-					<Column field="money" header="Money" body={formatCharGold} />
+					<Column field="money" header="Money" body={(e) => money2string(e.gold)} />
 					<Column
 						field="exp"
 						header="Experience"
@@ -184,7 +169,6 @@ function NewEntry({
 							<label htmlFor="description">Description</label>
 						</span>
 					</div>
-					<h2>Initial Money</h2>
 					<GoldEntry
 						value={money}
 						setValue={(g: Gold) => {

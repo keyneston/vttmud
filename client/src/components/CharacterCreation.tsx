@@ -37,7 +37,9 @@ export default function CharacterCreation({
 			return errors;
 		},
 		onSubmit: async (data) => {
-			let jData = JSON.stringify(data);
+			var gold = (data.spend ? -1 : 1) * (data.gold + data.silver / 10 + data.copper / 100);
+
+			let jData = JSON.stringify({ ...data, gold: gold, spend: null, silver: null, copper: null });
 			console.log(`submitting: ${jData}`);
 
 			const requestOptions = {

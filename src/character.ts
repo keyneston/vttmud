@@ -18,6 +18,14 @@ export const characterCreationEndpoint = async (req: Request, res: Response) => 
             name: req.body.character_name ?? "",
         },
     });
+    await prisma.characterLogEntry.create({
+        data: {
+            characterID: results.id,
+            gold: req.body.gold,
+            description: "Character Creation",
+            experience: 0,
+        },
+    });
 
     res.json(results);
     return;

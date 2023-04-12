@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Gold } from "../api/items";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
@@ -22,12 +21,18 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 					onChange={(e: any) => {
 						setValue({ ...value, spend: e.value === "-" });
 					}}
+					style={{ height: "2rem" }}
 				/>
 				<span className="p-float-label">
 					<InputNumber
 						className="money-input"
 						id="gold"
 						value={value.gold}
+						buttonLayout="vertical"
+						showButtons
+						decrementButtonClassName="p-button-secondary"
+						incrementButtonClassName="p-button-secondary"
+						style={{ width: "5rem" }}
 						onChange={(event: any) => {
 							setValue({ ...value, gold: event.value });
 						}}
@@ -39,6 +44,11 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 						className="money-input"
 						id="silver"
 						value={value.silver}
+						buttonLayout="vertical"
+						showButtons
+						decrementButtonClassName="p-button-secondary"
+						incrementButtonClassName="p-button-secondary"
+						style={{ width: "5rem" }}
 						onChange={(event: any) => {
 							setValue({ ...value, silver: event.value });
 						}}
@@ -50,6 +60,11 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 						className="money-input"
 						id="copper"
 						value={value.copper}
+						buttonLayout="vertical"
+						showButtons
+						decrementButtonClassName="p-button-secondary"
+						incrementButtonClassName="p-button-secondary"
+						style={{ width: "5rem" }}
 						onChange={(event: any) => {
 							setValue({ ...value, copper: event.value });
 						}}
