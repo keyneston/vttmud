@@ -40,32 +40,38 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
         return next(new StatusError("unauthorized", 403));
     }
 
-    var sums = await prisma.characterLogEntry.groupBy({
-        by: ["spend"],
-        _sum: {
-            gold: true,
-            silver: true,
-            copper: true,
-            platinum: true,
-            experience: true,
-        },
-        where: {
-            characterID: id,
-        },
-    });
-
     var ret: { [key: string]: any } = { ...result };
-    var pos: any;
-    var neg: any;
+    try {
+        var sums = await prisma.characterLogEntry.groupBy({
+            by: ["spend"],
+            _sum: {
+                gold: true,
+                silver: true,
+                copper: true,
+                platinum: true,
+                experience: true,
+            },
+            where: {
+                characterID: id,
+            },
+        });
 
-    sums.forEach((x) => (x.spend ? (neg = x) : (pos = x)));
+        var pos: any;
+        var neg: any;
 
-    ret.gold = pos._sum.gold - neg._sum.gold;
-    ret.platinum = pos._sum.platinum - neg._sum.platinum;
-    ret.silver = pos._sum.silver - neg._sum.silver;
-    ret.copper = pos._sum.copper - neg._sum.silver;
-    // experience is signed so simply add it all together.
-    ret.experience = pos._sum.experience + neg._sum.experience;
+        sums.forEach((x: any) => (x?.spend || false ? (neg = x) : (pos = x)));
+
+        ret.gold = (pos._sum.gold || 0) - (neg._sum.gold || 0);
+        ret.platinum = (pos._sum.platinum || 0) - (neg._sum.platinum || 0);
+        ret.silver = (pos._sum.silver || 0) - (neg._sum.silver || 0);
+        ret.copper = (pos._sum.copper || 0) - (neg._sum.silver || 0);
+        // experience is signed so simply add it all together.
+        ret.experience = (pos._sum.experience || 0) + (neg._sum.experience || 0);
+    } catch (c) {
+        // If no rows exist we will get an error. Do nothing.
+        ret.experience = 0;
+        ret.gold = 0;
+    }
 
     res.json(ret);
 };
