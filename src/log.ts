@@ -5,19 +5,12 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const appendLogEndpoint = async (req: Request, res: Response) => {
-    console.log("url: ", req.url);
-    console.log("params: ", req.params);
-    console.log("body: ", req.body);
-
     const user = req.signedCookies["discord-user"];
 
     var data = await prisma.characterLogEntry.create({
         data: {
             characterID: parseInt(req.params.id),
-            spend: req.body.spend,
-            gold: req.body.gold,
-            silver: req.body.silver,
-            copper: req.body.copper,
+            gold: req.body.gold + req.body.silver / 10 + req.body.copper / 100,
             experience: req.body.experience,
             description: req.body.description,
         },

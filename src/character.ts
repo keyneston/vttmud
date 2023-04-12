@@ -42,13 +42,9 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
 
     var ret: { [key: string]: any } = { ...result };
     try {
-        var sums = await prisma.characterLogEntry.groupBy({
-            by: ["spend"],
+        var sums = await prisma.characterLogEntry.aggregate({
             _sum: {
                 gold: true,
-                silver: true,
-                copper: true,
-                platinum: true,
                 experience: true,
             },
             where: {
@@ -56,17 +52,8 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
             },
         });
 
-        var pos: any;
-        var neg: any;
-
-        sums.forEach((x: any) => (x?.spend || false ? (neg = x) : (pos = x)));
-
-        ret.gold = (pos._sum.gold || 0) - (neg._sum.gold || 0);
-        ret.platinum = (pos._sum.platinum || 0) - (neg._sum.platinum || 0);
-        ret.silver = (pos._sum.silver || 0) - (neg._sum.silver || 0);
-        ret.copper = (pos._sum.copper || 0) - (neg._sum.silver || 0);
-        // experience is signed so simply add it all together.
-        ret.experience = (pos._sum.experience || 0) + (neg._sum.experience || 0);
+        ret.gold = sums?._sum?.gold || 0;
+        ret.experience = sums?._sum?.experience || 0;
     } catch (c) {
         // If no rows exist we will get an error. Do nothing.
         ret.experience = 0;
