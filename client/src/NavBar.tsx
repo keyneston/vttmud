@@ -1,14 +1,17 @@
 import "./NavBar.css";
 import React, { useState, useRef } from "react";
-import { Avatar } from "primereact/avatar";
-import { Menu } from "primereact/menu";
 import { Link, useNavigate } from "react-router-dom";
 import { loggedIn, avatarImage } from "./cookies/discord";
 import CharacterCreation from "./components/CharacterCreation";
 import { listCharacters } from "./api/characters";
 
+import { Avatar } from "primereact/avatar";
+import { Menu } from "primereact/menu";
+import { Toast } from "primereact/toast";
+
 function NavBar() {
 	const [ccVisible, setCCVisible] = useState(false);
+	const toast = useRef<Toast>(null);
 	const navigate = useNavigate();
 	const menu = useRef<Menu>(null);
 	const items = loggedIn() ? loggedInMenu(navigate, setCCVisible) : loggedOutMenu(navigate);
@@ -36,6 +39,7 @@ function NavBar() {
 						/>
 					</button>
 					<Menu model={items} popup ref={menu} />
+					<Toast ref={toast} />
 				</div>
 			</div>
 			<div className="navbar-divider" />

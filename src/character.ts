@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { StatusError } from "./error";
 import { PrismaClient } from "@prisma/client";
+import { getCharacter } from "./model";
 
 const prisma = new PrismaClient();
 
@@ -35,11 +36,7 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
     const user = req.signedCookies["discord-user"];
     const id = parseInt(req.params.id);
 
-    var result = await prisma.character.findUnique({
-        where: {
-            id: id,
-        },
-    });
+    var result = await getCharacter(id);
 
     if (result == null) {
         return next(new StatusError("Not Found", 404));

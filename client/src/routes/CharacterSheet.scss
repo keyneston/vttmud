@@ -6,6 +6,24 @@
 .cs-avatar {
 }
 
+.cs-root {
+	display: flex;
+	align-content: stretch;
+}
+
+.cs-edit-button {
+	justify-content: flex-end;
+	margin: 1rem;
+}
+
+.justify-start {
+	margin-right: auto;
+}
+
+.justify-end {
+	margin-left: auto;
+}
+
 .cs-avatar-holder {
 	margin: 1rem;
 	border: 0.5rem solid;

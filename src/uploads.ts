@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import { S3 } from "@aws-sdk/client-s3";
+import { getCharacter, setAvatar } from "./model";
+import { StatusError } from "./error";
+import path from "path";
 
 const s3Bucket = process.env.S3_BUCKET || "";
 const s3endpoint = process.env.S3_ENDPOINT || "ams3.digitaloceanspaces.com";
@@ -27,22 +30,58 @@ const upload = multer({
         bucket: s3Bucket,
         acl: "public-read",
         key: function (req: Request, file: any, cb: any) {
-            cb(null, file.originalname);
+            cb(null, file.fieldname + "/" + file.fieldname + "-" + Date.now() + path.extname(file.originalname));
         },
     }),
 });
 
-export function uploadArt(req: Request, resp: Response, next: any) {
-    // TODO: authenticate user
-    // TODO: find way to tie uploaded image to character creation
-    upload.single("character")(req, resp, function (error: any) {
+interface IFile {
+    fieldname?: string;
+    originalname?: string;
+    encoding?: string;
+    mimetype?: string;
+    size?: number;
+    bucket?: string;
+    key?: string;
+    acl?: string;
+    contentType?: string;
+    contentDisposition?: string;
+    contentEncoding?: string;
+    storageClass?: string;
+    serverSideEncryption?: string;
+    location?: string;
+    etag?: string;
+}
+
+export async function uploadAvatar(req: Request, resp: Response, next: any) {
+    const user = req.signedCookies["discord-user"];
+    const id = parseInt(req.params.id);
+
+    if (!id) {
+        return next(new StatusError("Invalid id", 400));
+    }
+
+    const character = await getCharacter(id);
+
+    if (!character) {
+        return next(new StatusError("Invalid id", 400));
+    }
+    if (character.owner != user.id) {
+        return next(new StatusError("unauthorized", 403));
+    }
+
+    upload.single("character")(req, resp, async function (error: any) {
         if (error) {
-            console.log(error);
             resp.status(500);
             return resp.json({ error: error });
         }
-        console.log("File uploaded successfully.");
-        resp.redirect("/success");
+        if (!req.file) {
+            return next(new StatusError("Internal Error", 500));
+        }
+        var file: IFile = req.file as IFile;
+
+        var results = await setAvatar(id, file.key || "");
+        resp.json(results);
     });
 }
 
