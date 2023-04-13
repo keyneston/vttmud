@@ -11,9 +11,17 @@
 	align-content: stretch;
 }
 
-.cs-edit-button {
-	justify-content: flex-end;
+.cs-button-collection {
 	margin: 1rem;
+	display: flex;
+	flex-direction: column;
+	max-width: 15rem;
+	align-items: stretch;
+	gap: 0.5rem;
+}
+
+.justify-stretch {
+	align-item: stretch;
 }
 
 .justify-start {

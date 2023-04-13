@@ -41,7 +41,7 @@ export default function CharacterCreation({
 		},
 		onSubmit: async (data) => {
 			var gold = (data.spend ? -1 : 1) * (data.gold + data.silver / 10 + data.copper / 100);
-			var exp = (data.level - 1) * 1000 + data.experience;
+			var exp = data.level * 1000 + data.experience;
 
 			let jData = JSON.stringify({
 				...data,

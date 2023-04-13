@@ -4,6 +4,7 @@ import { Character, fetchCharacter } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
 
+import { Card } from "primereact/card";
 import { Image } from "primereact/image";
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
@@ -27,19 +28,36 @@ export default function CharacterSheet() {
 		fetchData();
 	}, [urlParams]);
 
+	const chooseOptions = {
+		icon: "pi pi-fw pi-upload",
+		className: "p-button-info",
+	};
+
 	return (
-		<div className="cs-root">
+		<div className="cs-root justify-end">
 			{loading && "Loading"} {data && <DisplayCharacter character={data} edit={edit} />}
-			<Button
-				className="cs-edit-button justify-end"
-				label={edit ? "Save" : "Edit"}
-				severity={edit ? "success" : "warning"}
-				icon="pi pi-user-edit"
-				style={{ height: "3rem", width: "8rem" }}
-				onClick={(e) => {
-					setEdit(!edit);
-				}}
-			/>
+			<div className="cs-button-collection justify-end">
+				<Button
+					className="cs-edit-button"
+					label={edit ? "Save" : "Edit"}
+					severity={edit ? "success" : "warning"}
+					icon="pi pi-user-edit"
+					style={{ height: "3rem" }}
+					onClick={(e) => {
+						setEdit(!edit);
+					}}
+				/>
+				<FileUpload
+					auto
+					mode="basic"
+					name="json"
+					url={`/api/v1/upload/${data?.id}/json`}
+					accept="application/json"
+					maxFileSize={MaximumImageSize}
+					chooseLabel="Upload JSON"
+					chooseOptions={chooseOptions}
+				/>
+			</div>
 		</div>
 	);
 }

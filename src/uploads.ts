@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import { S3 } from "@aws-sdk/client-s3";
-import { getCharacter, setAvatar } from "./model";
+import { getCharacter, setAvatar, setJSON } from "./model";
 import { StatusError } from "./error";
 import path from "path";
 
@@ -35,6 +35,11 @@ const upload = multer({
     }),
 });
 
+const memoryStorage = multer.memoryStorage(),
+    uploadMemory = multer({
+        storage: memoryStorage,
+    });
+
 interface IFile {
     fieldname?: string;
     originalname?: string;
@@ -51,6 +56,7 @@ interface IFile {
     serverSideEncryption?: string;
     location?: string;
     etag?: string;
+    buffer?: Buffer;
 }
 
 export async function uploadAvatar(req: Request, resp: Response, next: any) {
@@ -81,6 +87,41 @@ export async function uploadAvatar(req: Request, resp: Response, next: any) {
         var file: IFile = req.file as IFile;
 
         var results = await setAvatar(id, file.key || "");
+        resp.json(results);
+    });
+}
+
+export async function uploadJSON(req: Request, resp: Response, next: any) {
+    const user = req.signedCookies["discord-user"];
+    const id = parseInt(req.params.id);
+
+    if (!id) {
+        return next(new StatusError("Invalid id", 400));
+    }
+
+    const character = await getCharacter(id);
+
+    if (!character) {
+        return next(new StatusError("Invalid id", 400));
+    }
+    if (character.owner != user.id) {
+        return next(new StatusError("unauthorized", 403));
+    }
+
+    uploadMemory.single("json")(req, resp, async function (error: any) {
+        if (error) {
+            next(new StatusError("Error", 500, error));
+        }
+        if (!req.file) {
+            return next(new StatusError("Internal Error", 500, "req.file doesn't exist"));
+        }
+        var file: IFile = req.file as IFile;
+
+        if (!file.buffer) {
+            return next(new StatusError("Bad Request", 400));
+        }
+
+        var results = await setJSON(id, JSON.parse(file.buffer!.toString()));
         resp.json(results);
     });
 }

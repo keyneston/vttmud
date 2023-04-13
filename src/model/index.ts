@@ -20,3 +20,14 @@ export async function setAvatar(id: number, path: string): Promise<Prisma.Charac
         },
     });
 }
+
+export async function setJSON(id: number, blob: any): Promise<Prisma.Character> {
+    return await prisma.character.update({
+        data: {
+            blob: blob,
+        },
+        where: {
+            id: id,
+        },
+    });
+}

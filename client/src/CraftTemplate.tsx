@@ -209,7 +209,6 @@ function ItemInformation({ item, level, itemCount }: ItemInformationProps) {
 	return (
 		<div className="box">
 			<div className="template-label">
-				{" "}
 				<label>Item Cost</label>
 			</div>
 			<div className="template-value">

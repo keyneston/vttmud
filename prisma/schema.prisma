@@ -12,6 +12,7 @@ model Character {
     owner String
     name String
     avatar String?
+	blob Json?
 }
 
 model CharacterLogEntry {
