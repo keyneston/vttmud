@@ -1,12 +1,21 @@
-.money {
+.ge-box {
 	width: 100%;
 	display: flex;
-	grid-template-columns: 25% 25% 25% 25%;
-	padding-top: 20px;
-	padding-bottom: 20px;
 	gap: 10px;
 }
 
-.money-input > input {
-	width: 5rem;
+.ge-input > input {
+	max-width: 8rem;
+	height: 3rem;
+	align-content: center;
+}
+
+.ge-set {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+}
+
+.ge-label {
+	text-align: center;
 }

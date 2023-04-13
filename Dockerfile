@@ -40,4 +40,4 @@ ENV PATH /usr/local/node/bin:$PATH
 
 RUN npx prisma generate
 
-CMD [ "node",  "./serve.ts" ]
+CMD [ "node", "./serve.ts" ]

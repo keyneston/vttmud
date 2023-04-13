@@ -7,11 +7,10 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { InputNumber } from "primereact/inputnumber";
-import { SelectButton } from "primereact/selectbutton";
 import { money2string, Gold } from "../api/items";
 import { updateLog, getLog, CharacterLogEntry } from "../api/characters";
 import { GoldEntry } from "../components/GoldEntry";
+import { ExperienceEntry } from "../components/ExperienceEntry";
 import "./log.scss";
 
 export default function CharacterLog() {
@@ -72,7 +71,7 @@ export default function CharacterLog() {
 				<Dialog
 					header="Log New Income/Expense"
 					visible={visible}
-					style={{ width: "70vw" }}
+					style={{ width: "45vw" }}
 					breakpoints={{ "960px": "100vw", "641px": "120vw" }}
 					onHide={() => {
 						setVisible(false);
@@ -114,7 +113,6 @@ function NewEntry({
 	appendEntry: (x: CharacterLogEntry) => void;
 }) {
 	const [money, setMoney] = useState<Gold>({ spend: false });
-	const [posExp, setPosExp] = useState<string>("+");
 	const navigate = useNavigate();
 
 	const formik = useFormik({
@@ -132,10 +130,6 @@ function NewEntry({
 			return errors;
 		},
 		onSubmit: async (data) => {
-			if (posExp === "-") {
-				data.experience *= -1;
-			}
-
 			var results = await updateLog(data);
 			appendEntry(results);
 
@@ -169,37 +163,27 @@ function NewEntry({
 							<label htmlFor="description">Description</label>
 						</span>
 					</div>
-					<GoldEntry
-						value={money}
-						setValue={(g: Gold) => {
-							formik.values.spend = g.spend;
-							formik.values.gold = g.gold || 0;
-							formik.values.silver = g.silver || 0;
-							formik.values.copper = g.copper || 0;
-							setMoney(g);
-						}}
-					/>
-
-					<div className="exp">
-						<SelectButton
-							options={["-", "+"]}
-							unselectable={false}
-							value={posExp}
-							onChange={(e) => setPosExp(e.value)}
+					<div className="le-gold-entry">
+						<GoldEntry
+							value={money}
+							setValue={(g: Gold) => {
+								formik.values.spend = g.spend;
+								formik.values.gold = g.gold || 0;
+								formik.values.silver = g.silver || 0;
+								formik.values.copper = g.copper || 0;
+								setMoney(g);
+							}}
 						/>
-						<span className="p-float-label">
-							<InputNumber
-								className="exp-input"
-								id="exp"
-								min={0}
-								value={formik.values.experience}
-								onChange={(event) => {
-									formik.values["experience"] = event.value || 0;
-								}}
-							/>
-							<label htmlFor="exp">Experience</label>
-						</span>
 					</div>
+					<div className="le-experience-entry">
+						<ExperienceEntry
+							value={formik.values.experience}
+							onChange={(value) => {
+								formik.values["experience"] = value || 0;
+							}}
+						/>
+					</div>
+
 					<Button label="Record" type="submit" severity="success" />
 				</form>
 			</div>

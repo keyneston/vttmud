@@ -19,7 +19,7 @@ build: clean build-client build-server
 build-client:
 	cd client && npm run build
 
-build-server:
+build-server: generate
 	npm run build
 
 foundry_dir:

@@ -105,7 +105,7 @@ export default function CharacterCreation({
 						<div className="cc-center">{getFormErrorMessage("character_name")}</div>
 						<div className="cc-right"></div>
 
-						<div className="cc-left-bottom">
+						<div className="cc-left-center">
 							<h2>Initial Money</h2>
 							<GoldEntry
 								value={money}
@@ -119,36 +119,49 @@ export default function CharacterCreation({
 							/>
 						</div>
 						<div className="cc-middle-middle">
-							<span className="p-float-label">
-								<label htmlFor="level">Level</label>
-								<InputNumber
-									id="level"
-									showButtons
-									min={1}
-									max={20}
-									value={formik.values.level}
-									onChange={(e) => {
-										formik.values.level = e.value || 1;
-									}}
-								/>
-							</span>
-							<span className="p-float-label">
-								<label htmlFor="experience">Experience</label>
-								<InputNumber
-									id="experience"
-									showButtons
-									min={0}
-									max={1000}
-									value={formik.values.experience}
-									onChange={(e) => {
-										formik.values.experience = e.value || 1;
-									}}
-								/>
-							</span>
+							<div className="cc-exp-entry">
+								<div>
+									<h2>Initial Experience</h2>
+								</div>
+								<div>
+									<label htmlFor="level">Level</label>
+									<InputNumber
+										id="level"
+										showButtons
+										min={1}
+										max={20}
+										value={formik.values.level}
+										onChange={(e) => {
+											formik.values.level =
+												e.value || 1;
+										}}
+									/>
+								</div>
+								<div>
+									<label htmlFor="experience">Experience</label>
+									<InputNumber
+										id="experience"
+										showButtons
+										min={0}
+										max={1000}
+										step={250}
+										value={formik.values.experience}
+										onChange={(e) => {
+											formik.values.experience =
+												e.value || 1;
+										}}
+									/>
+								</div>
+							</div>
 						</div>
 
 						<div className="cc-right-bottom">
-							<Button label="Submit" severity="success" type="submit" />
+							<Button
+								className="flex-end"
+								label="Save"
+								severity="success"
+								type="submit"
+							/>
 						</div>
 					</div>
 				</form>

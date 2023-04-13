@@ -1,8 +1,8 @@
-import { PrismaClient, Character } from "@prisma/client";
+import Prisma, { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function getCharacter(id: number): Promise<Character | null> {
+export async function getCharacter(id: number): Promise<Prisma.Character | null> {
     return await prisma.character.findUnique({
         where: {
             id: id,
@@ -10,7 +10,7 @@ export async function getCharacter(id: number): Promise<Character | null> {
     });
 }
 
-export async function setAvatar(id: number, path: string): Promise<Character> {
+export async function setAvatar(id: number, path: string): Promise<Prisma.Character> {
     return await prisma.character.update({
         data: {
             avatar: path,

@@ -49,7 +49,13 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 		<i className="pi pi-image cs-avatar-missing" style={{ fontSize: "8rem", color: "white" }} />
 	);
 
-	const avatar = <Image src={`${CDN}/${character.avatar}`} width="400" height="400" preview />;
+	const avatar = (
+		<img
+			src={`${CDN}/${character.avatar}`}
+			alt={`${character.name} avatar`}
+			style={{ maxWidth: "400px", maxHeight: "400px" }}
+		/>
+	);
 
 	return (
 		<>
