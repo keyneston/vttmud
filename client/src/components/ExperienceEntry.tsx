@@ -17,7 +17,9 @@ export function ExperienceEntry({ value, onChange }: ExperienceEntryProps) {
 				options={["-", "+"]}
 				unselectable={false}
 				value={posExp}
-				onChange={(e) => setPosExp(e.value)}
+				onChange={(e) => {
+					setPosExp(e.value);
+				}}
 			/>
 			<div>
 				<span className="p-float-label">
@@ -25,8 +27,12 @@ export function ExperienceEntry({ value, onChange }: ExperienceEntryProps) {
 						className="exp-input"
 						id="exp"
 						min={0}
-						value={value}
-						onChange={(e: any) => onChange(e.value || 0)}
+						step={250}
+						showButtons
+						value={Math.abs(value)}
+						onChange={(e: any) =>
+							onChange(e.value * (posExp === "+" ? 1 : -1) || 0)
+						}
 					/>
 					<label htmlFor="exp">Experience</label>
 				</span>

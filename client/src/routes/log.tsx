@@ -71,7 +71,7 @@ export default function CharacterLog() {
 				<Dialog
 					header="Log New Income/Expense"
 					visible={visible}
-					style={{ width: "45vw" }}
+					style={{ width: "50vw" }}
 					breakpoints={{ "960px": "100vw", "641px": "120vw" }}
 					onHide={() => {
 						setVisible(false);

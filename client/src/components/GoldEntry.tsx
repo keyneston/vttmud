@@ -32,6 +32,7 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 					<InputNumber
 						className="ge-input"
 						id="gold"
+						showButtons
 						value={value.gold}
 						style={{ gridArea: "2/2" }}
 						onChange={(event: any) => {
@@ -46,6 +47,7 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 					<InputNumber
 						className="ge-input"
 						id="silver"
+						showButtons
 						value={value.silver}
 						style={{ gridArea: "2/3" }}
 						onChange={(event: any) => {
@@ -61,8 +63,8 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 					<InputNumber
 						className="ge-input"
 						id="copper"
+						showButtons
 						value={value.copper}
-						buttonLayout="vertical"
 						style={{ gridArea: "2/4" }}
 						onChange={(event: any) => {
 							setValue({ ...value, copper: event.value });
