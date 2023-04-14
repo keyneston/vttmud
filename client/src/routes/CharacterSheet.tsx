@@ -99,7 +99,7 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 				<div className="cs-headline-info">
 					<h1>{character.name}</h1>
 					<h3>
-						Level {Math.floor(character.experience / 1000)} — Exp{" "}
+						Level {Math.floor(character.experience / 1000) + 1} — Exp{" "}
 						{character.experience % 1000} / 1000
 					</h3>
 					<h3>{money2string(character.gold)}</h3>
