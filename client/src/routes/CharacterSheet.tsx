@@ -17,14 +17,14 @@ export default function CharacterSheet() {
 	const [edit, setEdit] = useState(false);
 	const urlParams = useParams();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			var id: string = urlParams.id || "";
-			var data = await fetchCharacter(id);
-			setData(data);
-			setLoading(false);
-		};
+	const fetchData = async () => {
+		var id: string = urlParams.id || "";
+		var data = await fetchCharacter(id);
+		setData(data);
+		setLoading(false);
+	};
 
+	useEffect(() => {
 		fetchData();
 	}, [urlParams]);
 
@@ -35,7 +35,8 @@ export default function CharacterSheet() {
 
 	return (
 		<div className="cs-root justify-end">
-			{loading && "Loading"} {data && <DisplayCharacter character={data} edit={edit} />}
+			{loading && "Loading"}{" "}
+			{data && <DisplayCharacter character={data} edit={edit} refresh={fetchData} />}
 			<div className="cs-button-collection justify-end">
 				<Button
 					className="cs-edit-button"
@@ -62,7 +63,7 @@ export default function CharacterSheet() {
 	);
 }
 
-function DisplayCharacter({ character, edit }: { character: Character; edit: boolean }) {
+function DisplayCharacter({ character, edit, refresh }: { character: Character; edit: boolean; refresh: () => void }) {
 	const imageMissing = (
 		<i className="pi pi-image cs-avatar-missing" style={{ fontSize: "8rem", color: "white" }} />
 	);
@@ -93,6 +94,7 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 							accept="image/*"
 							maxFileSize={MaximumImageSize}
 							chooseLabel="Browse"
+							onUpload={(e) => refresh()}
 						/>
 					)}
 				</div>
