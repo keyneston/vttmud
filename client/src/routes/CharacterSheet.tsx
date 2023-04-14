@@ -4,8 +4,6 @@ import { Character, fetchCharacter } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
 
-import { Card } from "primereact/card";
-import { Image } from "primereact/image";
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";

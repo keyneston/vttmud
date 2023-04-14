@@ -16,25 +16,31 @@ var itemsDB: Item[] = [];
 
 getItemsDB();
 
-function emptyPerson(): CraftPerson {
-	return { name: "", days: 1, endDate: new Date() };
+function emptyPerson(id: number): CraftPerson {
+	const character_name = localStorage.getItem(`character_name_${id}`) || "";
+	return { name: character_name, days: 1, endDate: new Date() };
 }
 
 function CraftTemplate({ name, setName }: { name: string; setName: (name: string) => void }) {
 	const [item, setItem] = useState<Item | void>();
 	const [itemCount, setItemCount] = useState<number>(1);
 	const [level, setLevel] = useState<number>(0);
-	const [days, setDays] = useState<number>(4);
-	const [endDate, setEndDate] = useState<Date>(new Date());
 	const [people, setPeople] = useState<CraftPerson[]>([
-		emptyPerson(),
-		emptyPerson(),
-		emptyPerson(),
-		emptyPerson(),
+		emptyPerson(0),
+		emptyPerson(1),
+		emptyPerson(2),
+		emptyPerson(3),
 	]);
-	const [peopleCount, setPeopleCount] = useState<number>(1);
+	const [peopleCount, setPeopleCount] = useState<number>(() => {
+		const value = localStorage.getItem("craft_template_people_count");
+		return parseInt(value || "0");
+	});
 
-	localStorage.setItem("character_name", name);
+	localStorage.setItem("character_name_0", people[0].name);
+	localStorage.setItem("character_name_1", people[1].name);
+	localStorage.setItem("character_name_2", people[2].name);
+	localStorage.setItem("character_name_3", people[3].name);
+	localStorage.setItem("craft_template_people_count", peopleCount.toString());
 
 	const updatePerson = (id: number): ((i: CraftPerson) => void) => {
 		return (i: CraftPerson) => {
@@ -172,13 +178,17 @@ function Output({
 	var itemCountString = itemCount > 1 ? ` ${itemCount} x ` : "";
 
 	const formatNames = (people: CraftPerson[]) => people.map((x) => x.name).join(", ");
-	const formatDateRange = (person: CraftPerson) => {
-		if (person.days == 1) {
-			return `${person.name}: ${formatDate(person.endDate)}`;
+	const formatDateRange = (person: CraftPerson, wrap: boolean) => {
+		var str = "";
+		if (person.days === 1) {
+			str = `${formatDate(person.endDate)}`;
 		} else {
-			return `${person.name}: ${formatDate(subDate(person.endDate, person.days))}-${formatDate(
-				person.endDate
-			)}`;
+			str = `${formatDate(subDate(person.endDate, person.days))}-${formatDate(person.endDate)}`;
+		}
+		if (wrap) {
+			return `${person.name}(${str})`;
+		} else {
+			return str;
 		}
 	};
 
@@ -187,7 +197,7 @@ function Output({
 			<b>Character: </b> {formatNames(people)}
 			<br />
 			<b>Activity: </b> Craft {itemCountString} {item ? item.name : ""} <br />
-			<b>Days:</b> {people.map((x) => formatDateRange(x)).join(" ")} <br />
+			<b>Days:</b> {people.map((x) => formatDateRange(x, people.length > 1)).join(" ")} <br />
 			<b>Item Level:</b> {level || 0} <b>DC:</b> {craftDC(level)} <br />
 			<b>Result: Success Assurance</b>
 		</p>
