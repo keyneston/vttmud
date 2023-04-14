@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
-import { InputNumber } from "primereact/inputnumber";
+import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
 import { AutoComplete } from "primereact/autocomplete";
 import { Panel } from "primereact/panel";
 import { Divider } from "primereact/divider";
@@ -16,13 +16,23 @@ var itemsDB: Item[] = [];
 
 getItemsDB();
 
+function emptyPerson(): CraftPerson {
+	return { name: "", days: 1, endDate: new Date() };
+}
+
 function CraftTemplate({ name, setName }: { name: string; setName: (name: string) => void }) {
 	const [item, setItem] = useState<Item | void>();
 	const [itemCount, setItemCount] = useState<number>(1);
 	const [level, setLevel] = useState<number>(0);
 	const [days, setDays] = useState<number>(4);
 	const [endDate, setEndDate] = useState<Date>(new Date());
-	const [people, setPeople] = useState<CraftPerson[]>([{ name: "", days: 4, endDate: new Date() }]);
+	const [people, setPeople] = useState<CraftPerson[]>([
+		emptyPerson(),
+		emptyPerson(),
+		emptyPerson(),
+		emptyPerson(),
+	]);
+	const [peopleCount, setPeopleCount] = useState<number>(1);
 
 	localStorage.setItem("character_name", name);
 
@@ -35,34 +45,57 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 
 	return (
 		<Panel header="Crafting Template">
-			<Output
-				name={people[0].name}
-				item={item}
-				days={people[0].days}
-				endDate={people[0].endDate}
-				level={level}
-				itemCount={itemCount}
-			/>
+			<Output people={people.slice(0, peopleCount)} level={level} itemCount={itemCount} item={item} />
 
 			<Divider />
+			<InputNumber
+				min={1}
+				max={4}
+				value={peopleCount}
+				onValueChange={(e: InputNumberValueChangeEvent) => {
+					setPeopleCount(e.value || 1);
+				}}
+				showButtons
+				buttonLayout="horizontal"
+				decrementButtonClassName="p-button-danger"
+				incrementButtonClassName="p-button-success"
+				incrementButtonIcon="pi pi-plus"
+				decrementButtonIcon="pi pi-minus"
+			/>
 
-			<div className="box card">
-				<ItemAutoComplete item={item} setLevel={setLevel} setItem={setItem} />
-				<span className="p-float-label">
-					<InputNumber
-						value={level}
-						onValueChange={(e) => setLevel(e.value || 0)}
-						min={MinItemLevel}
-						max={MaxItemLevel}
-						id="level"
-					/>
-					<label htmlFor="level">Item Level</label>
-				</span>
+			<div className="cf-box card">
+				<div>
+					<ItemAutoComplete item={item} setLevel={setLevel} setItem={setItem} />
+				</div>
+				<div>
+					<span className="p-float-label">
+						<InputNumber
+							value={level}
+							onValueChange={(e) => setLevel(e.value || 0)}
+							min={MinItemLevel}
+							max={MaxItemLevel}
+							id="level"
+						/>
+						<label htmlFor="level">Item Level</label>
+					</span>
+				</div>
 
-				<ItemCount itemCount={itemCount} item={item} setItemCount={setItemCount} />
-				<Divider />
+				<div>
+					<ItemCount itemCount={itemCount} item={item} setItemCount={setItemCount} />
+				</div>
 
-				<CraftPersonTemplate id={0} value={people[0]} setValue={updatePerson(0)} />
+				{Array.from({ length: peopleCount }, (_, i) => (
+					<>
+						<Divider />
+						<div>
+							<CraftPersonTemplate
+								id={i}
+								value={people[i]}
+								setValue={updatePerson(i)}
+							/>
+						</div>
+					</>
+				))}
 			</div>
 
 			<Divider />
@@ -126,28 +159,35 @@ function CraftPersonTemplate({
 }
 
 function Output({
-	name,
-	item,
-	days,
-	endDate,
+	people,
 	level,
+	item,
 	itemCount,
 }: {
-	name: string;
-	item: void | Item | undefined;
-	days: number;
-	endDate: Date;
+	people: CraftPerson[];
 	level: number;
+	item: void | Item | undefined;
 	itemCount: number;
 }) {
 	var itemCountString = itemCount > 1 ? ` ${itemCount} x ` : "";
 
+	const formatNames = (people: CraftPerson[]) => people.map((x) => x.name).join(", ");
+	const formatDateRange = (person: CraftPerson) => {
+		if (person.days == 1) {
+			return `${person.name}: ${formatDate(person.endDate)}`;
+		} else {
+			return `${person.name}: ${formatDate(subDate(person.endDate, person.days))}-${formatDate(
+				person.endDate
+			)}`;
+		}
+	};
+
 	return (
 		<p className="m-0">
-			<b>Character: </b> {name} <br />
-			<b>Activity: </b> Craft {itemCountString}
-			{item ? item.name : ""} <br />
-			<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)} <br />
+			<b>Character: </b> {formatNames(people)}
+			<br />
+			<b>Activity: </b> Craft {itemCountString} {item ? item.name : ""} <br />
+			<b>Days:</b> {people.map((x) => formatDateRange(x)).join(" ")} <br />
 			<b>Item Level:</b> {level || 0} <b>DC:</b> {craftDC(level)} <br />
 			<b>Result: Success Assurance</b>
 		</p>

@@ -19,10 +19,10 @@
   text-align: right;
 }
 
-.box {
+.ct-box {
   width: 90%;
-  display: grid;
-  grid-template-columns: 50% 50%;
+  display: flex;
+  flex-direction: row;
   gap: 25px 2em;
   padding-top: 15px;
 }
