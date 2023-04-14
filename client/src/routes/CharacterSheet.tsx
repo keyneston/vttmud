@@ -8,6 +8,7 @@ import { Card } from "primereact/card";
 import { Image } from "primereact/image";
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
+import { InputText } from "primereact/inputtext";
 
 import "./CharacterSheet.scss";
 
@@ -75,6 +76,10 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 			style={{ maxWidth: "400px", maxHeight: "400px" }}
 		/>
 	);
+	const chooseOptions = {
+		icon: "pi pi-fw pi-image",
+		className: "p-button-info",
+	};
 
 	return (
 		<>
@@ -93,8 +98,9 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 							url={`/api/v1/upload/${character.id}/avatar`}
 							accept="image/*"
 							maxFileSize={MaximumImageSize}
-							chooseLabel="Browse"
+							chooseLabel="Change Avatar"
 							onUpload={(e) => refresh()}
+							chooseOptions={chooseOptions}
 						/>
 					)}
 				</div>

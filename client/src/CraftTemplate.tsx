@@ -22,16 +22,24 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 	const [level, setLevel] = useState<number>(0);
 	const [days, setDays] = useState<number>(4);
 	const [endDate, setEndDate] = useState<Date>(new Date());
+	const [people, setPeople] = useState<CraftPerson[]>([{ name: "", days: 4, endDate: new Date() }]);
 
 	localStorage.setItem("character_name", name);
+
+	const updatePerson = (id: number): ((i: CraftPerson) => void) => {
+		return (i: CraftPerson) => {
+			people[id] = i;
+			setPeople([...people]);
+		};
+	};
 
 	return (
 		<Panel header="Crafting Template">
 			<Output
-				name={name}
+				name={people[0].name}
 				item={item}
-				days={days}
-				endDate={endDate}
+				days={people[0].days}
+				endDate={people[0].endDate}
 				level={level}
 				itemCount={itemCount}
 			/>
@@ -39,16 +47,6 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 			<Divider />
 
 			<div className="box card">
-				<div>
-					<span className="p-float-label">
-						<InputText
-							id="character"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-						/>
-						<label htmlFor="character">Character Name</label>
-					</span>
-				</div>
 				<ItemAutoComplete item={item} setLevel={setLevel} setItem={setItem} />
 				<span className="p-float-label">
 					<InputNumber
@@ -61,35 +59,69 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 					<label htmlFor="level">Item Level</label>
 				</span>
 
-				<div>
-					<span className="p-float-label">
-						<Calendar
-							value={endDate}
-							onChange={(e) => {
-								let d = Array.isArray(e.value) ? e.value[0] : e.value;
-								setEndDate(new Date(d || new Date()));
-							}}
-							id="endDate"
-						/>
-						<label htmlFor="endDate">End Date</label>
-					</span>
-				</div>
-				<span className="p-float-label">
-					<InputNumber
-						value={days}
-						onValueChange={(e) => setDays(e.value || 0)}
-						min={0}
-						max={7}
-						id="days"
-					/>
-					<label htmlFor="days">Number of Days</label>
-				</span>
 				<ItemCount itemCount={itemCount} item={item} setItemCount={setItemCount} />
+				<Divider />
+
+				<CraftPersonTemplate id={0} value={people[0]} setValue={updatePerson(0)} />
 			</div>
 
 			<Divider />
 			<ItemInformation item={item} level={level || 0} itemCount={itemCount} />
 		</Panel>
+	);
+}
+
+interface CraftPerson {
+	name: string;
+	endDate: Date;
+	days: number;
+}
+
+function CraftPersonTemplate({
+	id,
+	value,
+	setValue,
+}: {
+	id: number;
+	value: CraftPerson;
+	setValue: (i: CraftPerson) => void;
+}) {
+	return (
+		<>
+			<div>
+				<span className="p-float-label">
+					<InputText
+						id={`${id}-character`}
+						value={value.name}
+						onChange={(e) => setValue({ ...value, name: e.target.value })}
+					/>
+					<label htmlFor={`${id}-character`}>Character Name</label>
+				</span>
+			</div>
+			<div>
+				<span className="p-float-label">
+					<Calendar
+						value={value.endDate}
+						onChange={(e) => {
+							let d = Array.isArray(e.value) ? e.value[0] : e.value;
+							setValue({ ...value, endDate: new Date(d || "") });
+						}}
+						id={`${id}-endDate`}
+					/>
+					<label htmlFor={`${id}-endDate`}>End Date</label>
+				</span>
+			</div>
+			<span className="p-float-label">
+				<InputNumber
+					value={value.days}
+					onValueChange={(e) => setValue({ ...value, days: e.value || 0 })}
+					min={0}
+					max={7}
+					id={`${id}-days`}
+				/>
+				<label htmlFor={`${id}-days`}>Number of Days</label>
+			</span>
+		</>
 	);
 }
 
