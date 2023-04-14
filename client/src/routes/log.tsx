@@ -28,9 +28,9 @@ export default function CharacterLog() {
 	}, [id]);
 
 	useEffect(() => {
-		var newSum = 0;
+		var newSum: number = 0;
 		logEntries.forEach((e) => {
-			newSum += e.gold || 0 + (e.silver || 0) / 10 + (e.copper || 0) / 100;
+			newSum = +(e.gold || 0) + +newSum;
 		});
 		setSum(newSum);
 	}, [id, logEntries]);
