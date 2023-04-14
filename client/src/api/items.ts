@@ -30,8 +30,8 @@ export function sumGold(...inputs: Gold[]): Gold {
 
 export function money2string(i: number): string {
     var gold = Math.floor(i);
-    var silver = Math.floor((i * 10) % 10);
-    var copper = Math.floor((i * 100) % 10);
+    var silver = Math.floor(Math.round(i * 10) % 10);
+    var copper = Math.floor(Math.round(i * 100) % 10);
 
     return `${gold} gp ${silver} sp ${copper} cp`;
 }

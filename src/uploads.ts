@@ -78,11 +78,11 @@ export async function uploadAvatar(req: Request, resp: Response, next: any) {
 
     upload.single("character")(req, resp, async function (error: any) {
         if (error) {
-            resp.status(500);
-            return resp.json({ error: error });
+            console.log(error);
+            next(new StatusError("Error", 500, error));
         }
         if (!req.file) {
-            return next(new StatusError("Internal Error", 500));
+            return next(new StatusError("Internal Error", 500, "req.file doesn't exist"));
         }
         var file: IFile = req.file as IFile;
 
@@ -110,6 +110,7 @@ export async function uploadJSON(req: Request, resp: Response, next: any) {
 
     uploadMemory.single("json")(req, resp, async function (error: any) {
         if (error) {
+            console.log(error);
             next(new StatusError("Error", 500, error));
         }
         if (!req.file) {
