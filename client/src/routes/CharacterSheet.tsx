@@ -7,6 +7,7 @@ import { CDN, MaximumImageSize } from "../constants";
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
+import { parseBlob } from "../blob";
 
 import "./CharacterSheet.scss";
 

@@ -8,19 +8,29 @@ generator client {
 }
 
 model Character {
-    id Int     @id @default(autoincrement())
-    owner String
-    name String
-    avatar String?
-	blob Json?
+  id     Int     @id @default(autoincrement())
+  owner  String
+  name   String
+  avatar String?
+  blob   Json?
+
+  server   Server? @relation(fields: [serverID], references: [id])
+  serverID Int
 }
 
 model CharacterLogEntry {
-	id           Int       @id @default(autoincrement())
-	characterID  Int
-	experience   Int?
-    gold         Decimal?  @db.Money
-	description  String?
-	createdAt    DateTime  @default(now())
-	updatedAt    DateTime  @updatedAt
+  id          Int      @id @default(autoincrement())
+  characterID Int
+  experience  Int?
+  gold        Decimal? @db.Money
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Server {
+  id        Int         @id @default(autoincrement())
+  discordID String
+  name      String
+  Character Character[]
 }

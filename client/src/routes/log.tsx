@@ -48,6 +48,51 @@ export default function CharacterLog() {
 		return `${createdAt.getFullYear()}-${createdAt.getMonth() + 1}-${createdAt.getDate()}`;
 	};
 
+	/*
+	const updateLogEntry = (row: number, entry: CharacterLogEntry) => {
+		let _logEntries = [...logEntries];
+
+		_logEntries[row] = entry;
+		setLogEntries(_logEntries);
+	};
+
+	const onRowEditComplete = async (e: DataTableRowEditCompleteEvent) => {
+		const res = await changeLogEntry({
+			id: e.newData.id,
+			characterID: e.newData.characterID,
+			spend: e.newData.spend,
+			description: e.newData.description,
+			gold: e.newData.gold,
+		});
+
+		updateLogEntry(e.index, res);
+	};
+
+	const goldEditor = (options: any) => {
+		console.log(options);
+		return (
+			<InputNumber
+				value={options.rowData.gold}
+				onValueChange={(e) => options.editorCallback(e.value)}
+				mode="currency"
+				currency="EUR"
+				locale="en-US"
+			/>
+		);
+	};
+
+	const descriptionEditor = (options: any) => {
+		console.log("descriptionOptions: ", options);
+		return (
+			<InputText
+				type="text"
+				value={options.value}
+				onChange={(e: any) => options.editorCallback(e.value)}
+			/>
+		);
+	};
+*/
+
 	return (
 		<>
 			<div className="log-header">
@@ -71,7 +116,7 @@ export default function CharacterLog() {
 				<Dialog
 					header="Log New Income/Expense"
 					visible={visible}
-					style={{ width: "50vw" }}
+					style={{ width: "70vw" }}
 					breakpoints={{ "960px": "100vw", "641px": "120vw" }}
 					onHide={() => {
 						setVisible(false);

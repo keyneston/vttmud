@@ -4,9 +4,8 @@ export interface Character {
     name: string;
     avatar?: string;
     gold: number;
-    silver: number;
-    copper: number;
     experience: number;
+    blob?: any;
 }
 
 export interface CharacterLogEntry {
@@ -35,6 +34,16 @@ export async function fetchCharacter(id: string | number): Promise<Character> {
 export async function updateLog(data: CharacterLogEntry): Promise<CharacterLogEntry> {
     return await fetch(`/api/v1/character/${data.characterID}/log`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    }).then((d) => {
+        return d.json();
+    });
+}
+
+export async function changeLogEntry(data: CharacterLogEntry): Promise<CharacterLogEntry> {
+    return await fetch(`/api/v1/character/${data.characterID}/log`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
     }).then((d) => {

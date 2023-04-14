@@ -13,16 +13,16 @@ const port = process.env.PORT || 3001;
 const publicFolder = process.env.PUBLIC_FOLDER || "/app/public";
 const cookiePassword = process.env.COOKIE_PASSWORD || "development";
 
-// TODO: don't hardcode these paths in incase the location changes from /app/
+// TODO: don't hardcode these paths in in case the location changes from /app/
 app.use(express.static(publicFolder));
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser(cookiePassword));
-app.use(
-    audit({
-        excludeURLs: ["0"],
-    })
-);
+// app.use(
+//     audit({
+//         excludeURLs: ["0"],
+//     })
+// );
 
 registerRotues(app);
 
