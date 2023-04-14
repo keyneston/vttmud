@@ -17,10 +17,12 @@ if (s3Bucket === "" || s3keyID === "" || s3accessKey === "") {
 }
 
 const s3Client = new S3({
+    forcePathStyle: false,
     credentials: {
         accessKeyId: s3keyID,
         secretAccessKey: s3accessKey,
     },
+    region: "us-east-1",
     endpoint: s3endpoint,
 });
 
