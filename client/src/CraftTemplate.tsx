@@ -54,36 +54,41 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 			<Output people={people.slice(0, peopleCount)} level={level} itemCount={itemCount} item={item} />
 
 			<Divider />
-			<InputNumber
-				min={1}
-				max={4}
-				value={peopleCount}
-				onValueChange={(e: InputNumberValueChangeEvent) => {
-					setPeopleCount(e.value || 1);
-				}}
-				showButtons
-				buttonLayout="horizontal"
-				decrementButtonClassName="p-button-danger"
-				incrementButtonClassName="p-button-success"
-				incrementButtonIcon="pi pi-plus"
-				decrementButtonIcon="pi pi-minus"
-			/>
+			<div className="ct-box card">
+				<div className="ct-label-set">
+					<label htmlFor="people-count">Number of Workers</label>
+					<InputNumber
+						className="ct-input-people-count"
+						id="people-count"
+						min={1}
+						max={4}
+						value={peopleCount}
+						onValueChange={(e: InputNumberValueChangeEvent) => {
+							setPeopleCount(e.value || 1);
+						}}
+						showButtons
+						buttonLayout="horizontal"
+						decrementButtonClassName="p-button-secondary"
+						incrementButtonClassName="p-button-secondary"
+						incrementButtonIcon="pi pi-plus"
+						decrementButtonIcon="pi pi-minus"
+						style={{ maxWidth: "4rem" }}
+					/>
+				</div>
 
-			<div className="cf-box card">
 				<div>
 					<ItemAutoComplete item={item} setLevel={setLevel} setItem={setItem} />
 				</div>
-				<div>
-					<span className="p-float-label">
-						<InputNumber
-							value={level}
-							onValueChange={(e) => setLevel(e.value || 0)}
-							min={MinItemLevel}
-							max={MaxItemLevel}
-							id="level"
-						/>
-						<label htmlFor="level">Item Level</label>
-					</span>
+				<div className="ct-label-set">
+					<label htmlFor="level">Item Level</label>
+					<InputNumber
+						className="ct-input"
+						value={level}
+						onValueChange={(e) => setLevel(e.value || 0)}
+						min={MinItemLevel}
+						max={MaxItemLevel}
+						id="level"
+					/>
 				</div>
 
 				<div>
@@ -93,13 +98,11 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 				{Array.from({ length: peopleCount }, (_, i) => (
 					<>
 						<Divider />
-						<div>
-							<CraftPersonTemplate
-								id={i}
-								value={people[i]}
-								setValue={updatePerson(i)}
-							/>
-						</div>
+						<CraftPersonTemplate
+							id={i}
+							value={people[i]}
+							setValue={updatePerson(i)}
+						/>
 					</>
 				))}
 			</div>
@@ -127,39 +130,38 @@ function CraftPersonTemplate({
 }) {
 	return (
 		<>
-			<div>
-				<span className="p-float-label">
-					<InputText
-						id={`${id}-character`}
-						value={value.name}
-						onChange={(e) => setValue({ ...value, name: e.target.value })}
-					/>
-					<label htmlFor={`${id}-character`}>Character Name</label>
-				</span>
+			<div className="ct-label-set">
+				<label htmlFor={`${id}-character`}>Character Name</label>
+				<InputText
+					className="ct-input"
+					id={`${id}-character`}
+					value={value.name}
+					onChange={(e) => setValue({ ...value, name: e.target.value })}
+				/>
 			</div>
-			<div>
-				<span className="p-float-label">
-					<Calendar
-						value={value.endDate}
-						onChange={(e) => {
-							let d = Array.isArray(e.value) ? e.value[0] : e.value;
-							setValue({ ...value, endDate: new Date(d || "") });
-						}}
-						id={`${id}-endDate`}
-					/>
-					<label htmlFor={`${id}-endDate`}>End Date</label>
-				</span>
+			<div className="ct-label-set">
+				<label htmlFor={`${id}-endDate`}>End Date</label>
+				<Calendar
+					className="ct-input"
+					value={value.endDate}
+					onChange={(e) => {
+						let d = Array.isArray(e.value) ? e.value[0] : e.value;
+						setValue({ ...value, endDate: new Date(d || "") });
+					}}
+					id={`${id}-endDate`}
+				/>
 			</div>
-			<span className="p-float-label">
+			<div className="ct-label-set">
+				<label htmlFor={`${id}-days`}>Number of Days</label>
 				<InputNumber
+					className="ct-input"
 					value={value.days}
 					onValueChange={(e) => setValue({ ...value, days: e.value || 0 })}
 					min={0}
 					max={7}
 					id={`${id}-days`}
 				/>
-				<label htmlFor={`${id}-days`}>Number of Days</label>
-			</span>
+			</div>
 		</>
 	);
 }
@@ -225,8 +227,10 @@ function ItemCount({
 	}
 
 	return (
-		<span className="p-float-label">
+		<div className="ct-label-set">
+			<label htmlFor="itemCount">Item Count</label>
 			<InputNumber
+				className="ct-input"
 				value={itemCount}
 				onChange={(e) => setItemCount(e.value || 1)}
 				id="itemCount"
@@ -234,8 +238,7 @@ function ItemCount({
 				max={10}
 				disabled={!consumable}
 			/>
-			<label htmlFor="itemCount">Item Count</label>
-		</span>
+		</div>
 	);
 }
 
@@ -249,8 +252,10 @@ function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 	const [searchEntries, setSearchEntires] = useState<Item[] | void>();
 
 	return (
-		<span className="p-float-label">
+		<div className="ct-label-set">
+			<label htmlFor="item">Item</label>
 			<AutoComplete
+				className="ct-input"
 				id="item"
 				value={item}
 				suggestions={searchEntries || undefined}
@@ -273,8 +278,7 @@ function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 				}}
 				forceSelection
 			/>
-			<label htmlFor="item">Item</label>
-		</span>
+		</div>
 	);
 }
 
