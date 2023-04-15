@@ -16,7 +16,11 @@
   },
   "watch": {
     "run-backend": {
-      "patterns": ["src/**/*.ts", "client/public/*", ".env"],
+      "patterns": [
+        "src/**/*.ts",
+        "client/public/*",
+        ".env"
+      ],
       "quiet": false,
       "extensions": "js,jsx,ts,tsx,css,html,env"
     }
@@ -35,6 +39,7 @@
     "express-requests-logger": "^4.0.0",
     "multer": "^1.4.5-lts.1",
     "multer-s3": "^3.0.1",
+    "redis": "^4.6.5",
     "webpack-node-externals": "^3.0.0"
   },
   "devDependencies": {
