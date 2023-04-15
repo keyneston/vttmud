@@ -1,11 +1,22 @@
 export default function Home() {
 	return (
 		<>
+			<h2>Welcome</h2>
 			<p>
 				Welcome to VTTMud. This site is a work in progress. Please contact{" "}
 				<a href="https://discordapp.com/users/620653174469951512">@keyneston#2930</a> on discord
 				if you have feedback.
 			</p>
+
+			<h2>Changelog</h2>
+			<ul>
+				<li>April 15th</li>
+				<ul>
+					<li>Added Homepage with changelog</li>
+					<li>Link on Character Sheet to download JSON</li>
+					<li>Navigation Sidebar</li>
+				</ul>
+			</ul>
 		</>
 	);
 }
