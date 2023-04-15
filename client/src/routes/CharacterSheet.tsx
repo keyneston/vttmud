@@ -1,13 +1,15 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Character, fetchCharacter } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
+import { parseBlob } from "../blob";
 
 import { Button } from "primereact/button";
-import { FileUpload } from "primereact/fileupload";
+import { FileUpload, FileUploadSelectEvent } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
-import { parseBlob } from "../blob";
+import { Dialog } from "primereact/dialog";
+import Cropper from "react-easy-crop";
 
 import "./CharacterSheet.scss";
 
@@ -15,6 +17,7 @@ export default function CharacterSheet() {
 	const [data, setData] = useState<Character | undefined>(undefined);
 	const [loading, setLoading] = useState(true);
 	const [edit, setEdit] = useState(false);
+
 	const urlParams = useParams();
 
 	const fetchData = async () => {
@@ -84,6 +87,8 @@ export default function CharacterSheet() {
 }
 
 function DisplayCharacter({ character, edit, refresh }: { character: Character; edit: boolean; refresh: () => void }) {
+	const [showCropper, setShowCropper] = useState<boolean>(false);
+	const [src, setSrc] = useState<string>("");
 	const imageMissing = (
 		<i className="pi pi-image cs-avatar-missing" style={{ fontSize: "8rem", color: "white" }} />
 	);
@@ -103,6 +108,13 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 	return (
 		<>
 			<div className="cs-root">
+				<Dialog
+					visible={showCropper}
+					style={{ width: "90vw", height: "80vh" }}
+					onHide={() => setShowCropper(false)}
+				>
+					<DoCropper src={src} setShowCropper={setShowCropper} />
+				</Dialog>
 				<div className="cs-avatar-uploader">
 					<div className="cs-avatar-holder">
 						<div className="cs-avatar">
@@ -111,7 +123,6 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 					</div>
 					{edit && (
 						<FileUpload
-							auto
 							mode="basic"
 							name="character"
 							url={`/api/v1/upload/${character.id}/avatar`}
@@ -120,6 +131,10 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 							chooseLabel="Change Avatar"
 							onUpload={(e) => refresh()}
 							chooseOptions={chooseOptions}
+							onSelect={(e) => {
+								setSrc(URL.createObjectURL(e.files[0]));
+								setShowCropper(true);
+							}}
 						/>
 					)}
 				</div>
@@ -135,6 +150,44 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 						{character?.server?.name ?? "unknown"}
 					</h3>
 				</div>
+			</div>
+		</>
+	);
+}
+
+function DoCropper({ src, setShowCropper }: { src: string; setShowCropper: (x: boolean) => void }) {
+	const [crop, setCrop] = useState({ x: 0, y: 0 });
+	const [zoom, setZoom] = useState(1);
+
+	const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {}, []);
+
+	return (
+		<>
+			<div className="crop-container">
+				<Cropper
+					image={src}
+					crop={crop}
+					zoom={zoom}
+					aspect={1}
+					onCropChange={setCrop}
+					onCropComplete={onCropComplete}
+					onZoomChange={setZoom}
+				/>
+			</div>
+			<div className="controls">
+				<input
+					type="range"
+					value={zoom}
+					min={1}
+					max={3}
+					step={0.1}
+					aria-labelledby="Zoom"
+					onChange={(e) => {
+						setZoom(parseInt(e.target.value));
+					}}
+					className="zoom-range"
+				/>
+				<Button label="Done" onClick={(e) => setShowCropper(false)} />
 			</div>
 		</>
 	);
