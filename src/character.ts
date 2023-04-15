@@ -17,6 +17,7 @@ export const characterCreationEndpoint = async (req: Request, res: Response) => 
         data: {
             owner: user.id,
             name: req.body.character_name ?? "",
+            serverID: req.body.server.id,
         },
     });
     await prisma.characterLogEntry.create({

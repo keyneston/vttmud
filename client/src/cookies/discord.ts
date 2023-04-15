@@ -3,6 +3,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 export const DiscordUserCookie = "discord-user";
+export const DiscordGuildsCookie = "discord-guilds";
 export const DiscordCookie = "discord";
 
 export function avatarImage(): string {

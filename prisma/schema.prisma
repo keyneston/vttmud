@@ -15,7 +15,7 @@ model Character {
   blob   Json?
 
   server   Server? @relation(fields: [serverID], references: [id])
-  serverID Int
+  serverID Int?
 }
 
 model CharacterLogEntry {

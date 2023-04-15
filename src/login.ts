@@ -10,7 +10,7 @@ if (
     process.exit(1);
 }
 
-const oauth2 = new DiscordOauth2({
+export const oauth2 = new DiscordOauth2({
     clientId: process.env.DISCORD_OAUTH_ID,
     clientSecret: process.env.DISCORD_OAUTH_SECRET,
     redirectUri: process.env.DISCORD_REDIRECT_URI,

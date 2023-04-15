@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
+import { useNavigate } from "react-router-dom";
+import { GoldEntry } from "./GoldEntry";
+import { Gold } from "../api/items";
+import { listServers, Server } from "../api/characters";
+
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
-import { useNavigate } from "react-router-dom";
-import { GoldEntry } from "./GoldEntry";
-import { Gold } from "../api/items";
+import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
 import "./CharacterCreation.scss";
 
@@ -19,6 +22,14 @@ export default function CharacterCreation({
 }) {
 	const navigate = useNavigate();
 	const [money, setMoney] = useState<Gold>({ spend: false });
+	const [serverList, setServerList] = useState<Server[]>([]);
+	const [server, setServer] = useState<Server>({ id: 0, name: "", discordID: "" });
+
+	useEffect(() => {
+		listServers().then((servers: Server[]) => {
+			setServerList(servers);
+		});
+	}, []);
 
 	const formik = useFormik({
 		initialValues: {
@@ -29,12 +40,17 @@ export default function CharacterCreation({
 			copper: 0,
 			level: 1,
 			experience: 0,
+			server: { id: 0, name: "", discordID: "" },
 		},
 		validate: (data) => {
 			let errors: FormikErrors<FormikValues> = {};
 
 			if (!data.character_name) {
 				errors.character_name = "Character Name must not be blank";
+			}
+
+			if (!data.server || data.server.id === 0) {
+				errors.server = "Server must be set";
 			}
 
 			return errors;
@@ -52,7 +68,6 @@ export default function CharacterCreation({
 				level: null,
 				experience: exp,
 			});
-			console.log(`submitting: ${jData}`);
 
 			const requestOptions = {
 				method: "POST",
@@ -71,9 +86,8 @@ export default function CharacterCreation({
 		},
 	});
 
-	const errors: { [key: string]: string } = formik.errors;
-	const touched: FormikTouched<FormikValues> = formik.touched;
-	const isFormFieldValid = (name: string) => !!(touched[name] && errors[name]);
+	const errors: { [key: string]: any } = formik.errors;
+	const isFormFieldValid = (name: string) => !!errors[name];
 	const getFormErrorMessage = (name: string) => {
 		let error = errors[name];
 
@@ -100,10 +114,25 @@ export default function CharacterCreation({
 									onChange={formik.handleChange}
 								/>
 								<label htmlFor="character_name">Character Name</label>
+								{getFormErrorMessage("character_name")}
 							</span>
 						</div>
-						<div className="cc-center">{getFormErrorMessage("character_name")}</div>
-						<div className="cc-right"></div>
+						<div className="cc-center"></div>
+						<div className="cc-right">
+							<Dropdown
+								id="server"
+								name="server"
+								value={server}
+								placeholder="Select a Server"
+								optionLabel="name"
+								options={serverList}
+								onChange={(e: DropdownChangeEvent) => {
+									setServer(e.value);
+									formik.setFieldValue("server", e.value, true);
+								}}
+							/>
+							<div>{getFormErrorMessage("server")}</div>
+						</div>
 
 						<div className="cc-left-center">
 							<h2>Initial Money</h2>

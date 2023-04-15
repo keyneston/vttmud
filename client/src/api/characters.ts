@@ -21,6 +21,12 @@ export interface CharacterLogEntry {
     updatedAt?: Date;
 }
 
+export interface Server {
+    id: number;
+    discordID: string;
+    name: string;
+}
+
 export async function listCharacters(): Promise<Character[]> {
     const results = await fetch("/api/v1/characters").then((d) => d.json());
     return results;
@@ -53,6 +59,11 @@ export async function changeLogEntry(data: CharacterLogEntry): Promise<Character
 
 export async function getLog(id: number): Promise<CharacterLogEntry[]> {
     const resp = await fetch(`/api/v1/character/${id}/log`);
+    return resp.json();
+}
+
+export async function listServers(): Promise<Server[]> {
+    const resp = await fetch(`/api/v1/servers`);
     return resp.json();
 }
 

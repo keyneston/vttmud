@@ -1,6 +1,6 @@
 import { redirect } from "react-router-dom";
 import Cookies from "universal-cookie";
-import { DiscordCookie, DiscordUserCookie } from "../cookies/discord";
+import { DiscordCookie, DiscordUserCookie, DiscordGuildsCookie } from "../cookies/discord";
 
 const cookies = new Cookies();
 
@@ -18,6 +18,7 @@ export async function loginAction() {
 export async function logoutAction() {
 	cookies.remove(DiscordCookie);
 	cookies.remove(DiscordUserCookie);
+	cookies.remove(DiscordGuildsCookie);
 
 	return redirect("/");
 }
