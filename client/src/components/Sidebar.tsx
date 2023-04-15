@@ -103,6 +103,7 @@ export function Sidebar() {
 									tooltip="Login"
 									rounded
 									outlined
+									severity="success"
 									aria-label="Login"
 								/>
 							</Link>
