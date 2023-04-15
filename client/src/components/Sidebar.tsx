@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { Divider } from "primereact/divider";
+import { Button } from "primereact/button";
 import { Link } from "react-router-dom";
 import { Avatar } from "primereact/avatar";
 import { listCharacters, Character } from "../api/characters";
 import { getColor } from "../helpers/colors";
 import { CDN } from "../constants";
+import CharacterCreation from "../components/CharacterCreation";
 import "./Sidebar.scss";
+import { loggedIn } from "../cookies/discord";
 /*
 		characters.forEach((x) => {
 			menu.push({
@@ -33,6 +36,7 @@ import "./Sidebar.scss";
 
 export function Sidebar() {
 	const [characters, setCharacters] = useState<Character[]>([]);
+	const [ccVisible, setCCVisible] = useState(false);
 
 	useEffect(() => {
 		listCharacters().then((chars: Character[]) => {
@@ -56,8 +60,33 @@ export function Sidebar() {
 						Templates
 					</Link>
 				</div>
+				<div>
+					<Link
+						className="sidebar-link"
+						onClick={(e: any) => {
+							e.preventDefault();
+							setCCVisible(true);
+						}}
+						to="/"
+					>
+						Create Character
+					</Link>
+				</div>
+				<div>
+					{loggedIn() ? (
+						<Link className="sidebar-link" to="/logout">
+							<i className="pi pi-icon-logout" />
+							Logout
+						</Link>
+					) : (
+						<Link className="sidebar-link" to="/login">
+							Login
+						</Link>
+					)}
+				</div>
 			</div>
 			{charSections}
+			<CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
 		</div>
 	);
 }
@@ -81,21 +110,23 @@ function CharacterSection({ char }: { char: Character }) {
 	};
 
 	return (
-		<div className="sidebar-section">
-			<div className="sidebar-section-header">
-				{formatAvatar()}
-				<div>{char.name}</div>
+		<>
+			<div className="sidebar-section">
+				<div className="sidebar-section-header">
+					{formatAvatar()}
+					<div>{char.name}</div>
+				</div>
+				<div className="sidebar-sublink">
+					<Link className="sidebar-link" to={`/character/${char.id}/`}>
+						Character Sheet
+					</Link>
+				</div>
+				<div className="sidebar-sublink">
+					<Link className="sidebar-link" to={`/character/${char.id}/log`}>
+						Log
+					</Link>
+				</div>
 			</div>
-			<div className="sidebar-sublink">
-				<Link className="sidebar-link" to={`/character/${char.id}/`}>
-					Character Sheet
-				</Link>
-			</div>
-			<div className="sidebar-sublink">
-				<Link className="sidebar-link" to={`/character/${char.id}/log`}>
-					Log
-				</Link>
-			</div>
-		</div>
+		</>
 	);
 }

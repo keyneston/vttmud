@@ -21,8 +21,7 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: "",
-				element: <Link to="/templates">Templates</Link>,
-				loader: Home,
+				element: <Home />,
 			},
 			{
 				path: "templates",
