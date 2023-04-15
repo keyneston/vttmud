@@ -13,6 +13,19 @@
 	padding-right: 2rem;
 }
 
+.sidebar-section-items {
+	display: flex;
+	flex-flow: row wrap;
+	gap: 0.5rem;
+}
+
+.sidebar-character-items {
+	display: flex;
+	flex-flow: row wrap;
+	gap: 0.5rem;
+	justify-content: center;
+}
+
 .sidebar-section-header {
 	display: flex;
 	flex-direction: row;
@@ -24,7 +37,6 @@
 }
 
 .sidebar-sublink {
-	padding-left: 2rem;
 }
 
 a.sidebar-link {

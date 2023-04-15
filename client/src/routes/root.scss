@@ -7,7 +7,7 @@ body {
 .root {
 	text-align: left;
 	display: grid;
-	grid-auto-columns: 20% 35% 35% 10%;
+	grid-auto-columns: 19rem 40% 40% calc(20% - 19rem);
 	grid-auto-rows: 20px content 20px;
 	height: 100%;
 }

@@ -110,7 +110,10 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 						{character.experience % 1000} / 1000
 					</h3>
 					<h3>{money2string(character.gold)}</h3>
-					<h3>{"Server: "}{character?.server?.name ?? "unknown"}</h3>
+					<h3>
+						{"Server: "}
+						{character?.server?.name ?? "unknown"}
+					</h3>
 				</div>
 			</div>
 		</>
