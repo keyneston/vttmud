@@ -1,3 +1,5 @@
+import { loggedIn } from "../cookies/discord";
+
 export interface Character {
     id: number;
     owner: string;
@@ -6,8 +8,8 @@ export interface Character {
     gold: number;
     experience: number;
     blob?: any;
-serverID?: number;
-server: Server;
+    serverID?: number;
+    server: Server;
 }
 
 export interface CharacterLogEntry {
@@ -30,6 +32,10 @@ export interface Server {
 }
 
 export async function listCharacters(): Promise<Character[]> {
+    if (!loggedIn()) {
+        return [];
+    }
+
     const results = await fetch("/api/v1/characters").then((d) => d.json());
     return results;
 }

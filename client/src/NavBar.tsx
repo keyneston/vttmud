@@ -88,31 +88,6 @@ function loggedInMenu(navigate: any, setCCVisible: (x: boolean) => void) {
 		},
 	];
 
-	// TODO: cleaner way of doing this?
-	listCharacters().then((characters) => {
-		characters.forEach((x) => {
-			menu.push({
-				label: x.name,
-				items: [
-					{
-						label: "Sheet",
-						icon: "pi pi-user",
-						command: () => {
-							navigate(`/character/${x.id}`);
-						},
-					},
-					{
-						label: `Log`,
-						icon: "pi pi-book",
-						command: () => {
-							navigate(`/character/${x.id}/log`);
-						},
-					},
-				],
-			});
-		});
-	});
-
 	return menu;
 }
 
