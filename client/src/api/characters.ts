@@ -6,6 +6,8 @@ export interface Character {
     gold: number;
     experience: number;
     blob?: any;
+serverID?: number;
+server: Server;
 }
 
 export interface CharacterLogEntry {

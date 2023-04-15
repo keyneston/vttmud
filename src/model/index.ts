@@ -7,6 +7,9 @@ export async function getCharacter(id: number): Promise<Prisma.Character | null>
         where: {
             id: id,
         },
+        include: {
+            server: true,
+        }
     });
 }
 
