@@ -169,6 +169,19 @@ function CharacterSection({ char }: { char: Character }) {
 							/>
 						</Link>
 					</div>
+					<div className="sidebar-sublink">
+						<Link className="sidebar-link" to={`/character/${char.id}/downtime`}>
+							<Button
+								icon="pi pi-moon"
+								tooltip="Downtime"
+								rounded
+								outlined
+								aria-label="Downtime"
+								severity="warning"
+								size="large"
+							/>
+						</Link>
+					</div>
 				</div>
 			</div>
 		</>
