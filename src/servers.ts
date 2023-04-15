@@ -27,7 +27,9 @@ export const listServersEndpoint = async (req: Request, res: Response, next: any
         } else {
             guilds = await oauth2.getUserGuilds(discord.access_token);
 
-            await redisClient.set(redisKey, JSON.stringify(guilds));
+            await redisClient.set(redisKey, JSON.stringify(guilds), {
+                EX: 3600,
+            });
         }
 
         let guildIDs = guilds.map((g: any) => g.id);
