@@ -57,6 +57,26 @@ export default function CharacterSheet() {
 					maxFileSize={MaximumImageSize}
 					chooseLabel="Upload JSON"
 					chooseOptions={chooseOptions}
+					className="justify-stretch"
+				/>
+				<Button
+					className="cs-blob-download-button"
+					label="Download JSON"
+					icon="pi pi-download"
+					style={{ height: "3rem" }}
+					disabled={!data?.blob}
+					onClick={(e) => {
+						const json = JSON.stringify(data!.blob, null, 4);
+						const blob = new Blob([json], {
+							type: "application/json",
+						});
+						const url = URL.createObjectURL(blob);
+						const a = document.createElement("a"); //
+
+						a.setAttribute("href", url);
+						a.setAttribute("download", `${data?.name || "character"}.json`);
+						a.click();
+					}}
 				/>
 			</div>
 		</div>

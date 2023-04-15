@@ -17,7 +17,7 @@ function NavBar() {
 				<div className="navbar-left">
 					<div className="logo">
 						<Link className="logo" to="/">
-							VTTMUD
+							VTTMud
 						</Link>
 					</div>
 				</div>
