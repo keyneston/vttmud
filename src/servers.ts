@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { StatusError } from "./error";
 import { oauth2 } from "./login";
 import { PrismaClient } from "@prisma/client";
-import { redisClient } from "./redis";
+import { redisClient } from "./serve";
 
 const prisma = new PrismaClient();
 

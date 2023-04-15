@@ -8,7 +8,7 @@ module.exports = {
 	entry: {
 		serve: "./src/serve.ts",
 	},
-	externals: [nodeExternals()],
+	externals: [nodeExternals(), "redis"],
 	target: "node",
 	output: {
 		filename: "[name].ts",
