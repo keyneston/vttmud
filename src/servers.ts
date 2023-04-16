@@ -6,6 +6,19 @@ import { redisClient } from "./serve";
 
 const prisma = new PrismaClient();
 
+const upsertStaticServers = async () => {
+    let results = await prisma.server.createMany({
+        data: [
+            { id: 1, discordID: "802423566196539412", name: "Covalon" },
+            { id: 2, discordID: "1079822138900492320", name: "Thistle Academy" },
+        ],
+        skipDuplicates: true,
+    });
+};
+
+// make sure the servers list is accurate at boot
+upsertStaticServers();
+
 export const listServersEndpoint = async (req: Request, res: Response, next: any) => {
     const discord = req.signedCookies["discord"];
     const user = req.signedCookies["discord-user"];
@@ -13,7 +26,7 @@ export const listServersEndpoint = async (req: Request, res: Response, next: any
     var isCached = false;
 
     if (!discord) {
-        return new StatusError("Unauthorized", 403);
+        return next(new StatusError("Unauthorized", 403));
     }
 
     let guilds;
@@ -47,6 +60,6 @@ export const listServersEndpoint = async (req: Request, res: Response, next: any
         });
         res.json(servers);
     } catch (e: any) {
-        return new StatusError("Internal Server Error", 500, e.message);
+        return next(new StatusError("Internal Server Error", 500, e.message));
     }
 };

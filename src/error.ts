@@ -20,6 +20,7 @@ interface StatusError extends Error {
 }
 
 function errorMiddleware(err: any, req: Request, res: Response, next: any) {
+    console.log(`Handling error ${err.status || 500}: ${err.message}`);
     res.status(err.status || 500);
     res.json({ error: err.name || err.message, message: err.message });
 }

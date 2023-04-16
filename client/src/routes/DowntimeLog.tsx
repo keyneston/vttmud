@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { classNames } from "primereact/utils";
+import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
+import { useParams } from "react-router-dom";
 
 import { Button } from "primereact/button";
 import { Calendar } from "primereact/calendar";
@@ -12,19 +14,9 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
 import { Tag } from "primereact/tag";
 
+import { createDowntimeEntries, listDowntimeEntries, DowntimeEntry } from "../api/characters";
 import { subDate, formatDate } from "../date";
 import "./DowntimeLog.scss";
-
-type DowntimeEntry = {
-	date: Date;
-	level: number;
-	activity: string;
-	assurance: boolean;
-	roll?: number;
-	bonus?: number;
-	dc?: number;
-	details?: string;
-};
 
 const calculateSuccess = function (r: DowntimeEntry): number {
 	var level = 2;
@@ -103,48 +95,14 @@ const assuranceBodyTemplate = (rowData: DowntimeEntry) => {
 
 export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
+	const [data, setData] = useState<DowntimeEntry[]>([]);
 
-	const data: DowntimeEntry[] = [
-		{
-			date: new Date(),
-			level: 5,
-			activity: "Earn Income",
-			assurance: false,
-			roll: 11,
-			bonus: 9,
-			dc: 20,
-			details: "Example Data",
-		},
-		{
-			date: new Date(),
-			level: 5,
-			activity: "Earn Income",
-			assurance: true,
-			bonus: 9,
-			dc: 20,
-			details: "Example Data",
-		},
-		{
-			date: new Date(),
-			level: 5,
-			activity: "Earn Income",
-			assurance: false,
-			roll: 20,
-			bonus: 9,
-			dc: 20,
-			details: "Example Data",
-		},
-		{
-			date: new Date(),
-			level: 5,
-			activity: "Earn Income",
-			assurance: false,
-			roll: 1,
-			bonus: 9,
-			dc: 20,
-			details: "Example Data",
-		},
-	];
+	const urlParams = useParams();
+	const id: number = parseInt(urlParams.id || "0");
+
+	useEffect(() => {
+		listDowntimeEntries(id).then((d: DowntimeEntry[]) => setData(d));
+	}, [listDowntimeEntries]);
 
 	return (
 		<div className="downtime-root">
@@ -192,22 +150,71 @@ type NewDowntimeEntryProps = {
 	setVisible: (x: boolean) => void;
 };
 
+type FormikDowntimeEntry = {
+	endDate: Date;
+	days: number;
+	dc: number;
+	details: string;
+	entries: DayEntry[];
+	activity: string;
+	level: number;
+};
+
 function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
-	const [dc, setDC] = useState<number>(1);
-	const [days, setDays] = useState<number>(1);
-	const [details, setDetails] = useState<string>("");
-	const [endDate, setEndDate] = useState<Date>(new Date());
-	const [data, setData] = useState<DayEntry[]>(
-		Array.from({ length: 7 }, () => {
-			return { assurance: false, bonus: 0 };
-		})
-	);
+	const urlParams = useParams();
+	const id: number = parseInt(urlParams.id || "0");
+	const formik = useFormik<FormikDowntimeEntry>({
+		initialValues: {
+			endDate: new Date(),
+			days: 1,
+			dc: 20,
+			details: "",
+			activity: "Earn Income",
+			level: 1,
+			entries: Array.from({ length: 7 }, () => {
+				return { assurance: false, bonus: 0, roll: 0 };
+			}),
+		},
+		validate: (data) => {
+			let errors: FormikErrors<FormikValues> = {};
+
+			if (data.days > 7 || data.days < 1) {
+				errors.days = "Days must be between 1-7";
+			}
+
+			if (!data.activity) {
+				errors.activity = "Activity must be set";
+			}
+
+			return errors;
+		},
+		onSubmit: async (data) => {
+			// munge the data:
+			const entries = Array.from({ length: data.days }, (_, i) => {
+				return {
+					date: subDate(data.endDate, i),
+					dc: data.dc,
+					roll: data.entries[i].roll,
+					assurance: data.entries[i].assurance,
+					bonus: data.entries[i].bonus,
+					details: data.details,
+					activity: data.activity,
+					level: data.level, // TODO: finish adding level
+				} as DowntimeEntry;
+			});
+
+			createDowntimeEntries(id, entries);
+
+			setVisible(false);
+			formik.resetForm();
+		},
+	});
 
 	const updateEntry = (i: number): ((d: DayEntry) => void) => {
 		return (d: DayEntry): void => {
-			var _data = [...data];
+			var _data = [...formik.values.entries];
 			_data[i] = d;
-			setData(_data);
+			formik.setFieldValue("entries", _data);
 		};
 	};
 
@@ -218,66 +225,89 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 			visible={visible}
 			onHide={() => setVisible(false)}
 		>
-			<div className="new-downtime-entry-root">
-				<div className="new-downtime-label-set">
-					<label htmlFor="end-date">End Date</label>
-					<Calendar
-						className="dt-input-width"
-						id="end-date"
-						value={endDate}
-						onChange={(e) => {
-							let d = Array.isArray(e.value) ? e.value[0] : e.value;
-							setEndDate(new Date(d || ""));
-						}}
+			<form onSubmit={formik.handleSubmit}>
+				<div className="new-downtime-entry-root">
+					<div className="new-downtime-label-set">
+						<label htmlFor="end-date">End Date</label>
+						<Calendar
+							className="dt-input-width"
+							id="end-date"
+							value={formik.values.endDate}
+							onChange={(e) => {
+								let d = Array.isArray(e.value) ? e.value[0] : e.value;
+								formik.setFieldValue("endDate", new Date(d || ""));
+							}}
+						/>
+					</div>
+					<div className="new-downtime-label-set">
+						<label htmlFor="days">Days</label>
+						<InputNumber
+							className="dt-input-width"
+							id="days"
+							value={formik.values.days}
+							onChange={(e) => formik.setFieldValue("days", e?.value ?? 1)}
+							min={1}
+							max={7}
+							showButtons
+						/>
+					</div>
+					<div className="new-downtime-label-set">
+						<label htmlFor="days">Level</label>
+						<InputNumber
+							className="dt-input-width"
+							id="level"
+							value={formik.values.level}
+							onChange={(e) => formik.setFieldValue("level", e?.value ?? 1)}
+							min={1}
+							max={20}
+							showButtons
+						/>
+					</div>
+					<div className="new-downtime-label-set">
+						<label htmlFor="dc">DC</label>
+						<InputNumber
+							className="dt-input-width"
+							id="dc"
+							value={formik.values.dc}
+							onChange={(e) => formik.setFieldValue("dc", e.value ?? 20)}
+							min={1}
+							showButtons
+						/>
+					</div>
+					<div className="new-downtime-label-set">
+						<label htmlFor="details">Additional Details</label>
+						<InputText
+							className="dt-input-width"
+							id="details"
+							value={formik.values.details}
+							onChange={(e) =>
+								formik.setFieldValue("details", e.target.value ?? "")
+							}
+						/>
+					</div>
+					{Array.from({ length: formik.values.days }, (_, i) => {
+						return (
+							<>
+								<Divider />
+								<PerDayEntry
+									key={`per-day-entry-${i}`}
+									id={i}
+									value={formik.values.entries[i]}
+									setValue={updateEntry(i)}
+									endDate={formik.values.endDate}
+								/>
+							</>
+						);
+					})}
+
+					<Button
+						label="Record"
+						type="submit"
+						severity="success"
+						icon="pi pi-file-edit"
 					/>
 				</div>
-				<div className="new-downtime-label-set">
-					<label htmlFor="days">Days</label>
-					<InputNumber
-						className="dt-input-width"
-						id="days"
-						value={days}
-						onChange={(e) => setDays(e?.value ?? 1)}
-						min={1}
-						max={7}
-						showButtons
-					/>
-				</div>
-				<div className="new-downtime-label-set">
-					<label htmlFor="dc">DC</label>
-					<InputNumber
-						className="dt-input-width"
-						id="dc"
-						value={dc}
-						onChange={(e) => setDC(e.value ?? 1)}
-						min={1}
-						showButtons
-					/>
-				</div>
-				<div className="new-downtime-label-set">
-					<label htmlFor="details">Additional Details</label>
-					<InputText
-						className="dt-input-width"
-						id="details"
-						value={details}
-						onChange={(e) => setDetails(e.target.value ?? "")}
-					/>
-				</div>
-				{Array.from({ length: days }, (_, i) => {
-					return (
-						<>
-							<Divider />
-							<PerDayEntry
-								key={`per-day-entry-${i}`}
-								id={i}
-								value={data[i]}
-								setValue={updateEntry(i)}
-								endDate={endDate}
-							/>
-						</>
-					);
-				})}
-			</div>
+			</form>
 		</Dialog>
 	);
 }

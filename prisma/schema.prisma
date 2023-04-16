@@ -14,18 +14,24 @@ model Character {
   avatar String?
   blob   Json?
 
-  server   Server? @relation(fields: [serverID], references: [id])
-  serverID Int?
+  server            Server?             @relation(fields: [serverID], references: [id])
+  serverID          Int?
+  DowntimeEntry     DowntimeEntry[]
+  CharacterLogEntry CharacterLogEntry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model CharacterLogEntry {
-  id          Int      @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   characterID Int
+  character   Character? @relation(fields: [characterID], references: [id])
   experience  Int?
-  gold        Decimal? @db.Money
+  gold        Decimal?   @db.Money
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now()) @updatedAt
 }
 
 model Server {
@@ -33,4 +39,24 @@ model Server {
   discordID String
   name      String
   Character Character[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model DowntimeEntry {
+  date  DateTime
+  id          Int        @id @default(autoincrement())
+  character   Character? @relation(fields: [characterID], references: [id])
+  characterID Int
+  activity    String
+  level       Int
+  roll        Int
+  bonus       Int
+  dc          Int
+  assurance   Boolean
+  details String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
