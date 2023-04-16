@@ -1,7 +1,19 @@
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Tag } from "primereact/tag";
+import { useState } from "react";
 import { classNames } from "primereact/utils";
+
+import { Button } from "primereact/button";
+import { Calendar } from "primereact/calendar";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
+import { Dialog } from "primereact/dialog";
+import { Divider } from "primereact/divider";
+import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
+import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
+import { Tag } from "primereact/tag";
+
+import { subDate, formatDate } from "../date";
+import "./DowntimeLog.scss";
 
 type DowntimeEntry = {
 	date: Date;
@@ -14,12 +26,7 @@ type DowntimeEntry = {
 	details?: string;
 };
 
-const resultTemplate = (r: DowntimeEntry) => {
-	if (!r || !r.dc || !r.bonus) {
-		return <></>;
-	}
-	var tagColor: "danger" | "warning" | "success" | "info" | null | undefined = undefined;
-	var tagLabel: string = "";
+const calculateSuccess = function (r: DowntimeEntry): number {
 	var level = 2;
 
 	var dc = r.dc ?? 0;
@@ -43,7 +50,23 @@ const resultTemplate = (r: DowntimeEntry) => {
 		r.roll += 1;
 	}
 
-	switch (level) {
+	if (level > 4) {
+		return 4;
+	} else if (level < 1) {
+		return 1;
+	} else {
+		return level;
+	}
+};
+
+const resultTemplate = (r: DowntimeEntry) => {
+	if (!r || !r.dc || !r.bonus) {
+		return <></>;
+	}
+	var tagColor: "danger" | "warning" | "success" | "info" | null | undefined = undefined;
+	var tagLabel: string = "";
+
+	switch (calculateSuccess(r)) {
 		case 0:
 		case 1:
 			tagColor = "danger";
@@ -67,7 +90,20 @@ const resultTemplate = (r: DowntimeEntry) => {
 	return <Tag severity={tagColor} value={tagLabel} />;
 };
 
+const assuranceBodyTemplate = (rowData: DowntimeEntry) => {
+	return (
+		<i
+			className={classNames("pi", {
+				"true-icon pi-check-circle": rowData.assurance,
+				"false-icon pi-times-circle": !rowData.assurance,
+			})}
+		></i>
+	);
+};
+
 export default function DowntimeLog() {
+	const [visible, setVisible] = useState<boolean>(false);
+
 	const data: DowntimeEntry[] = [
 		{
 			date: new Date(),
@@ -110,19 +146,17 @@ export default function DowntimeLog() {
 		},
 	];
 
-	const assuranceBodyTemplate = (rowData: DowntimeEntry) => {
-		return (
-			<i
-				className={classNames("pi", {
-					"true-icon pi-check-circle": rowData.assurance,
-					"false-icon pi-times-circle": !rowData.assurance,
-				})}
-			></i>
-		);
-	};
-
 	return (
 		<div className="downtime-root">
+			<div className="downtime-header">
+				<Button
+					severity="success"
+					icon="pi pi-plus"
+					rounded
+					onClick={(e) => setVisible(true)}
+				/>
+			</div>
+			<NewDowntimeEntry visible={visible} setVisible={setVisible} />
 			<DataTable
 				value={data}
 				tableStyle={{ minWidth: "50rem" }}
@@ -149,6 +183,169 @@ export default function DowntimeLog() {
 				<Column field="result" header="Result" body={resultTemplate} />
 				<Column field="details" header="Additional Details" body={(e) => e.details} />
 			</DataTable>
+		</div>
+	);
+}
+
+type NewDowntimeEntryProps = {
+	visible: boolean;
+	setVisible: (x: boolean) => void;
+};
+
+function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
+	const [dc, setDC] = useState<number>(1);
+	const [days, setDays] = useState<number>(1);
+	const [details, setDetails] = useState<string>("");
+	const [endDate, setEndDate] = useState<Date>(new Date());
+	const [data, setData] = useState<DayEntry[]>(
+		Array.from({ length: 7 }, () => {
+			return { assurance: false, bonus: 0 };
+		})
+	);
+
+	const updateEntry = (i: number): ((d: DayEntry) => void) => {
+		return (d: DayEntry): void => {
+			var _data = [...data];
+			_data[i] = d;
+			setData(_data);
+		};
+	};
+
+	return (
+		<Dialog
+			header="New Downtime Entry"
+			style={{ width: "80vw", height: "85hw" }}
+			visible={visible}
+			onHide={() => setVisible(false)}
+		>
+			<div className="new-downtime-entry-root">
+				<div className="new-downtime-label-set">
+					<label htmlFor="end-date">End Date</label>
+					<Calendar
+						className="dt-input-width"
+						id="end-date"
+						value={endDate}
+						onChange={(e) => {
+							let d = Array.isArray(e.value) ? e.value[0] : e.value;
+							setEndDate(new Date(d || ""));
+						}}
+					/>
+				</div>
+				<div className="new-downtime-label-set">
+					<label htmlFor="days">Days</label>
+					<InputNumber
+						className="dt-input-width"
+						id="days"
+						value={days}
+						onChange={(e) => setDays(e?.value ?? 1)}
+						min={1}
+						max={7}
+						showButtons
+					/>
+				</div>
+				<div className="new-downtime-label-set">
+					<label htmlFor="dc">DC</label>
+					<InputNumber
+						className="dt-input-width"
+						id="dc"
+						value={dc}
+						onChange={(e) => setDC(e.value ?? 1)}
+						min={1}
+						showButtons
+					/>
+				</div>
+				<div className="new-downtime-label-set">
+					<label htmlFor="details">Additional Details</label>
+					<InputText
+						className="dt-input-width"
+						id="details"
+						value={details}
+						onChange={(e) => setDetails(e.target.value ?? "")}
+					/>
+				</div>
+				{Array.from({ length: days }, (_, i) => {
+					return (
+						<>
+							<Divider />
+							<PerDayEntry
+								key={`per-day-entry-${i}`}
+								id={i}
+								value={data[i]}
+								setValue={updateEntry(i)}
+								endDate={endDate}
+							/>
+						</>
+					);
+				})}
+			</div>
+		</Dialog>
+	);
+}
+
+type DayEntry = {
+	assurance: boolean;
+	roll?: number;
+	bonus: number;
+};
+
+function PerDayEntry({
+	id,
+	value,
+	setValue,
+	endDate,
+}: {
+	id: number;
+	value: DayEntry;
+	setValue: (i: DayEntry) => void;
+	endDate: Date;
+}) {
+	if (!value) {
+		return <></>;
+	}
+
+	return (
+		<div className="new-downtime-per-day-entry">
+			<h3>Day {formatDate(subDate(endDate, id))}</h3>
+			<div className="new-downtime-label-set">
+				<label htmlFor={`${id}-assurance`}>Assurance</label>
+				<InputSwitch
+					id={`${id}-assurance`}
+					checked={value.assurance}
+					onChange={(e: InputSwitchChangeEvent) => {
+						value.assurance = e.value || false;
+						setValue({ ...value });
+					}}
+				/>
+			</div>
+			<div className="new-downtime-label-set">
+				<label htmlFor="roll">Roll</label>
+				<InputNumber
+					className="dt-input-width"
+					id="roll"
+					value={value.roll}
+					onChange={(e) => {
+						value.roll = e.value || 0;
+						setValue({ ...value });
+					}}
+					min={1}
+					max={20}
+					showButtons
+					disabled={value.assurance}
+				/>
+			</div>
+			<div className="new-downtime-label-set">
+				<label htmlFor={`${id}-bonus`}>Bonus</label>
+				<InputNumber
+					className="dt-input-width"
+					id={`${id}-bonus`}
+					value={value.bonus}
+					onChange={(e) => {
+						value.bonus = e.value || 0;
+						setValue({ ...value });
+					}}
+					showButtons
+				/>
+			</div>
 		</div>
 	);
 }

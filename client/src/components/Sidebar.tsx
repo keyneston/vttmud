@@ -7,7 +7,6 @@ import CharacterCreation from "../components/CharacterCreation";
 import { loggedIn } from "../cookies/discord";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
-import { Tooltip } from "primereact/tooltip";
 import { Link } from "react-router-dom";
 
 import "./Sidebar.scss";
