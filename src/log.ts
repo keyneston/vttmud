@@ -35,7 +35,7 @@ export const updateLogEntryEndpoint = async (req: Request, res: Response, next: 
     const user = req.signedCookies["discord-user"];
     const id = parseInt(req.params.id);
     if (id != req.body.characterID) {
-        return new StatusError("Bad Request", 400, "url id and body id don't match");
+        return next(new StatusError("Bad Request", 400, "url id and body id don't match"));
     }
 
     var character = await prisma.character.findUnique({
@@ -45,7 +45,7 @@ export const updateLogEntryEndpoint = async (req: Request, res: Response, next: 
     });
 
     if (!character || character.owner != user.id) {
-        return new StatusError("Unauthorized", 403);
+        return next(new StatusError("Unauthorized", 403));
     }
 
     var updatedEntry = await prisma.characterLogEntry.update({

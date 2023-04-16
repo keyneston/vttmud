@@ -7,7 +7,6 @@ import CharacterCreation from "../components/CharacterCreation";
 import { loggedIn } from "../cookies/discord";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
-import { Tooltip } from "primereact/tooltip";
 import { Link } from "react-router-dom";
 
 import "./Sidebar.scss";
@@ -165,6 +164,19 @@ function CharacterSection({ char }: { char: Character }) {
 								outlined
 								aria-label="Log"
 								severity="info"
+								size="large"
+							/>
+						</Link>
+					</div>
+					<div className="sidebar-sublink">
+						<Link className="sidebar-link" to={`/character/${char.id}/downtime`}>
+							<Button
+								icon="pi pi-moon"
+								tooltip="Downtime"
+								rounded
+								outlined
+								aria-label="Downtime"
+								severity="warning"
 								size="large"
 							/>
 						</Link>

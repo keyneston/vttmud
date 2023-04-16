@@ -13,6 +13,7 @@ import Templates from "./routes/templates";
 import Home from "./routes/home";
 import CharacterLog from "./routes/log";
 import CharacterSheet from "./routes/CharacterSheet";
+import DowntimeLog from "./routes/DowntimeLog";
 
 const router = createBrowserRouter([
 	{
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
 			{
 				path: "character/:id/log",
 				element: <CharacterLog />,
+			},
+			{
+				path: "character/:id/downtime",
+				element: <DowntimeLog />,
 			},
 		],
 	},
