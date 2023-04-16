@@ -25,6 +25,16 @@ export enum Activity {
     Retraining = "Retraining",
 }
 
+export const ActivityColors: Map<string, string> = new Map([
+    [String(Activity.GatherResources), "green"],
+    [String(Activity.Perform), "#ef476f"],
+    [String(Activity.Craft), "#ffd166"],
+    [String(Activity.EarnIncome), "#06d6a0"],
+    [String(Activity.LearnASpell), "#118ab2"],
+    [String(Activity.Retraining), "#073b4c"],
+    [String(Activity.Unknown), "#ef233c"],
+]);
+
 export async function listDowntimeEntries(characterID: number): Promise<DowntimeEntry[]> {
     let resp = await fetch(`/api/v1/character/${characterID}/downtime`, {
         method: "GET",

@@ -18,6 +18,7 @@ export default function Home() {
 						Added log for tracking uses of downtime. UI is rudimentary at this
 						point.
 					</li>
+					<li>Added pie chart for Activity type in Downtime Log.</li>
 				</ul>
 				<li>April 15th</li>
 				<ul>

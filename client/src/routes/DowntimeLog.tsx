@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 
 import { Button } from "primereact/button";
 import { Calendar } from "primereact/calendar";
+import { Chart } from "primereact/chart";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
@@ -13,9 +14,10 @@ import { Divider } from "primereact/divider";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
+import { Panel } from "primereact/panel";
 import { Tag } from "primereact/tag";
 
-import { createDowntimeEntries, listDowntimeEntries, DowntimeEntry, Activity } from "../api/downtime";
+import { createDowntimeEntries, listDowntimeEntries, DowntimeEntry, Activity, ActivityColors } from "../api/downtime";
 import { subDate, formatDate } from "../date";
 import "./DowntimeLog.scss";
 
@@ -105,33 +107,7 @@ const assuranceBodyTemplate = (rowData: DowntimeEntry) => {
 
 const activityTemplate = (activity: Activity) => {
 	var tagLabel = activity as string;
-	var tagColor: string = "green";
-
-	switch (activity) {
-		case Activity.GatherResources:
-			tagColor = "green";
-			break;
-		case Activity.Perform:
-			tagColor = "#ef476f";
-			break;
-		case Activity.Craft:
-			tagColor = "#ffd166";
-			break;
-		case Activity.EarnIncome:
-			tagColor = "#06d6a0";
-			break;
-		case Activity.LearnASpell:
-			tagColor = "#118ab2";
-			break;
-		case Activity.Retraining:
-			tagColor = "#073b4c";
-			break;
-		case Activity.Unknown:
-			tagColor = "#ef233c";
-			break;
-		default:
-			activity satisfies never;
-	}
+	var tagColor: string = ActivityColors.get(activity) || "green";
 
 	return <Tag value={tagLabel} style={{ background: tagColor }} />;
 };
@@ -145,7 +121,7 @@ export default function DowntimeLog() {
 
 	useEffect(() => {
 		listDowntimeEntries(id).then((d: DowntimeEntry[]) => setData(d));
-	}, [listDowntimeEntries]);
+	}, [listDowntimeEntries, id]);
 
 	return (
 		<div className="downtime-root">
@@ -185,6 +161,7 @@ export default function DowntimeLog() {
 				<Column field="result" header="Result" body={resultTemplate} />
 				<Column field="details" header="Additional Details" body={(e) => e.details} />
 			</DataTable>
+			<ActivityPieChart data={data} />
 		</div>
 	);
 }
@@ -435,5 +412,52 @@ function PerDayEntry({
 				/>
 			</div>
 		</div>
+	);
+}
+
+function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
+	var activityCounts: { [key: string]: number } = {};
+	data.forEach((x) => {
+		activityCounts[x.activity] = 1 + (activityCounts[x.activity] || 0);
+	});
+
+	var chartData = {
+		labels: [
+			Activity.Retraining,
+			Activity.LearnASpell,
+			Activity.EarnIncome,
+			Activity.Craft,
+			Activity.Perform,
+			Activity.GatherResources,
+			"Unknown",
+		],
+		datasets: [
+			{
+				data: [
+					activityCounts[Activity.Retraining],
+					activityCounts[Activity.LearnASpell],
+					activityCounts[Activity.EarnIncome],
+					activityCounts[Activity.Craft],
+					activityCounts[Activity.Perform],
+					activityCounts[Activity.GatherResources],
+					activityCounts[Activity.Unknown],
+				],
+				backgroundColor: [
+					ActivityColors.get(Activity.Retraining),
+					ActivityColors.get(Activity.LearnASpell),
+					ActivityColors.get(Activity.EarnIncome),
+					ActivityColors.get(Activity.Craft),
+					ActivityColors.get(Activity.Perform),
+					ActivityColors.get(Activity.GatherResources),
+					ActivityColors.get(Activity.Unknown),
+				],
+			},
+		],
+	};
+
+	return (
+		<Panel header="Activity Type" style={{ width: "23rem" }}>
+			<Chart type="pie" data={chartData} className="" style={{ width: "20rem", height: "20rem" }} />
+		</Panel>
 	);
 }
