@@ -7,6 +7,7 @@ import { Button } from "primereact/button";
 import { Calendar } from "primereact/calendar";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { Dropdown } from "primereact/dropdown";
 import { Dialog } from "primereact/dialog";
 import { Divider } from "primereact/divider";
 import { InputText } from "primereact/inputtext";
@@ -14,7 +15,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
 import { Tag } from "primereact/tag";
 
-import { createDowntimeEntries, listDowntimeEntries, DowntimeEntry } from "../api/characters";
+import { createDowntimeEntries, listDowntimeEntries, DowntimeEntry, Activity } from "../api/downtime";
 import { subDate, formatDate } from "../date";
 import "./DowntimeLog.scss";
 
@@ -82,6 +83,15 @@ const resultTemplate = (r: DowntimeEntry) => {
 	return <Tag severity={tagColor} value={tagLabel} />;
 };
 
+const activities = [
+	Activity.EarnIncome,
+	Activity.Perform,
+	Activity.Craft,
+	Activity.GatherResources,
+	Activity.LearnASpell,
+	Activity.Retraining,
+];
+
 const assuranceBodyTemplate = (rowData: DowntimeEntry) => {
 	return (
 		<i
@@ -91,6 +101,39 @@ const assuranceBodyTemplate = (rowData: DowntimeEntry) => {
 			})}
 		></i>
 	);
+};
+
+const activityTemplate = (activity: Activity) => {
+	var tagLabel = activity as string;
+	var tagColor: string = "green";
+
+	switch (activity) {
+		case Activity.GatherResources:
+			tagColor = "green";
+			break;
+		case Activity.Perform:
+			tagColor = "#ef476f";
+			break;
+		case Activity.Craft:
+			tagColor = "#ffd166";
+			break;
+		case Activity.EarnIncome:
+			tagColor = "#06d6a0";
+			break;
+		case Activity.LearnASpell:
+			tagColor = "#118ab2";
+			break;
+		case Activity.Retraining:
+			tagColor = "#073b4c";
+			break;
+		case Activity.Unknown:
+			tagColor = "#ef233c";
+			break;
+		default:
+			activity satisfies never;
+	}
+
+	return <Tag value={tagLabel} style={{ background: tagColor }} />;
 };
 
 export default function DowntimeLog() {
@@ -130,6 +173,7 @@ export default function DowntimeLog() {
 				/>
 				<Column field="level" header="Level" body={(e) => e.level} />
 				<Column field="assurance" header="Assurance" body={assuranceBodyTemplate} />
+				<Column field="activity" header="Activity" body={(e) => activityTemplate(e.activity)} />
 				<Column field="roll" header="Roll" body={(e) => e.roll} />
 				<Column field="bonus" header="Bonus" body={(e) => e.bonus} />
 				<Column
@@ -194,12 +238,12 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 				return {
 					date: subDate(data.endDate, i),
 					dc: data.dc,
-					roll: data.entries[i].roll,
+					roll: data.entries[i].assurance ? null : data.entries[i].roll,
 					assurance: data.entries[i].assurance,
 					bonus: data.entries[i].bonus,
 					details: data.details,
 					activity: data.activity,
-					level: data.level, // TODO: finish adding level
+					level: data.level,
 				} as DowntimeEntry;
 			});
 
@@ -272,6 +316,20 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							onChange={(e) => formik.setFieldValue("dc", e.value ?? 20)}
 							min={1}
 							showButtons
+						/>
+					</div>
+					<div className="new-downtime-label-set">
+						<label htmlFor="activity">Activity</label>
+						<Dropdown
+							id="activity"
+							value={formik.values.activity}
+							onChange={(e) => formik.setFieldValue("activity", e.value)}
+							options={activities}
+							placeholder="Select an Activity"
+							valueTemplate={activityTemplate}
+							itemTemplate={activityTemplate}
+							className="w-full md:w-14rem"
+							style={{ width: "12rem" }}
 						/>
 					</div>
 					<div className="new-downtime-label-set">

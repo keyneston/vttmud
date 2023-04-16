@@ -51,7 +51,7 @@ model DowntimeEntry {
   characterID Int
   activity    String
   level       Int
-  roll        Int
+  roll        Int?
   bonus       Int
   dc          Int
   assurance   Boolean
