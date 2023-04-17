@@ -161,7 +161,10 @@ export default function DowntimeLog() {
 				<Column field="result" header="Result" body={resultTemplate} />
 				<Column field="details" header="Additional Details" body={(e) => e.details} />
 			</DataTable>
-			<ActivityPieChart data={data} />
+			<div className="dt-charts">
+				<ActivityPieChart data={data} />
+				<SuccessRatePieChart data={data} />
+			</div>
 		</div>
 	);
 }
@@ -458,6 +461,31 @@ function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 
 	return (
 		<Panel header="Activity Type" style={{ width: "23rem" }}>
+			<Chart type="pie" data={chartData} className="" style={{ width: "20rem", height: "20rem" }} />
+		</Panel>
+	);
+}
+
+function SuccessRatePieChart({ data }: { data: DowntimeEntry[] }) {
+	const documentStyle = getComputedStyle(document.documentElement);
+	var successRate: number[] = [0, 0, 0, 0];
+	data.forEach((x) => {
+		var rate = calculateSuccess(x);
+		successRate[4 - rate] += 1;
+	});
+
+	var chartData = {
+		labels: ["Critical Success", "Success", "Failure", "Critical Failure"],
+		datasets: [
+			{
+				data: successRate,
+				backgroundColor: ["#0288D1", "#689F38", "#FBC02D", "#D32F2F"],
+			},
+		],
+	};
+
+	return (
+		<Panel header="Success Rate" style={{ width: "23rem" }}>
 			<Chart type="pie" data={chartData} className="" style={{ width: "20rem", height: "20rem" }} />
 		</Panel>
 	);

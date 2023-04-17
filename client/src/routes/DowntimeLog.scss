@@ -29,3 +29,10 @@
 .dt-input-width > input {
 	max-width: 8rem;
 }
+
+.dt-charts {
+	padding-top: 2rem;
+	display: flex;
+	flex-flow: row wrap;
+	gap: 2rem;
+}
