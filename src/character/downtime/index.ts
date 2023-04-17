@@ -28,8 +28,6 @@ export const createDowntimeEntriesEndpoint = async (req: Request, res: Response,
             data: entries,
         });
 
-        console.log("results: ", JSON.stringify(results));
-
         res.json({ status: "success" });
     } catch (e: any) {
         return next(new StatusError("Internal Server Error", 500, e.message));
@@ -57,8 +55,6 @@ export const getDowntimeEntriesEndpoint = async (req: Request, res: Response, ne
         if (!character || character.owner != user.id) {
             return next(new StatusError("Unauthorized", 403));
         }
-
-        console.log("Returning endpoints: ", character.DowntimeEntry);
 
         return res.json(character.DowntimeEntry);
     } catch (e: any) {
