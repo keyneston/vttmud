@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
 import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
@@ -11,10 +12,6 @@ import { subDate, formatDate } from "./date";
 import { formulaCost, craftDC } from "./pf2e/income";
 
 import "./CraftTemplate.css";
-
-var itemsDB: Item[] = [];
-
-getItemsDB();
 
 function emptyPerson(id: number): CraftPerson {
 	const character_name = localStorage.getItem(`character_name_${id}`) || "";
@@ -36,11 +33,13 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 		return parseInt(value || "0");
 	});
 
-	localStorage.setItem("character_name_0", people[0].name);
-	localStorage.setItem("character_name_1", people[1].name);
-	localStorage.setItem("character_name_2", people[2].name);
-	localStorage.setItem("character_name_3", people[3].name);
-	localStorage.setItem("craft_template_people_count", peopleCount.toString());
+	useEffect(() => {
+		localStorage.setItem("character_name_0", people[0].name);
+		localStorage.setItem("character_name_1", people[1].name);
+		localStorage.setItem("character_name_2", people[2].name);
+		localStorage.setItem("character_name_3", people[3].name);
+		localStorage.setItem("craft_template_people_count", peopleCount.toString());
+	}, [people[0].name, people[1].name, people[2].name, people[3].name, peopleCount]);
 
 	const updatePerson = (id: number): ((i: CraftPerson) => void) => {
 		return (i: CraftPerson) => {
@@ -251,6 +250,13 @@ type ItemAutoCompleteProps = {
 function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 	const [searchEntries, setSearchEntires] = useState<Item[] | void>();
 
+	const { isLoading, error, data, isFetching } = useQuery({
+		queryKey: ["itemsDB"],
+		queryFn: () => fetch("/items.db.json").then((response) => response.json()),
+		cacheTime: 3600 * 1000, // 1 hour
+	});
+	const itemsDB: Item[] = !isLoading && !error ? data : [];
+
 	return (
 		<div className="ct-label-set">
 			<label htmlFor="item">Item</label>
@@ -312,19 +318,6 @@ function ItemInformation({ item, level, itemCount }: ItemInformationProps) {
 			</div>
 		</div>
 	);
-}
-
-function getItemsDB() {
-	console.log("itemsDB: Starting fetch");
-	return fetch("/items.db.json")
-		.then((response) => response.json())
-		.then((responseJson) => {
-			console.log("itemsDB: Updated");
-			itemsDB = responseJson;
-		})
-		.catch((error) => {
-			console.error(error);
-		});
 }
 
 export { CraftTemplate };
