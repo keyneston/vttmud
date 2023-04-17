@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useReducer } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { classNames } from "primereact/utils";
 import { useFormik, FormikValues, FormikErrors } from "formik";
@@ -141,33 +141,39 @@ export default function DowntimeLog() {
 				/>
 			</div>
 			<NewDowntimeEntry visible={visible} setVisible={setVisible} />
-			<DataTable
-				value={data}
-				tableStyle={{ minWidth: "50rem" }}
-				stripedRows
-				paginator
-				rows={20}
-				rowsPerPageOptions={[20, 50, 100]}
-			>
-				<Column
-					field="date"
-					header="Date"
-					body={(e) => `${e.date.getMonth() + 1}/${e.date.getDate()}`}
-				/>
-				<Column field="level" header="Level" body={(e) => e.level} />
-				<Column field="assurance" header="Assurance" body={assuranceBodyTemplate} />
-				<Column field="activity" header="Activity" body={(e) => activityTemplate(e.activity)} />
-				<Column field="roll" header="Roll" body={(e) => e.roll} />
-				<Column field="bonus" header="Bonus" body={(e) => e.bonus} />
-				<Column
-					field="total"
-					header="Total"
-					body={(e) => (e.assurance ? 10 : e.roll) + e.bonus}
-				/>
-				<Column field="dc" header="DC" body={(e) => e.dc} />
-				<Column field="result" header="Result" body={resultTemplate} />
-				<Column field="details" header="Additional Details" body={(e) => e.details} />
-			</DataTable>
+			<Panel header="Downtime Log">
+				<DataTable
+					value={data}
+					tableStyle={{ minWidth: "50rem" }}
+					stripedRows
+					paginator
+					rows={20}
+					rowsPerPageOptions={[20, 50, 100]}
+				>
+					<Column
+						field="date"
+						header="Date"
+						body={(e) => `${e.date.getMonth() + 1}/${e.date.getDate()}`}
+					/>
+					<Column field="level" header="Level" body={(e) => e.level} />
+					<Column field="assurance" header="Assurance" body={assuranceBodyTemplate} />
+					<Column
+						field="activity"
+						header="Activity"
+						body={(e) => activityTemplate(e.activity)}
+					/>
+					<Column field="roll" header="Roll" body={(e) => e.roll} />
+					<Column field="bonus" header="Bonus" body={(e) => e.bonus} />
+					<Column
+						field="total"
+						header="Total"
+						body={(e) => (e.assurance ? 10 : e.roll) + e.bonus}
+					/>
+					<Column field="dc" header="DC" body={(e) => e.dc} />
+					<Column field="result" header="Result" body={resultTemplate} />
+					<Column field="details" header="Additional Details" body={(e) => e.details} />
+				</DataTable>
+			</Panel>
 			<div className="dt-charts">
 				<ActivityPieChart data={data || []} />
 				<SuccessRatePieChart data={data || []} />
@@ -192,6 +198,7 @@ type FormikDowntimeEntry = {
 };
 
 function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
+	const [, forceUpdate] = useReducer((x) => x + 1, 0);
 	const queryClient = useQueryClient();
 	const urlParams = useParams();
 	const id: number = parseInt(urlParams.id || "0");
@@ -332,6 +339,23 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							itemTemplate={activityTemplate}
 							className="w-full md:w-14rem"
 							style={{ width: "12rem" }}
+						/>
+					</div>
+					<div className="new-downtime-label-set">
+						<label htmlFor="bonus">Bonus</label>
+						<InputNumber
+							id="bonus"
+							showButtons
+							className="dt-input-width"
+							onChange={(e) => {
+								formik.values.entries.forEach(
+									(_, i) =>
+										(formik.values.entries[i].bonus =
+											e.value || 0)
+								);
+
+								forceUpdate();
+							}}
 						/>
 					</div>
 					<div className="new-downtime-label-set">
