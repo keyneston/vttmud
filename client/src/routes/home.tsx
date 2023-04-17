@@ -15,6 +15,7 @@ export default function Home() {
 				<li>April 17th</li>
 				<ul>
 					<li>Fix sorting of downtime entries</li>
+					<li>Default level/craft dcs in downtime entries to current level</li>
 				</ul>
 				<li>April 16th</li>
 				<ul>

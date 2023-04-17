@@ -169,7 +169,7 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 		},
 		onSubmit: async (data) => {
 			await updateLog(data);
-			queryClient.invalidateQueries(["character", id, "log"]);
+			queryClient.invalidateQueries(["character", id]);
 
 			setVisible(false);
 			formik.resetForm();

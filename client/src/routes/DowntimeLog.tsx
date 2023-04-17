@@ -19,7 +19,9 @@ import { Panel } from "primereact/panel";
 import { Tag } from "primereact/tag";
 
 import { createDowntimeEntries, listDowntimeEntries, DowntimeEntry, Activity, ActivityColors } from "../api/downtime";
+import { fetchCharacter, calculateLevel } from "../api/characters";
 import { subDate, formatDate } from "../date";
+import { craftDC } from "../pf2e/income";
 import "./DowntimeLog.scss";
 
 const calculateSuccess = function (r: DowntimeEntry): number {
@@ -119,13 +121,14 @@ export default function DowntimeLog() {
 	const urlParams = useParams();
 	const id: number = parseInt(urlParams.id || "0");
 
-	const { data } = useQuery({
+	const entries = useQuery({
 		queryKey: ["listDowntimeEntries", id],
 		queryFn: () => listDowntimeEntries(id),
 		placeholderData: [],
 		staleTime: 5 * 60 * 1000,
 		cacheTime: 10 * 60 * 1000,
 	});
+	const data = entries.data;
 
 	return (
 		<div className="downtime-root">
@@ -192,14 +195,27 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 	const queryClient = useQueryClient();
 	const urlParams = useParams();
 	const id: number = parseInt(urlParams.id || "0");
+
+	const char = useQuery({
+		queryKey: ["character", id],
+		queryFn: () => fetchCharacter(id),
+		staleTime: 5 * 60 * 1000,
+		cacheTime: 10 * 60 * 1000,
+		onSuccess: (data) => {
+			const level = calculateLevel(data?.experience || 0);
+			formik.setFieldValue("level", level);
+			formik.setFieldValue("dc", craftDC(level));
+		},
+	});
+
 	const formik = useFormik<FormikDowntimeEntry>({
 		initialValues: {
 			endDate: new Date(),
 			days: 1,
-			dc: 20,
+			dc: craftDC(calculateLevel(char?.data?.experience || 0)),
 			details: "",
 			activity: "Earn Income",
-			level: 1,
+			level: calculateLevel(char?.data?.experience || 0),
 			entries: Array.from({ length: 7 }, () => {
 				return { assurance: false, bonus: 0, roll: 0 };
 			}),

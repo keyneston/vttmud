@@ -75,4 +75,8 @@ export async function listServers(): Promise<Server[]> {
     return resp.json();
 }
 
+export function calculateLevel(experience: number): number {
+    return Math.floor(experience / 1000) + 1;
+}
+
 export {};
