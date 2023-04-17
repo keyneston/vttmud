@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
-import { useCookies } from "react-cookie";
+import { useState } from "react";
 import { listCharacters, Character } from "../api/characters";
 import { getColor } from "../helpers/colors";
 import { CDN } from "../constants";
@@ -13,10 +12,9 @@ import { Link } from "react-router-dom";
 import "./Sidebar.scss";
 
 export function Sidebar() {
-	const [authToken, setAuthToken] = useCookies(["discord"]);
 	const [ccVisible, setCCVisible] = useState(false);
 
-	const { isLoading, error, data, isFetching } = useQuery({
+	const { isLoading, error, data } = useQuery({
 		queryKey: ["listCharacters"],
 		queryFn: () => listCharacters(),
 		cacheTime: 5 * 60 * 1000,

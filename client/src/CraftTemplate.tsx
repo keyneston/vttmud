@@ -39,7 +39,7 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 		localStorage.setItem("character_name_2", people[2].name);
 		localStorage.setItem("character_name_3", people[3].name);
 		localStorage.setItem("craft_template_people_count", peopleCount.toString());
-	}, [people[0].name, people[1].name, people[2].name, people[3].name, peopleCount]);
+	}, [people, peopleCount]);
 
 	const updatePerson = (id: number): ((i: CraftPerson) => void) => {
 		return (i: CraftPerson) => {
@@ -250,13 +250,14 @@ type ItemAutoCompleteProps = {
 function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 	const [searchEntries, setSearchEntires] = useState<Item[] | void>();
 
-	const { isLoading, error, data, isFetching } = useQuery({
+	const { data } = useQuery({
 		queryKey: ["itemsDB"],
 		queryFn: () => fetch("/items.db.json").then((response) => response.json()),
+		placeholderData: [],
 		cacheTime: 3600 * 1000, // 1 hour
 		staleTime: 3600 * 1000,
 	});
-	const itemsDB: Item[] = !isLoading && !error ? data : [];
+	const itemsDB: Item[] = data || [];
 
 	return (
 		<div className="ct-label-set">

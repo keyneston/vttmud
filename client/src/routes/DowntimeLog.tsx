@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { classNames } from "primereact/utils";
-import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
+import { useFormik, FormikValues, FormikErrors } from "formik";
 import { useParams } from "react-router-dom";
 
 import { Button } from "primereact/button";
@@ -119,7 +119,7 @@ export default function DowntimeLog() {
 	const urlParams = useParams();
 	const id: number = parseInt(urlParams.id || "0");
 
-	const { isLoading, data, error } = useQuery({
+	const { data } = useQuery({
 		queryKey: ["listDowntimeEntries", id],
 		queryFn: () => listDowntimeEntries(id),
 		placeholderData: [],
@@ -476,8 +476,6 @@ function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 }
 
 function SuccessRatePieChart({ data }: { data: DowntimeEntry[] }) {
-	const documentStyle = getComputedStyle(document.documentElement);
-
 	const successRate = useMemo(() => {
 		var successRate: number[] = [0, 0, 0, 0];
 		data.forEach((x) => {

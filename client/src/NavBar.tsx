@@ -22,15 +22,7 @@ function NavBar() {
 					</div>
 				</div>
 				<div className="navbar-right">
-					<button className="avatar">
-						<Avatar
-							label="U"
-							size="xlarge"
-							style={style}
-							image={image}
-							shape="circle"
-						/>
-					</button>
+					<Avatar label="U" size="xlarge" style={style} image={image} shape="circle" />
 					<Toast ref={toast} />
 				</div>
 			</div>

@@ -1,6 +1,7 @@
-import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
+import { useFormik, FormikValues, FormikErrors } from "formik";
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
 import { DataTable } from "primereact/datatable";
 import { ReactNode } from "react";
 import { Column } from "primereact/column";
@@ -16,28 +17,27 @@ import "./log.scss";
 export default function CharacterLog() {
 	const urlParams = useParams();
 	const [visible, setVisible] = useState(false);
-	const [logEntries, setLogEntries] = useState<CharacterLogEntry[]>([]);
 	const [sum, setSum] = useState<number>(0);
 
 	const id = parseInt(urlParams.id || "0");
 
-	useEffect(() => {
-		getLog(id).then((data: CharacterLogEntry[]) => {
-			setLogEntries(data);
-		});
-	}, [id]);
+	const { data } = useQuery({
+		queryKey: ["character", id, "log"],
+		queryFn: () => getLog(id),
+		placeholderData: [],
+		staleTime: 5 * 60 * 1000,
+		cacheTime: 10 * 60 * 1000,
+	});
+	const logEntries = useMemo(() => data || [], [data]);
 
-	useEffect(() => {
+	var newSum = useMemo(() => {
 		var newSum: number = 0;
 		logEntries.forEach((e) => {
 			newSum = +(e.gold || 0) + +newSum;
 		});
-		setSum(newSum);
-	}, [id, logEntries]);
-
-	const appendEntry = (logEntry: CharacterLogEntry) => {
-		setLogEntries([logEntry, ...logEntries]);
-	};
+		return newSum;
+	}, [logEntries]);
+	setSum(newSum);
 
 	const formatDate = (e: CharacterLogEntry): ReactNode => {
 		if (!e.createdAt) {
@@ -122,7 +122,7 @@ export default function CharacterLog() {
 						setVisible(false);
 					}}
 				>
-					<NewEntry id={id} setVisible={setVisible} appendEntry={appendEntry} />
+					<NewEntry id={id} setVisible={setVisible} />
 				</Dialog>
 
 				<DataTable
@@ -148,17 +148,10 @@ export default function CharacterLog() {
 	);
 }
 
-function NewEntry({
-	id,
-	setVisible,
-	appendEntry,
-}: {
-	id: number;
-	setVisible: (visible: boolean) => void;
-	appendEntry: (x: CharacterLogEntry) => void;
-}) {
+function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolean) => void }) {
 	const [money, setMoney] = useState<Gold>({ spend: false });
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const formik = useFormik({
 		initialValues: {
@@ -175,23 +168,14 @@ function NewEntry({
 			return errors;
 		},
 		onSubmit: async (data) => {
-			var results = await updateLog(data);
-			appendEntry(results);
+			await updateLog(data);
+			queryClient.invalidateQueries(["character", id, "log"]);
 
 			setVisible(false);
 			formik.resetForm();
 			navigate(`/character/${id}/log`);
 		},
 	});
-
-	const errors: { [key: string]: string } = formik.errors;
-	const touched: FormikTouched<FormikValues> = formik.touched;
-	const isFormFieldValid = (name: string) => !!(touched[name] && errors[name]);
-	const getFormErrorMessage = (name: string) => {
-		let error = errors[name];
-
-		return isFormFieldValid(name) && <small className="p-error">{error}</small>;
-	};
 
 	return (
 		<>

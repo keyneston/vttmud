@@ -1,14 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Character, fetchCharacter } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
 
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
-import { InputText } from "primereact/inputtext";
-import { parseBlob } from "../blob";
+// import { parseBlob } from "../blob";
 
 import "./CharacterSheet.scss";
 
@@ -18,7 +17,7 @@ export default function CharacterSheet() {
 	const urlParams = useParams();
 
 	var id: number = parseInt(urlParams.id || "0");
-	const { isLoading, error, data } = useQuery({
+	const { isLoading, data } = useQuery({
 		queryKey: ["character", id],
 		queryFn: () => fetchCharacter(id),
 		cacheTime: 10 * 60 * 1000,

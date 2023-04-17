@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
+import { useFormik, FormikValues, FormikErrors } from "formik";
 import { useNavigate } from "react-router-dom";
 import { GoldEntry } from "./GoldEntry";
 import { Gold } from "../api/items";
@@ -26,17 +26,14 @@ export default function CharacterCreation({
 	const [money, setMoney] = useState<Gold>({ spend: false });
 	const [server, setServer] = useState<Server>({ id: 0, name: "", discordID: "" });
 
-	const { isLoading, error, data, isFetching } = useQuery({
+	const { data } = useQuery({
 		queryKey: ["listServers"],
 		queryFn: () => listServers(),
+		placeholderData: [],
 		staleTime: 10 * 60 * 1000,
 		cacheTime: 10 * 60 * 1000,
 	});
-
-	var serverList: Server[] = [];
-	if (!isLoading && !error) {
-		serverList = data ?? [];
-	}
+	const serverList = data || [];
 
 	const formik = useFormik({
 		initialValues: {
