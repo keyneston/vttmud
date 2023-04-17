@@ -340,6 +340,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 						type="submit"
 						severity="success"
 						icon="pi pi-file-edit"
+						style={{ height: "3rem" }}
 					/>
 				</div>
 			</form>

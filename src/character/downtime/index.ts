@@ -46,7 +46,11 @@ export const getDowntimeEntriesEndpoint = async (req: Request, res: Response, ne
                 id: id,
             },
             include: {
-                DowntimeEntry: true,
+                DowntimeEntry: {
+                    orderBy: {
+                        date: "desc",
+                    },
+                },
             },
         });
 
