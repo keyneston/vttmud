@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { classNames } from "primereact/utils";
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
 import { useParams } from "react-router-dom";
@@ -114,14 +115,17 @@ const activityTemplate = (activity: Activity) => {
 
 export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
-	const [data, setData] = useState<DowntimeEntry[]>([]);
 
 	const urlParams = useParams();
 	const id: number = parseInt(urlParams.id || "0");
 
-	useEffect(() => {
-		listDowntimeEntries(id).then((d: DowntimeEntry[]) => setData(d));
-	}, [listDowntimeEntries, id]);
+	const { isLoading, data, error } = useQuery({
+		queryKey: ["listDowntimeEntries", id],
+		queryFn: () => listDowntimeEntries(id),
+		placeholderData: [],
+		staleTime: 5 * 60 * 1000,
+		cacheTime: 10 * 60 * 1000,
+	});
 
 	return (
 		<div className="downtime-root">
@@ -162,8 +166,8 @@ export default function DowntimeLog() {
 				<Column field="details" header="Additional Details" body={(e) => e.details} />
 			</DataTable>
 			<div className="dt-charts">
-				<ActivityPieChart data={data} />
-				<SuccessRatePieChart data={data} />
+				<ActivityPieChart data={data || []} />
+				<SuccessRatePieChart data={data || []} />
 			</div>
 		</div>
 	);
@@ -185,6 +189,7 @@ type FormikDowntimeEntry = {
 };
 
 function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
+	const queryClient = useQueryClient();
 	const urlParams = useParams();
 	const id: number = parseInt(urlParams.id || "0");
 	const formik = useFormik<FormikDowntimeEntry>({
@@ -228,6 +233,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 			});
 
 			createDowntimeEntries(id, entries);
+			queryClient.invalidateQueries(["listDowntimeEntries", id]);
 
 			setVisible(false);
 			formik.resetForm();

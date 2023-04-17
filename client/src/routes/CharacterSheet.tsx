@@ -21,6 +21,8 @@ export default function CharacterSheet() {
 	const { isLoading, error, data } = useQuery({
 		queryKey: ["character", id],
 		queryFn: () => fetchCharacter(id),
+		cacheTime: 10 * 60 * 1000,
+		staleTime: 5 * 60 * 1000,
 	});
 
 	const chooseOptions = {

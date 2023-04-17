@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
 import { useNavigate } from "react-router-dom";
 import { GoldEntry } from "./GoldEntry";
@@ -20,16 +21,22 @@ export default function CharacterCreation({
 	visible: boolean;
 	setVisible: (x: boolean) => void;
 }) {
+	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const [money, setMoney] = useState<Gold>({ spend: false });
-	const [serverList, setServerList] = useState<Server[]>([]);
 	const [server, setServer] = useState<Server>({ id: 0, name: "", discordID: "" });
 
-	useEffect(() => {
-		listServers().then((servers: Server[]) => {
-			setServerList(servers);
-		});
-	}, []);
+	const { isLoading, error, data, isFetching } = useQuery({
+		queryKey: ["listServers"],
+		queryFn: () => listServers(),
+		staleTime: 10 * 60 * 1000,
+		cacheTime: 10 * 60 * 1000,
+	});
+
+	var serverList: Server[] = [];
+	if (!isLoading && !error) {
+		serverList = data ?? [];
+	}
 
 	const formik = useFormik({
 		initialValues: {
@@ -78,6 +85,8 @@ export default function CharacterCreation({
 			var results = await fetch("/api/v1/character", requestOptions).then((d) => {
 				return d.json();
 			});
+
+			queryClient.invalidateQueries(["listCharacters"]);
 
 			setVisible(false);
 			navigate(`/character/${results.id}`);

@@ -19,6 +19,8 @@ export function Sidebar() {
 	const { isLoading, error, data, isFetching } = useQuery({
 		queryKey: ["listCharacters"],
 		queryFn: () => listCharacters(),
+		cacheTime: 5 * 60 * 1000,
+		staleTime: 5 * 60 * 1000,
 	});
 
 	var charSections;
