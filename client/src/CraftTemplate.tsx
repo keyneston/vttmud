@@ -184,7 +184,7 @@ function Output({
 		if (person.days === 1) {
 			str = `${formatDate(person.endDate)}`;
 		} else {
-			str = `${formatDate(subDate(person.endDate, person.days))}-${formatDate(person.endDate)}`;
+			str = `${formatDate(subDate(person.endDate, person.days - 1))}-${formatDate(person.endDate)}`;
 		}
 		if (wrap) {
 			return `${person.name}(${str})`;

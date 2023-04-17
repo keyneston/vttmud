@@ -16,6 +16,8 @@ export default function Home() {
 				<ul>
 					<li>Fix sorting of downtime entries</li>
 					<li>Default level/craft dcs in downtime entries to current level</li>
+					<li>Add editing of existing character log entries</li>
+					<li>Fix bug where downtime log would record into the future</li>
 				</ul>
 				<li>April 16th</li>
 				<ul>
