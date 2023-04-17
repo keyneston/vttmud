@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { Character, fetchCharacter } from "../api/characters";
 import { money2string } from "../api/items";
@@ -12,21 +13,15 @@ import { parseBlob } from "../blob";
 import "./CharacterSheet.scss";
 
 export default function CharacterSheet() {
-	const [data, setData] = useState<Character | undefined>(undefined);
-	const [loading, setLoading] = useState(true);
 	const [edit, setEdit] = useState(false);
+	const queryClient = useQueryClient();
 	const urlParams = useParams();
 
-	const fetchData = async () => {
-		var id: string = urlParams.id || "";
-		var data = await fetchCharacter(id);
-		setData(data);
-		setLoading(false);
-	};
-
-	useEffect(() => {
-		fetchData();
-	}, [urlParams]);
+	var id: number = parseInt(urlParams.id || "0");
+	const { isLoading, error, data } = useQuery({
+		queryKey: ["character", id],
+		queryFn: () => fetchCharacter(id),
+	});
 
 	const chooseOptions = {
 		icon: "pi pi-fw pi-upload",
@@ -35,8 +30,7 @@ export default function CharacterSheet() {
 
 	return (
 		<div className="cs-root justify-end">
-			{loading && "Loading"}{" "}
-			{data && <DisplayCharacter character={data} edit={edit} refresh={fetchData} />}
+			{isLoading && "Loading"} {data && <DisplayCharacter character={data} edit={edit} />}
 			<div className="cs-button-collection justify-end">
 				<Button
 					className="cs-edit-button"
@@ -58,6 +52,7 @@ export default function CharacterSheet() {
 					chooseLabel="Upload JSON"
 					chooseOptions={chooseOptions}
 					className="justify-stretch"
+					onUpload={(e) => queryClient.invalidateQueries(["character", id])}
 				/>
 				<Button
 					className="cs-blob-download-button"
@@ -83,7 +78,8 @@ export default function CharacterSheet() {
 	);
 }
 
-function DisplayCharacter({ character, edit, refresh }: { character: Character; edit: boolean; refresh: () => void }) {
+function DisplayCharacter({ character, edit }: { character: Character; edit: boolean }) {
+	const queryClient = useQueryClient();
 	const imageMissing = (
 		<i className="pi pi-image cs-avatar-missing" style={{ fontSize: "8rem", color: "white" }} />
 	);
@@ -118,7 +114,12 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 							accept="image/*"
 							maxFileSize={MaximumImageSize}
 							chooseLabel="Change Avatar"
-							onUpload={(e) => refresh()}
+							onUpload={(e) =>
+								queryClient.invalidateQueries([
+									"character",
+									character.id,
+								])
+							}
 							chooseOptions={chooseOptions}
 						/>
 					)}

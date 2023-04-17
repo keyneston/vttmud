@@ -21,10 +21,15 @@ export function Sidebar() {
 		queryFn: () => listCharacters(),
 	});
 
-	if (isLoading) return <div>"Loading..."</div>;
-	if (error) return <div>"Error loading character list."</div>;
+	var charSections;
 
-	const charSections = data!.map((x: Character) => <CharacterSection key={x.name} char={x} />);
+	if (isLoading) {
+		charSections = <div>Loading...</div>;
+	} else if (error) {
+		charSections = <div>Error loading character list.</div>;
+	} else {
+		charSections = data!.map((x: Character) => <CharacterSection key={x.name} char={x} />);
+	}
 
 	return (
 		<div className="sidebar-root">
