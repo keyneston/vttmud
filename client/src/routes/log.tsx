@@ -17,7 +17,6 @@ import "./log.scss";
 export default function CharacterLog() {
 	const urlParams = useParams();
 	const [visible, setVisible] = useState(false);
-	const [sum, setSum] = useState<number>(0);
 
 	const id = parseInt(urlParams.id || "0");
 
@@ -28,16 +27,17 @@ export default function CharacterLog() {
 		staleTime: 5 * 60 * 1000,
 		cacheTime: 10 * 60 * 1000,
 	});
-	const logEntries = useMemo(() => data || [], [data]);
+	const logEntries: CharacterLogEntry[] = useMemo(() => {
+		return data || [];
+	}, [data]);
 
-	var newSum = useMemo(() => {
+	var sum = useMemo(() => {
 		var newSum: number = 0;
 		logEntries.forEach((e) => {
 			newSum = +(e.gold || 0) + +newSum;
 		});
 		return newSum;
 	}, [logEntries]);
-	setSum(newSum);
 
 	const formatDate = (e: CharacterLogEntry): ReactNode => {
 		if (!e.createdAt) {
