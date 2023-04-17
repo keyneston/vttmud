@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { classNames } from "primereact/utils";
 import { useFormik, FormikValues, FormikErrors, FormikTouched } from "formik";
 import { useParams } from "react-router-dom";
@@ -420,10 +420,13 @@ function PerDayEntry({
 }
 
 function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
-	var activityCounts: { [key: string]: number } = {};
-	data.forEach((x) => {
-		activityCounts[x.activity] = 1 + (activityCounts[x.activity] || 0);
-	});
+	const activityCounts = useMemo(() => {
+		var activityCounts: { [key: string]: number } = {};
+		data.forEach((x) => {
+			activityCounts[x.activity] = 1 + (activityCounts[x.activity] || 0);
+		});
+		return activityCounts;
+	}, [data]);
 
 	var chartData = {
 		labels: [
@@ -468,11 +471,15 @@ function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 
 function SuccessRatePieChart({ data }: { data: DowntimeEntry[] }) {
 	const documentStyle = getComputedStyle(document.documentElement);
-	var successRate: number[] = [0, 0, 0, 0];
-	data.forEach((x) => {
-		var rate = calculateSuccess(x);
-		successRate[4 - rate] += 1;
-	});
+
+	const successRate = useMemo(() => {
+		var successRate: number[] = [0, 0, 0, 0];
+		data.forEach((x) => {
+			var rate = calculateSuccess(x);
+			successRate[4 - rate] += 1;
+		});
+		return successRate;
+	}, [data]);
 
 	var chartData = {
 		labels: ["Critical Success", "Success", "Failure", "Critical Failure"],

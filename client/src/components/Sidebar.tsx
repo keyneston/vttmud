@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { listCharacters, Character } from "../api/characters";
@@ -13,20 +14,17 @@ import "./Sidebar.scss";
 
 export function Sidebar() {
 	const [authToken, setAuthToken] = useCookies(["discord"]);
-	const [characters, setCharacters] = useState<Character[]>([]);
 	const [ccVisible, setCCVisible] = useState(false);
 
-	useEffect(() => {
-		if (loggedIn()) {
-			listCharacters().then((chars: Character[]) => {
-				setCharacters(chars);
-			});
-		} else {
-			setCharacters([]);
-		}
-	}, [authToken]);
+	const { isLoading, error, data, isFetching } = useQuery({
+		queryKey: ["listCharacters"],
+		queryFn: () => listCharacters(),
+	});
 
-	const charSections = characters.map((x: Character) => <CharacterSection key={x.name} char={x} />);
+	if (isLoading) return <div>"Loading..."</div>;
+	if (error) return <div>"Error loading character list."</div>;
+
+	const charSections = data!.map((x: Character) => <CharacterSection key={x.name} char={x} />);
 
 	return (
 		<div className="sidebar-root">
