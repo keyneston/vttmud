@@ -1,4 +1,4 @@
-import { useState, useMemo, useReducer } from "react";
+import { Fragment, useState, useMemo, useReducer } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { classNames } from "primereact/utils";
 import { useFormik, FormikValues, FormikErrors } from "formik";
@@ -408,7 +408,6 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="end-date">End Date</label>
 						<Calendar
-							key="new-dt-calendar"
 							style={{ width: "8rem" }}
 							id="end-date"
 							value={formik.values.endDate}
@@ -421,7 +420,6 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="days">Days</label>
 						<InputNumber
-							key="new-dt-days"
 							className="dt-input-width"
 							id="days"
 							value={formik.values.days}
@@ -434,7 +432,6 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="days">Level</label>
 						<InputNumber
-							key="new-dt-level"
 							className="dt-input-width"
 							id="level"
 							value={formik.values.level}
@@ -447,7 +444,6 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="dc">DC</label>
 						<InputNumber
-							key="new-dt-dc"
 							className="dt-input-width"
 							id="dc"
 							value={formik.values.dc}
@@ -459,7 +455,6 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="activity">Activity</label>
 						<Dropdown
-							key="new-dt-activity"
 							id="activity"
 							value={formik.values.activity}
 							onChange={(e) => formik.setFieldValue("activity", e.value)}
@@ -474,7 +469,6 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="bonus">Bonus</label>
 						<InputNumber
-							key="new-dt-bonus"
 							id="bonus"
 							showButtons
 							className="dt-input-width"
@@ -492,7 +486,6 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="details">Additional Details</label>
 						<InputText
-							key="new-dt-details"
 							className="dt-input-width"
 							id="details"
 							value={formik.values.details}
@@ -503,7 +496,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					</div>
 					{Array.from({ length: formik.values.days }, (_, i) => {
 						return (
-							<>
+							<Fragment key={`per-day-entry-div-${i}`}>
 								<Divider key={`divider-${i}`} />
 								<PerDayEntry
 									key={`per-day-entry-${i}`}
@@ -512,12 +505,11 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 									setValue={updateEntry(i)}
 									endDate={formik.values.endDate}
 								/>
-							</>
+							</Fragment>
 						);
 					})}
 
 					<Button
-						key="submit-button"
 						label="Record"
 						type="submit"
 						severity="success"
