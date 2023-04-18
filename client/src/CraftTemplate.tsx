@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
@@ -95,14 +95,14 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 				</div>
 
 				{Array.from({ length: peopleCount }, (_, i) => (
-					<>
+					<Fragment key={`ct-person-${i}`}>
 						<Divider />
 						<CraftPersonTemplate
 							id={i}
 							value={people[i]}
 							setValue={updatePerson(i)}
 						/>
-					</>
+					</Fragment>
 				))}
 			</div>
 
