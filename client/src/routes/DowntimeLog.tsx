@@ -220,7 +220,6 @@ export default function DowntimeLog() {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries(["character", id]);
-			forceUpdate();
 		},
 	});
 
@@ -381,7 +380,8 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 			});
 
 			createDowntimeEntries(id, entries);
-			queryClient.invalidateQueries(["listDowntimeEntries", id]);
+			queryClient.invalidateQueries(["character", id, "downtime"]);
+			queryClient.refetchQueries(["character", id, "downtime"]);
 
 			setVisible(false);
 			formik.resetForm();
