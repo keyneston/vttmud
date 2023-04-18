@@ -16,7 +16,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 
-import "./log.scss";
+import "./CharacterLog.scss";
 
 export default function CharacterLog() {
 	const urlParams = useParams();
