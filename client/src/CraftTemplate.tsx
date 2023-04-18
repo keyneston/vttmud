@@ -254,7 +254,7 @@ function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 		queryKey: ["itemsDB"],
 		queryFn: () => fetch("/items.db.json").then((response) => response.json()),
 		placeholderData: [],
-		cacheTime: 3600 * 1000, // 1 hour
+		cacheTime: 7200 * 1000, // 1 hour
 		staleTime: 3600 * 1000,
 	});
 	const itemsDB: Item[] = data || [];

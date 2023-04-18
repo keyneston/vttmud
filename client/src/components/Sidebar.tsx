@@ -28,7 +28,7 @@ export function Sidebar() {
 	} else if (error) {
 		charSections = <div>Error loading character list.</div>;
 	} else {
-		charSections = data!.map((x: Character) => <CharacterSection key={x.name} char={x} />);
+		charSections = data!.map((x: Character) => <CharacterSection key={`${x.id}-${x.name}`} char={x} />);
 	}
 
 	return (
@@ -124,6 +124,7 @@ function CharacterSection({ char }: { char: Character }) {
 		var color = getColor(char.name);
 		return (
 			<Avatar
+				key={`${char.id}-avatar`}
 				label={char.name.substring(0, 1)}
 				size="large"
 				style={

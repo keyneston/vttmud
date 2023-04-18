@@ -1,5 +1,5 @@
 import { useState, useMemo, useReducer } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { classNames } from "primereact/utils";
 import { useFormik, FormikValues, FormikErrors } from "formik";
 import { useParams } from "react-router-dom";
@@ -8,7 +8,7 @@ import { Button } from "primereact/button";
 import { Calendar } from "primereact/calendar";
 import { Chart } from "primereact/chart";
 import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+import { DataTable, DataTableRowEditCompleteEvent } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
 import { Dialog } from "primereact/dialog";
 import { Divider } from "primereact/divider";
@@ -18,7 +18,14 @@ import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
 import { Panel } from "primereact/panel";
 import { Tag } from "primereact/tag";
 
-import { createDowntimeEntries, listDowntimeEntries, DowntimeEntry, Activity, ActivityColors } from "../api/downtime";
+import {
+	createDowntimeEntries,
+	listDowntimeEntries,
+	updateDowntimeEntry,
+	DowntimeEntry,
+	Activity,
+	ActivityColors,
+} from "../api/downtime";
 import { fetchCharacter, calculateLevel } from "../api/characters";
 import { subDate, formatDate } from "../date";
 import { craftDC } from "../pf2e/income";
@@ -115,20 +122,93 @@ const activityTemplate = (activity: Activity) => {
 	return <Tag value={tagLabel} style={{ background: tagColor }} />;
 };
 
+const textEditor = (options: any) => {
+	return (
+		<InputText
+			type="text"
+			value={options.value}
+			onChange={(e: any) => options.editorCallback(e.target.value)}
+			className="dt-input-width"
+		/>
+	);
+};
+
+const numberEditor = (options: any) => {
+	return (
+		<InputNumber
+			value={options.value}
+			onValueChange={(e: any) => options.editorCallback(e.value)}
+			className="dt-input-width"
+		/>
+	);
+};
+
+const levelEditor = (options: any) => {
+	return (
+		<InputNumber
+			value={options.value}
+			max={20}
+			min={1}
+			onValueChange={(e: any) => options.editorCallback(e.value)}
+			className="dt-input-width"
+		/>
+	);
+};
+
+const assuranceEditor = (options: any) => {
+	return (
+		<InputSwitch
+			id={`assurance`}
+			checked={options.value}
+			onChange={(e: InputSwitchChangeEvent) => {
+				options.editorCallback(e.value);
+			}}
+		/>
+	);
+};
+
+const activityEditor = (options: any) => {
+	return (
+		<Dropdown
+			id="activity"
+			value={options.value}
+			onChange={(e) => options.editorCallback(e.value)}
+			options={activities}
+			placeholder="Select an Activity"
+			valueTemplate={activityTemplate}
+			itemTemplate={activityTemplate}
+			className="w-full md:w-14rem"
+			style={{ width: "12rem" }}
+		/>
+	);
+};
+
 export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
+	const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
+	const queryClient = useQueryClient();
 	const urlParams = useParams();
 	const id: number = parseInt(urlParams.id || "0");
 
 	const entries = useQuery({
-		queryKey: ["listDowntimeEntries", id],
+		queryKey: ["character", id, "downtime"],
 		queryFn: () => listDowntimeEntries(id),
 		placeholderData: [],
 		staleTime: 5 * 60 * 1000,
 		cacheTime: 10 * 60 * 1000,
 	});
 	const data = entries.data;
+
+	const mutation = useMutation({
+		mutationFn: (data: DowntimeEntry) => {
+			return updateDowntimeEntry(id, data);
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries(["character", id]);
+			forceUpdate();
+		},
+	});
 
 	return (
 		<div className="downtime-root">
@@ -149,29 +229,59 @@ export default function DowntimeLog() {
 					paginator
 					rows={20}
 					rowsPerPageOptions={[20, 50, 100]}
+					onRowEditComplete={(e: DataTableRowEditCompleteEvent) => {
+						mutation.mutate(e.newData as DowntimeEntry);
+					}}
+					editMode="row"
 				>
 					<Column
 						field="date"
 						header="Date"
 						body={(e) => `${e.date.getMonth() + 1}/${e.date.getDate()}`}
 					/>
-					<Column field="level" header="Level" body={(e) => e.level} />
-					<Column field="assurance" header="Assurance" body={assuranceBodyTemplate} />
+					<Column
+						field="level"
+						header="Level"
+						body={(e) => e.level}
+						editor={levelEditor}
+					/>
+					<Column
+						field="assurance"
+						header="Assurance"
+						body={assuranceBodyTemplate}
+						editor={assuranceEditor}
+					/>
 					<Column
 						field="activity"
 						header="Activity"
 						body={(e) => activityTemplate(e.activity)}
+						editor={activityEditor}
 					/>
-					<Column field="roll" header="Roll" body={(e) => e.roll} />
-					<Column field="bonus" header="Bonus" body={(e) => e.bonus} />
+					<Column field="roll" header="Roll" body={(e) => e.roll} editor={numberEditor} />
+					<Column
+						field="bonus"
+						header="Bonus"
+						body={(e) => e.bonus}
+						editor={numberEditor}
+					/>
 					<Column
 						field="total"
 						header="Total"
 						body={(e) => (e.assurance ? 10 : e.roll) + e.bonus}
 					/>
-					<Column field="dc" header="DC" body={(e) => e.dc} />
+					<Column field="dc" header="DC" body={(e) => e.dc} editor={numberEditor} />
 					<Column field="result" header="Result" body={resultTemplate} />
-					<Column field="details" header="Additional Details" body={(e) => e.details} />
+					<Column
+						field="details"
+						header="Additional Details"
+						body={(e) => e.details}
+						editor={textEditor}
+					/>
+					<Column
+						rowEditor
+						headerStyle={{ width: "10%", minWidth: "8rem" }}
+						bodyStyle={{ textAlign: "center" }}
+					/>
 				</DataTable>
 			</Panel>
 			<div className="dt-charts">
@@ -283,7 +393,8 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="end-date">End Date</label>
 						<Calendar
-							className="dt-input-width"
+							key="new-dt-calendar"
+							style={{ width: "8rem" }}
 							id="end-date"
 							value={formik.values.endDate}
 							onChange={(e) => {
@@ -295,6 +406,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="days">Days</label>
 						<InputNumber
+							key="new-dt-days"
 							className="dt-input-width"
 							id="days"
 							value={formik.values.days}
@@ -307,6 +419,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="days">Level</label>
 						<InputNumber
+							key="new-dt-level"
 							className="dt-input-width"
 							id="level"
 							value={formik.values.level}
@@ -319,6 +432,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="dc">DC</label>
 						<InputNumber
+							key="new-dt-dc"
 							className="dt-input-width"
 							id="dc"
 							value={formik.values.dc}
@@ -330,6 +444,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="activity">Activity</label>
 						<Dropdown
+							key="new-dt-activity"
 							id="activity"
 							value={formik.values.activity}
 							onChange={(e) => formik.setFieldValue("activity", e.value)}
@@ -344,6 +459,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="bonus">Bonus</label>
 						<InputNumber
+							key="new-dt-bonus"
 							id="bonus"
 							showButtons
 							className="dt-input-width"
@@ -361,6 +477,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					<div className="new-downtime-label-set">
 						<label htmlFor="details">Additional Details</label>
 						<InputText
+							key="new-dt-details"
 							className="dt-input-width"
 							id="details"
 							value={formik.values.details}
@@ -372,7 +489,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					{Array.from({ length: formik.values.days }, (_, i) => {
 						return (
 							<>
-								<Divider />
+								<Divider key={`divider-${i}`} />
 								<PerDayEntry
 									key={`per-day-entry-${i}`}
 									id={i}
@@ -385,6 +502,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					})}
 
 					<Button
+						key="submit-button"
 						label="Record"
 						type="submit"
 						severity="success"

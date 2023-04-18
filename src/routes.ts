@@ -7,7 +7,11 @@ import { listCharacters, characterEndpoint, characterCreationEndpoint } from "./
 import { uploadAvatar, uploadJSON } from "./uploads";
 import { requireAuthorization } from "./auth";
 import { listServersEndpoint } from "./servers";
-import { getDowntimeEntriesEndpoint, createDowntimeEntriesEndpoint } from "./character/downtime";
+import {
+    getDowntimeEntriesEndpoint,
+    createDowntimeEntriesEndpoint,
+    updateDowntimeEntriesEndpoint,
+} from "./character/downtime";
 
 const publicFolder = process.env.PUBLIC_FOLDER || "/app/public";
 
@@ -42,6 +46,7 @@ function registerRestrictedRoutes(app: express.Application) {
 
     app.get("/api/v1/character/:id/downtime", requireAuthorization(getDowntimeEntriesEndpoint));
     app.post("/api/v1/character/:id/downtime", requireAuthorization(createDowntimeEntriesEndpoint));
+    app.patch("/api/v1/character/:id/downtime", requireAuthorization(updateDowntimeEntriesEndpoint));
 }
 
 export { registerRotues };

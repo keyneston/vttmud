@@ -12,6 +12,10 @@ export default function Home() {
 
 			<h2>Changelog</h2>
 			<ul>
+				<li>April 18th</li>
+				<ul>
+					<li>Add editing of downtime entries</li>
+				</ul>
 				<li>April 17th</li>
 				<ul>
 					<li>Fix sorting of downtime entries</li>

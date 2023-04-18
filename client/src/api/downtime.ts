@@ -61,3 +61,17 @@ export async function createDowntimeEntries(characterID: number, entries: Downti
     });
     return resp.json();
 }
+
+export async function updateDowntimeEntry(characterID: number, entry: DowntimeEntry): Promise<DowntimeEntry> {
+    const resp = await fetch(`/api/v1/character/${characterID}/downtime`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(entry),
+    }).then((d) => d.json());
+    return {
+        ...resp,
+        date: new Date(resp.date),
+        createdAt: new Date(resp.createdAt),
+        updatedAt: new Date(resp.updatedAt),
+    };
+}
