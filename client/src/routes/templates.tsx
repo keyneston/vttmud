@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CraftTemplate } from "../CraftTemplate";
+import { CraftTemplate } from "../components/CraftTemplate";
 import { IncomeTemplate } from "../components/incomeTemplate";
 import "./templates.scss";
 
