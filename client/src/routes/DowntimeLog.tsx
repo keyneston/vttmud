@@ -183,6 +183,20 @@ const activityEditor = (options: any) => {
 	);
 };
 
+const calendarEditor = (options: any) => {
+	return (
+		<Calendar
+			style={{ width: "8rem" }}
+			id="date"
+			value={options.value}
+			onChange={(e) => {
+				let d = Array.isArray(e.value) ? e.value[0] : e.value;
+				options.editorCallback(new Date(d || ""));
+			}}
+		/>
+	);
+};
+
 export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
 	const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -238,6 +252,7 @@ export default function DowntimeLog() {
 						field="date"
 						header="Date"
 						body={(e) => `${e.date.getMonth() + 1}/${e.date.getDate()}`}
+						editor={calendarEditor}
 					/>
 					<Column
 						field="level"
