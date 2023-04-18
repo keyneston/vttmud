@@ -15,6 +15,7 @@ export default function Home() {
 				<li>April 18th</li>
 				<ul>
 					<li>Add editing of downtime entries</li>
+					<li>Display remaining downtime on downtime log</li>
 				</ul>
 				<li>April 17th</li>
 				<ul>

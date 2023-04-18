@@ -214,13 +214,11 @@ export default function DowntimeLog() {
 	const data = entries.data;
 
 	const character = useQuery({
-		queryKey: ["character", id, "downtime"],
+		queryKey: ["character", id],
 		queryFn: () => fetchCharacter(id),
 		staleTime: 5 * 60 * 1000,
 		cacheTime: 10 * 60 * 1000,
 	});
-	var char = character.data;
-	var isLoading = character.isLoading;
 
 	const mutation = useMutation({
 		mutationFn: (data: DowntimeEntry) => {
@@ -231,11 +229,21 @@ export default function DowntimeLog() {
 		},
 	});
 
+	const downtimeRemaining = (query: any) => {
+		if (query.isLoading || query.isFetching) {
+			return <i className="pi pi-spin pi-spinner" style={{ fontSize: "1rem" }}></i>;
+		} else if (query.error) {
+			return <small className="p-error">Error: {query.error.message}</small>;
+		} else {
+			return ` ${query.data?.remainingDowntime}`;
+		}
+	};
+
 	return (
 		<div className="downtime-root">
 			<div className="downtime-header">
 				<div className="downtime-header-left">
-					<b>Downtime Remaining:</b> {(!isLoading && char?.downtimeRemaining) || 0}
+					<b>Downtime Remaining: </b>&nbsp;{downtimeRemaining(character)}
 				</div>
 				<div className="downtime-header-right">
 					<Button
