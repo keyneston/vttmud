@@ -27,6 +27,7 @@ export default function CharacterSheet() {
 	const chooseOptions = {
 		icon: "pi pi-fw pi-upload",
 		className: "p-button-info",
+		style: { display: "flex" },
 	};
 
 	return (

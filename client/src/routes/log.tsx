@@ -237,5 +237,3 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 		</>
 	);
 }
-
-export {};
