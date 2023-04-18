@@ -199,7 +199,6 @@ const calendarEditor = (options: any) => {
 
 export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
-	const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
 	const queryClient = useQueryClient();
 	const urlParams = useParams();
@@ -214,6 +213,15 @@ export default function DowntimeLog() {
 	});
 	const data = entries.data;
 
+	const character = useQuery({
+		queryKey: ["character", id, "downtime"],
+		queryFn: () => fetchCharacter(id),
+		staleTime: 5 * 60 * 1000,
+		cacheTime: 10 * 60 * 1000,
+	});
+	var char = character.data;
+	var isLoading = character.isLoading;
+
 	const mutation = useMutation({
 		mutationFn: (data: DowntimeEntry) => {
 			return updateDowntimeEntry(id, data);
@@ -226,12 +234,17 @@ export default function DowntimeLog() {
 	return (
 		<div className="downtime-root">
 			<div className="downtime-header">
-				<Button
-					severity="success"
-					icon="pi pi-plus"
-					rounded
-					onClick={(e) => setVisible(true)}
-				/>
+				<div className="downtime-header-left">
+					<b>Downtime Remaining:</b> {(!isLoading && char?.downtimeRemaining) || 0}
+				</div>
+				<div className="downtime-header-right">
+					<Button
+						severity="success"
+						icon="pi pi-plus"
+						rounded
+						onClick={(e) => setVisible(true)}
+					/>
+				</div>
 			</div>
 			<NewDowntimeEntry visible={visible} setVisible={setVisible} />
 			<Panel header="Downtime Log">

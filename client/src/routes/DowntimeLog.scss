@@ -1,10 +1,25 @@
 .downtime-header {
+	flex-flow: row wrap;
+	display: flex;
+}
+
+.downtime-header-right {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
-	width: 100%;
+	width: 50%;
 	padding-top: 1rem;
 	padding-bottom: 1rem;
+}
+
+.downtime-header-left {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	width: 50%;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	align-self: center;
 }
 
 .new-downtime-entry-root {

@@ -10,6 +10,7 @@ export interface Character {
     blob?: any;
     serverID?: number;
     server: Server;
+    downtimeRemaining?: number;
 }
 
 export interface CharacterLogEntry {

@@ -47,6 +47,28 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
     }
 
     var ret: { [key: string]: any } = { ...result };
+
+    try {
+        var downtime = await prisma.downtimeEntry.findMany({
+            where: {
+                characterID: result.id,
+                date: {
+                    gte: new Date(new Date().getDate() - 7),
+                },
+                NOT: {
+                    activity: {
+                        contains: "Learn a Spell",
+                        mode: "insensitive",
+                    },
+                },
+            },
+        });
+        var days = 7 - downtime.length;
+        ret.remainingDowntime = days >= 0 ? days : 0;
+    } catch (e: any) {
+        ret.remainingDowntime = 0;
+    }
+
     try {
         var sums = await prisma.characterLogEntry.aggregate({
             _sum: {
