@@ -5,7 +5,6 @@ import { Character, fetchCharacter, uploadAvatar } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
 
-import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 import { Slider } from "primereact/slider";
@@ -86,7 +85,6 @@ export default function CharacterSheet() {
 }
 
 function DisplayCharacter({ character, edit }: { character: Character; edit: boolean }) {
-	const queryClient = useQueryClient();
 	const [showCropper, setShowCropper] = useState<boolean>(false);
 	const [src, setSrc] = useState<string>("");
 	const imageMissing = (

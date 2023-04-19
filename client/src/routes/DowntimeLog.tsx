@@ -11,7 +11,6 @@ import { Column } from "primereact/column";
 import { DataTable, DataTableRowEditCompleteEvent } from "primereact/datatable";
 import { Dropdown } from "primereact/dropdown";
 import { Dialog } from "primereact/dialog";
-import { Divider } from "primereact/divider";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
