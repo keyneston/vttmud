@@ -121,7 +121,7 @@ export function Sidebar() {
 
 function CharacterSection({ char }: { char: Character }) {
 	const formatAvatar = () => {
-		var color = getColor(char.name);
+		var color = getColor(char.id + char.name);
 		return (
 			<Avatar
 				key={`${char.id}-avatar`}
