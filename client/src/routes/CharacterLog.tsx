@@ -18,6 +18,32 @@ import { InputNumber } from "primereact/inputnumber";
 
 import "./CharacterLog.scss";
 
+const goldEditor = (options: any) => {
+	return (
+		<InputNumber
+			value={options.value}
+			onValueChange={(e: any) => options.editorCallback(e.value)}
+			mode="currency"
+			currency="EUR"
+			locale="en-US"
+		/>
+	);
+};
+
+const textEditor = (options: any) => {
+	return (
+		<InputText
+			type="text"
+			value={options.value}
+			onChange={(e: any) => options.editorCallback(e.target.value)}
+		/>
+	);
+};
+
+const experienceEditor = (options: any) => {
+	return <InputNumber value={options.value} onChange={(e: any) => options.editorCallback(e.value)} />;
+};
+
 export default function CharacterLog() {
 	const urlParams = useParams();
 	const queryClient = useQueryClient();
@@ -64,32 +90,6 @@ export default function CharacterLog() {
 		});
 
 		queryClient.invalidateQueries(["character", id]);
-	};
-
-	const goldEditor = (options: any) => {
-		return (
-			<InputNumber
-				value={options.value}
-				onValueChange={(e: any) => options.editorCallback(e.value)}
-				mode="currency"
-				currency="EUR"
-				locale="en-US"
-			/>
-		);
-	};
-
-	const textEditor = (options: any) => {
-		return (
-			<InputText
-				type="text"
-				value={options.value}
-				onChange={(e: any) => options.editorCallback(e.target.value)}
-			/>
-		);
-	};
-
-	const experienceEditor = (options: any) => {
-		return <InputNumber value={options.value} onChange={(e: any) => options.editorCallback(e.value)} />;
 	};
 
 	return (

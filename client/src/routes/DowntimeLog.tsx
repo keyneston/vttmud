@@ -420,7 +420,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 	return (
 		<Dialog
 			header="New Downtime Entry"
-			style={{ width: "80vw", height: "85hw" }}
+			style={{ width: "80vw", height: "40rem" }}
 			visible={visible}
 			onHide={() => setVisible(false)}
 		>
@@ -518,7 +518,6 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 					{Array.from({ length: formik.values.days }, (_, i) => {
 						return (
 							<Fragment key={`per-day-entry-div-${i}`}>
-								<Divider key={`divider-${i}`} />
 								<PerDayEntry
 									key={`per-day-entry-${i}`}
 									id={i}
@@ -530,13 +529,15 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 						);
 					})}
 
-					<Button
-						label="Record"
-						type="submit"
-						severity="success"
-						icon="pi pi-file-edit"
-						style={{ height: "3rem" }}
-					/>
+					<div className="new-dt-bottom-right">
+						<Button
+							label="Record"
+							type="submit"
+							severity="success"
+							icon="pi pi-file-edit"
+							style={{ height: "3rem" }}
+						/>
+					</div>
 				</div>
 			</form>
 		</Dialog>
