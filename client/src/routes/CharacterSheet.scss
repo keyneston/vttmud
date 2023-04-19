@@ -47,23 +47,33 @@
 }
 
 .crop-container {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
-	right: 0;
-	bottom: 80px;
+	width: 100vw;
+	height: calc(100vh - 8rem);
+	background: white;
+	z-index: 1000;
+}
+
+.controls-background {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	bottom: 0;
+	height: 8rem;
+	background: white;
+	z-index: 1000;
+	border-top: 5px solid black;
 }
 
 .controls {
-	position: absolute;
-	bottom: 20px;
-	left: 80%;
-	width: 80%;
-	transform: translateX(-50%);
-	height: 40px;
+	background: white;
 	display: flex;
 	flex-flow: row wrap;
 	align-items: center;
+	justify-content: center;
+	padding-top: 2rem;
 	gap: 2rem;
 }
 

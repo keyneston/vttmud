@@ -5,6 +5,7 @@ import { Character, fetchCharacter, uploadAvatar } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
 
+import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
 import { Slider } from "primereact/slider";
@@ -187,64 +188,66 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 					objectFit="auto-cover"
 				/>
 			</div>
-			<div className="controls">
-				<div>
-					<Slider
-						value={zoom}
-						onChange={(e) => {
-							let d = Array.isArray(e.value) ? e.value[0] : e.value;
-							setZoom(d);
-						}}
-						min={1}
-						max={3}
-						step={0.1}
-						style={{ width: "8rem" }}
-						aria-labelledby="Zoom"
-					/>
-				</div>
-				<div>
-					<Slider
-						id="rotation-slider"
-						value={rotation}
-						onChange={(e) => {
-							let d = Array.isArray(e.value) ? e.value[0] : e.value;
-							setRotation(d);
-						}}
-						min={1}
-						max={360}
-						step={1}
-						style={{ width: "8rem" }}
-						aria-labelledby="Zoom"
-					/>
-				</div>
-				<div>
-					<Button
-						icon="pi pi-cross"
-						label="Cancel"
-						severity="danger"
-						onClick={async (e) => {
-							setShowCropper(false);
-						}}
-					/>
-				</div>
-				<div>
-					<Button
-						label="Done"
-						onClick={async (e) => {
-							var croppedSrc = await getCroppedImg(
-								src,
-								croppedAreaPixels,
-								rotation
-							);
-							const fileRes = await fetch(croppedSrc);
-							const blob = await fileRes.blob();
-							await uploadAvatar(id, blob);
-							queryClient.invalidateQueries(["character", id]);
-							queryClient.invalidateQueries(["listCharacters"]);
+			<div className="controls-background">
+				<div className="controls">
+					<div>
+						<Slider
+							value={zoom}
+							onChange={(e) => {
+								let d = Array.isArray(e.value) ? e.value[0] : e.value;
+								setZoom(d);
+							}}
+							min={1}
+							max={3}
+							step={0.1}
+							style={{ width: "8rem" }}
+							aria-labelledby="Zoom"
+						/>
+					</div>
+					<div>
+						<Slider
+							id="rotation-slider"
+							value={rotation}
+							onChange={(e) => {
+								let d = Array.isArray(e.value) ? e.value[0] : e.value;
+								setRotation(d);
+							}}
+							min={1}
+							max={360}
+							step={1}
+							style={{ width: "8rem" }}
+							aria-labelledby="Zoom"
+						/>
+					</div>
+					<div>
+						<Button
+							icon="pi pi-cross"
+							label="Cancel"
+							severity="danger"
+							onClick={async (e) => {
+								setShowCropper(false);
+							}}
+						/>
+					</div>
+					<div>
+						<Button
+							label="Done"
+							onClick={async (e) => {
+								var croppedSrc = await getCroppedImg(
+									src,
+									croppedAreaPixels,
+									rotation
+								);
+								const fileRes = await fetch(croppedSrc);
+								const blob = await fileRes.blob();
+								await uploadAvatar(id, blob);
+								queryClient.invalidateQueries(["character", id]);
+								queryClient.invalidateQueries(["listCharacters"]);
 
-							setShowCropper(false);
-						}}
-					/>
+								setShowCropper(false);
+							}}
+						/>
+					</div>
 				</div>
 			</div>
 		</>
