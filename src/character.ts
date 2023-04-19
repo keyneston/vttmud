@@ -49,11 +49,14 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
     var ret: { [key: string]: any } = { ...result };
 
     try {
+        var d = new Date();
+        d.setDate(new Date().getDate() - 7);
+
         var downtime = await prisma.downtimeEntry.findMany({
             where: {
                 characterID: result.id,
                 date: {
-                    gte: new Date(new Date().getDate() - 7),
+                    gte: d,
                 },
                 NOT: {
                     activity: {
