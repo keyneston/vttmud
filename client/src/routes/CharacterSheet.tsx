@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
-import { Character, fetchCharacter } from "../api/characters";
+import { Character, fetchCharacter, uploadAvatar } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
 import { parseBlob } from "../blob";
@@ -9,7 +9,10 @@ import { Button } from "primereact/button";
 import { FileUpload, FileUploadSelectEvent } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
+import { Slider } from "primereact/slider";
+
 import Cropper from "react-easy-crop";
+import { getCroppedImg } from "../helpers/crop";
 
 import "./CharacterSheet.scss";
 
@@ -113,7 +116,7 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 					style={{ width: "90vw", height: "80vh" }}
 					onHide={() => setShowCropper(false)}
 				>
-					<DoCropper src={src} setShowCropper={setShowCropper} />
+					<DoCropper id={character.id} src={src} setShowCropper={setShowCropper} />
 				</Dialog>
 				<div className="cs-avatar-uploader">
 					<div className="cs-avatar-holder">
@@ -123,9 +126,8 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 					</div>
 					{edit && (
 						<FileUpload
+							customUpload={true}
 							mode="basic"
-							name="character"
-							url={`/api/v1/upload/${character.id}/avatar`}
 							accept="image/*"
 							maxFileSize={MaximumImageSize}
 							chooseLabel="Change Avatar"
@@ -134,6 +136,7 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 							onSelect={(e) => {
 								setSrc(URL.createObjectURL(e.files[0]));
 								setShowCropper(true);
+								e.files = [];
 							}}
 						/>
 					)}
@@ -155,11 +158,15 @@ function DisplayCharacter({ character, edit, refresh }: { character: Character; 
 	);
 }
 
-function DoCropper({ src, setShowCropper }: { src: string; setShowCropper: (x: boolean) => void }) {
+function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setShowCropper: (x: boolean) => void }) {
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
+	const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>({ x: 0, y: 0 });
 	const [zoom, setZoom] = useState(1);
+	const [rotation, setRotation] = useState(0);
 
-	const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {}, []);
+	const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
+		setCroppedAreaPixels(croppedAreaPixels);
+	}, []);
 
 	return (
 		<>
@@ -168,26 +175,76 @@ function DoCropper({ src, setShowCropper }: { src: string; setShowCropper: (x: b
 					image={src}
 					crop={crop}
 					zoom={zoom}
+					zoomSpeed={0.5}
 					aspect={1}
-					onCropChange={setCrop}
 					onCropComplete={onCropComplete}
+					onCropChange={setCrop}
 					onZoomChange={setZoom}
+					rotation={rotation}
+					restrictPosition={false}
+					onRotationChange={setRotation}
+					objectFit="auto-cover"
 				/>
 			</div>
 			<div className="controls">
-				<input
-					type="range"
-					value={zoom}
-					min={1}
-					max={3}
-					step={0.1}
-					aria-labelledby="Zoom"
-					onChange={(e) => {
-						setZoom(parseInt(e.target.value));
-					}}
-					className="zoom-range"
-				/>
-				<Button label="Done" onClick={(e) => setShowCropper(false)} />
+				<div>
+					<Slider
+						value={zoom}
+						onChange={(e) => {
+							let d = Array.isArray(e.value) ? e.value[0] : e.value;
+							setZoom(d);
+						}}
+						min={1}
+						max={3}
+						step={0.1}
+						style={{ width: "8rem" }}
+						aria-labelledby="Zoom"
+					/>
+				</div>
+				<div>
+					<Slider
+						id="rotation-slider"
+						value={rotation}
+						onChange={(e) => {
+							let d = Array.isArray(e.value) ? e.value[0] : e.value;
+							setRotation(d);
+						}}
+						min={1}
+						max={360}
+						step={1}
+						style={{ width: "8rem" }}
+						aria-labelledby="Zoom"
+					/>
+				</div>
+				<div>
+					<Button
+						icon="pi pi-cross"
+						label="Cancel"
+						severity="danger"
+						onClick={async (e) => {
+							setShowCropper(false);
+						}}
+					/>
+				</div>
+				<div>
+					<Button
+						label="Done"
+						onClick={async (e) => {
+							console.log({ crop, croppedAreaPixels });
+							var croppedSrc = await getCroppedImg(
+								src,
+								croppedAreaPixels,
+								rotation
+							);
+							const fileRes = await fetch(croppedSrc);
+							const blob = await fileRes.blob();
+
+							var out = await uploadAvatar(id, blob);
+
+							setShowCropper(false);
+						}}
+					/>
+				</div>
 			</div>
 		</>
 	);

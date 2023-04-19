@@ -27,7 +27,7 @@ export function Sidebar() {
 		}
 	}, [authToken]);
 
-	const charSections = characters.map((x: Character) => <CharacterSection key={x.name} char={x} />);
+	const charSections = characters.map((x: Character) => <CharacterSection key={`${x.id}-${x.name}`} char={x} />);
 
 	return (
 		<div className="sidebar-root">
