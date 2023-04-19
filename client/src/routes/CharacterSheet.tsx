@@ -95,6 +95,7 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 
 	const avatar = (
 		<img
+			className="cs-avatar"
 			src={`${CDN}/${character.avatar}`}
 			alt={`${character.name} avatar`}
 			style={{ maxWidth: "400px", maxHeight: "400px" }}
