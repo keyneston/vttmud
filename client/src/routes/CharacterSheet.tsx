@@ -100,10 +100,6 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 			style={{ maxWidth: "400px", maxHeight: "400px" }}
 		/>
 	);
-	const chooseOptions = {
-		icon: "pi pi-fw pi-image",
-		className: "p-button-info",
-	};
 
 	return (
 		<>
@@ -115,23 +111,23 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 						</div>
 					</div>
 					{edit && (
-						<FileUpload
-							customUpload={true}
-							mode="basic"
-							accept="image/*"
-							maxFileSize={MaximumImageSize}
-							chooseLabel="Change Avatar"
-							onUpload={(e) =>
-								queryClient.invalidateQueries([
-									"character",
-									character.id,
-								])
-							}
-							chooseOptions={chooseOptions}
-							onSelect={(e) => {
-								e.originalEvent.preventDefault();
-								setSrc(URL.createObjectURL(e.files[0]));
-								setShowCropper(true);
+						<Button
+							icon="pi pi-image"
+							severity="info"
+							label="Change Avatar"
+							onClick={async (e) => {
+								var input = document.createElement("input");
+								input.setAttribute("type", "file");
+								input.setAttribute("accept", "image/*");
+								input.addEventListener("change", () => {
+									if (!input.files) {
+										return;
+									}
+
+									setSrc(URL.createObjectURL(input!.files[0]));
+									setShowCropper(true);
+								});
+								input.click();
 							}}
 						/>
 					)}
