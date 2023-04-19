@@ -29,7 +29,7 @@
   "license": "",
   "dependencies": {
     "@prisma/client": "^4.13.0",
-    "aws-sdk": "^2.1358.0",
+    "aws-sdk": "^2.1360.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "discord-oauth2": "^2.11.0",
