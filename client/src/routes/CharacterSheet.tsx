@@ -7,7 +7,6 @@ import { CDN, MaximumImageSize } from "../constants";
 
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
-import { Dialog } from "primereact/dialog";
 import { Slider } from "primereact/slider";
 
 import Cropper from "react-easy-crop";
@@ -108,13 +107,6 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 	return (
 		<>
 			<div className="cs-root">
-				<Dialog
-					visible={showCropper}
-					style={{ width: "90vw", height: "80vh" }}
-					onHide={() => setShowCropper(false)}
-				>
-					<DoCropper id={character.id} src={src} setShowCropper={setShowCropper} />
-				</Dialog>
 				<div className="cs-avatar-uploader">
 					<div className="cs-avatar-holder">
 						<div className="cs-avatar">
@@ -136,9 +128,9 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 							}
 							chooseOptions={chooseOptions}
 							onSelect={(e) => {
+								e.originalEvent.preventDefault();
 								setSrc(URL.createObjectURL(e.files[0]));
 								setShowCropper(true);
-								e.files = [];
 							}}
 						/>
 					)}
@@ -155,6 +147,10 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 						{character?.server?.name ?? "unknown"}
 					</h3>
 				</div>
+
+				{showCropper && (
+					<DoCropper id={character.id} src={src} setShowCropper={setShowCropper} />
+				)}
 			</div>
 		</>
 	);
@@ -168,6 +164,7 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 	const [rotation, setRotation] = useState(0);
 
 	const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
+		console.log({ croppedArea, croppedAreaPixels });
 		setCroppedAreaPixels(croppedAreaPixels);
 	}, []);
 
@@ -187,7 +184,7 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 					onZoomChange={setZoom}
 					rotation={rotation}
 					onRotationChange={setRotation}
-					objectFit="vertical-cover"
+					objectFit="auto-cover"
 				/>
 			</div>
 			<div className="controls">
@@ -243,6 +240,7 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 							const blob = await fileRes.blob();
 							await uploadAvatar(id, blob);
 							queryClient.invalidateQueries(["character", id]);
+							queryClient.invalidateQueries(["listCharacters"]);
 
 							setShowCropper(false);
 						}}
