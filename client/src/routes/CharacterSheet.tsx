@@ -1,19 +1,24 @@
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { Character, fetchCharacter } from "../api/characters";
+import { useState, useCallback } from "react";
+import { Character, fetchCharacter, uploadAvatar } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
 
 import { Button } from "primereact/button";
 import { FileUpload } from "primereact/fileupload";
-// import { parseBlob } from "../blob";
+import { Dialog } from "primereact/dialog";
+import { Slider } from "primereact/slider";
+
+import Cropper from "react-easy-crop";
+import { getCroppedImg } from "../helpers/crop";
 
 import "./CharacterSheet.scss";
 
 export default function CharacterSheet() {
 	const [edit, setEdit] = useState(false);
 	const queryClient = useQueryClient();
+
 	const urlParams = useParams();
 
 	var id: number = parseInt(urlParams.id || "0");
@@ -82,6 +87,8 @@ export default function CharacterSheet() {
 
 function DisplayCharacter({ character, edit }: { character: Character; edit: boolean }) {
 	const queryClient = useQueryClient();
+	const [showCropper, setShowCropper] = useState<boolean>(false);
+	const [src, setSrc] = useState<string>("");
 	const imageMissing = (
 		<i className="pi pi-image cs-avatar-missing" style={{ fontSize: "8rem", color: "white" }} />
 	);
@@ -101,6 +108,13 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 	return (
 		<>
 			<div className="cs-root">
+				<Dialog
+					visible={showCropper}
+					style={{ width: "90vw", height: "80vh" }}
+					onHide={() => setShowCropper(false)}
+				>
+					<DoCropper id={character.id} src={src} setShowCropper={setShowCropper} />
+				</Dialog>
 				<div className="cs-avatar-uploader">
 					<div className="cs-avatar-holder">
 						<div className="cs-avatar">
@@ -109,10 +123,8 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 					</div>
 					{edit && (
 						<FileUpload
-							auto
+							customUpload={true}
 							mode="basic"
-							name="character"
-							url={`/api/v1/upload/${character.id}/avatar`}
 							accept="image/*"
 							maxFileSize={MaximumImageSize}
 							chooseLabel="Change Avatar"
@@ -123,6 +135,11 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 								])
 							}
 							chooseOptions={chooseOptions}
+							onSelect={(e) => {
+								setSrc(URL.createObjectURL(e.files[0]));
+								setShowCropper(true);
+								e.files = [];
+							}}
 						/>
 					)}
 				</div>
@@ -137,6 +154,99 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 						{"Server: "}
 						{character?.server?.name ?? "unknown"}
 					</h3>
+				</div>
+			</div>
+		</>
+	);
+}
+
+function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setShowCropper: (x: boolean) => void }) {
+	const queryClient = useQueryClient();
+	const [crop, setCrop] = useState({ x: 0, y: 0 });
+	const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>({ x: 0, y: 0 });
+	const [zoom, setZoom] = useState(1);
+	const [rotation, setRotation] = useState(0);
+
+	const onCropComplete = useCallback((croppedArea: any, croppedAreaPixels: any) => {
+		setCroppedAreaPixels(croppedAreaPixels);
+	}, []);
+
+	return (
+		<>
+			<div className="crop-container">
+				<Cropper
+					image={src}
+					crop={crop}
+					zoom={zoom}
+					minZoom={1}
+					maxZoom={3}
+					zoomSpeed={0.5}
+					aspect={1}
+					onCropComplete={onCropComplete}
+					onCropChange={setCrop}
+					onZoomChange={setZoom}
+					rotation={rotation}
+					onRotationChange={setRotation}
+					objectFit="vertical-cover"
+				/>
+			</div>
+			<div className="controls">
+				<div>
+					<Slider
+						value={zoom}
+						onChange={(e) => {
+							let d = Array.isArray(e.value) ? e.value[0] : e.value;
+							setZoom(d);
+						}}
+						min={1}
+						max={3}
+						step={0.1}
+						style={{ width: "8rem" }}
+						aria-labelledby="Zoom"
+					/>
+				</div>
+				<div>
+					<Slider
+						id="rotation-slider"
+						value={rotation}
+						onChange={(e) => {
+							let d = Array.isArray(e.value) ? e.value[0] : e.value;
+							setRotation(d);
+						}}
+						min={1}
+						max={360}
+						step={1}
+						style={{ width: "8rem" }}
+						aria-labelledby="Zoom"
+					/>
+				</div>
+				<div>
+					<Button
+						icon="pi pi-cross"
+						label="Cancel"
+						severity="danger"
+						onClick={async (e) => {
+							setShowCropper(false);
+						}}
+					/>
+				</div>
+				<div>
+					<Button
+						label="Done"
+						onClick={async (e) => {
+							var croppedSrc = await getCroppedImg(
+								src,
+								croppedAreaPixels,
+								rotation
+							);
+							const fileRes = await fetch(croppedSrc);
+							const blob = await fileRes.blob();
+							await uploadAvatar(id, blob);
+							queryClient.invalidateQueries(["character", id]);
+
+							setShowCropper(false);
+						}}
+					/>
 				</div>
 			</div>
 		</>

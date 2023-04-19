@@ -80,4 +80,16 @@ export function calculateLevel(experience: number): number {
     return Math.floor(experience / 1000) + 1;
 }
 
+export async function uploadAvatar(id: number, file: Blob) {
+    const formData = new FormData();
+    formData.append("character", file);
+
+    var value = await fetch(`/api/v1/upload/${id}/avatar`, {
+        method: "POST",
+        body: formData,
+    }).then((resp) => resp.json());
+
+    return value;
+}
+
 export {};
