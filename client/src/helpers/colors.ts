@@ -1,5 +1,3 @@
-import crypto from "crypto";
-
 // cyrb53 is from https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
 const cyrb53 = (str: string, seed: number = 0) => {
     let h1 = 0xdeadbeef ^ seed,
