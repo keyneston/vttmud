@@ -12,6 +12,10 @@ export default function Home() {
 
 			<h2>Changelog</h2>
 			<ul>
+				<li>April 19th</li>
+				<ul>
+					<li>Added cropping tool to crop avatar images before uploading</li>
+				</ul>
 				<li>April 18th</li>
 				<ul>
 					<li>Add editing of downtime entries</li>
@@ -28,10 +32,9 @@ export default function Home() {
 				<li>April 16th</li>
 				<ul>
 					<li>
-						Added log for tracking uses of downtime. UI is rudimentary at this
-						point.
+						Added log for tracking uses of downtime, UI is rudimentary at this point
 					</li>
-					<li>Added pie chart for Activity type in Downtime Log.</li>
+					<li>Added pie chart for Activity type in Downtime Log</li>
 				</ul>
 				<li>April 15th</li>
 				<ul>
