@@ -12,6 +12,10 @@ export default function Home() {
 
 			<h2>Changelog</h2>
 			<ul>
+				<li>April 20th</li>
+				<ul>
+					<li>Add avatar to log pages to indicate which character is selected</li>
+				</ul>
 				<li>April 19th</li>
 				<ul>
 					<li>Added cropping tool to crop avatar images before uploading</li>

@@ -25,6 +25,8 @@ import {
 	Activity,
 	ActivityColors,
 } from "../api/downtime";
+
+import { CharacterAvatar } from "../components/Avatar";
 import { fetchCharacter, calculateLevel } from "../api/characters";
 import { subDate, formatDate } from "../date";
 import { craftDC } from "../pf2e/income";
@@ -242,7 +244,11 @@ export default function DowntimeLog() {
 		<div className="downtime-root">
 			<div className="downtime-header">
 				<div className="downtime-header-left">
-					<b>Downtime Remaining: </b>&nbsp;{downtimeRemaining(character)}
+					<CharacterAvatar character={character?.data} />
+					<p>
+						<b>Downtime Remaining: </b>
+						{downtimeRemaining(character)}
+					</p>
 				</div>
 				<div className="downtime-header-right">
 					<Button

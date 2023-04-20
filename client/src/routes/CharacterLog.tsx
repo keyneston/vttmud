@@ -4,10 +4,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { ReactNode } from "react";
 import { money2string, Gold } from "../api/items";
-import { updateLog, getLog, CharacterLogEntry } from "../api/characters";
+import { updateLog, getLog, CharacterLogEntry, fetchCharacter } from "../api/characters";
 import { GoldEntry } from "../components/GoldEntry";
 import { ExperienceEntry } from "../components/ExperienceEntry";
 import { changeLogEntry } from "../api/characters";
+import { CharacterAvatar } from "../components/Avatar";
 
 import { DataTable, DataTableRowEditCompleteEvent } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -62,13 +63,12 @@ export default function CharacterLog() {
 		return data || [];
 	}, [data]);
 
-	var sum = useMemo(() => {
-		var newSum: number = 0;
-		logEntries.forEach((e) => {
-			newSum = +(e.gold || 0) + +newSum;
-		});
-		return newSum;
-	}, [logEntries]);
+	const character = useQuery({
+		queryFn: () => fetchCharacter(id),
+		queryKey: ["character", id],
+		staleTime: 5 * 60 * 1000,
+		cacheTime: 10 * 60 * 1000,
+	});
 
 	const formatDate = (e: CharacterLogEntry): ReactNode => {
 		if (!e.createdAt) {
@@ -96,8 +96,9 @@ export default function CharacterLog() {
 		<>
 			<div className="log-header">
 				<div className="log-header-left">
+					<CharacterAvatar character={character.data} />
 					<p>
-						<strong>Sum Gold:</strong> {money2string(sum)}
+						<strong>Gold:</strong> {money2string(character?.data?.gold || 0)}
 					</p>
 				</div>
 				<div className="log-header-right">

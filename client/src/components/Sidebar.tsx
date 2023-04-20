@@ -1,13 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { listCharacters, Character } from "../api/characters";
-import { getColor } from "../helpers/colors";
-import { CDN } from "../constants";
 import CharacterCreation from "../components/CharacterCreation";
 import { loggedIn } from "../cookies/discord";
-import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { Link } from "react-router-dom";
+import { CharacterAvatar } from "../components/Avatar";
 
 import "./Sidebar.scss";
 
@@ -120,29 +118,11 @@ export function Sidebar() {
 }
 
 function CharacterSection({ char }: { char: Character }) {
-	const formatAvatar = () => {
-		var color = getColor(char.id + char.name);
-		return (
-			<Avatar
-				key={`${char.id}-avatar`}
-				label={char.name.substring(0, 1)}
-				size="large"
-				style={
-					char.avatar
-						? {}
-						: { backgroundColor: color.backgroundColor, color: color.color }
-				}
-				image={char.avatar ? `${CDN}/${char.avatar}` : ""}
-				shape="circle"
-			/>
-		);
-	};
-
 	return (
 		<>
 			<div className="sidebar-section">
 				<div className="sidebar-section-header">
-					{formatAvatar()}
+					<CharacterAvatar character={char} />
 					<div>{char.name}</div>
 				</div>
 				<div className="sidebar-character-items">

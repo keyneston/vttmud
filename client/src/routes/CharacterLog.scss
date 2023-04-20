@@ -6,7 +6,7 @@
 .log-header {
 	display: grid;
 	width: 100%;
-	padding: 20px;
+	padding-bottom: 1rem;
 }
 
 .log-header-right {
@@ -19,6 +19,9 @@
 	grid-column: 1;
 	float: left;
 	text-align: left;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
 }
 
 .new-entry {
