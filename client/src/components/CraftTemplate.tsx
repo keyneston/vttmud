@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar } from "primereact/calendar";
 import { InputText } from "primereact/inputtext";
@@ -214,12 +214,19 @@ function ItemCount({
 	setItemCount: (itemCount: number) => void;
 	item: Item | void | undefined;
 }) {
-	var consumable = false;
-	item?.traits?.value.forEach((t: string) => {
-		if (t === "consumable") {
-			consumable = true;
+	const consumable = useMemo(() => {
+		var consumable = false;
+		if (item?.type === "custom") {
+			return true;
 		}
-	});
+
+		item?.traits?.value.forEach((t: string) => {
+			if (t === "consumable") {
+				return true;
+			}
+		});
+		return consumable;
+	}, [item]);
 
 	if (consumable === false) {
 		setItemCount(1);
@@ -275,8 +282,19 @@ function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 					setSearchEntires(results);
 				}}
 				field="name"
-				onChange={(e) => {
-					setItem(e.value);
+				onChange={(e: any) => {
+					if (typeof e.value === "string") {
+						setItem({
+							id: "",
+							cost: { spend: false },
+							level: 0,
+							traits: { rarity: "custom", value: [] },
+							type: "custom",
+							name: e.value,
+						});
+					} else {
+						setItem(e.value);
+					}
 				}}
 				onSelect={(e) => {
 					setLevel(e.value.level);
@@ -284,7 +302,6 @@ function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 				itemTemplate={(e) => {
 					return `${e.name} [${e.level}]`;
 				}}
-				forceSelection
 			/>
 		</div>
 	);

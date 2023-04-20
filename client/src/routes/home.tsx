@@ -15,6 +15,7 @@ export default function Home() {
 				<li>April 20th</li>
 				<ul>
 					<li>Add avatar to log pages to indicate which character is selected</li>
+					<li>Allow setting custom items when crafting</li>
 				</ul>
 				<li>April 19th</li>
 				<ul>
