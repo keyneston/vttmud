@@ -15,6 +15,7 @@ import { TabView, TabPanel } from "primereact/tabview";
 
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "../helpers/crop";
+import DOMPurify from "dompurify";
 
 import "./CharacterSheet.scss";
 
@@ -310,11 +311,16 @@ function DetailsPanel({ data }: PanelProps) {
 	if (!data) {
 		return <div>Unavailable</div>;
 	}
+
+	let backstory = DOMPurify.sanitize(data.backstory || "");
+	let apperance = DOMPurify.sanitize(data.appearance || "");
 	// TODO: escape this:
 	return (
 		<>
-			<Panel header="Background">{data.backstory}</Panel>
-			<Panel header="Appearance">{data.appearance}</Panel>
+			<h3>Backstory</h3>
+			<span dangerouslySetInnerHTML={{ __html: backstory }} />
+			<h3>Appearance</h3>
+			<span dangerouslySetInnerHTML={{ __html: apperance }} />
 		</>
 	);
 }
