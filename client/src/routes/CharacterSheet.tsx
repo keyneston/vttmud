@@ -9,7 +9,6 @@ import { parseBlob, CharacterInfo } from "../blob";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { FileUpload } from "primereact/fileupload";
-import { Panel } from "primereact/panel";
 import { Slider } from "primereact/slider";
 import { TabView, TabPanel } from "primereact/tabview";
 
@@ -308,13 +307,13 @@ function StatsPanel({ data }: PanelProps) {
 }
 
 function DetailsPanel({ data }: PanelProps) {
+	let backstory = useMemo(() => DOMPurify.sanitize(data?.backstory || ""), [data]);
+	let apperance = useMemo(() => DOMPurify.sanitize(data?.appearance || ""), [data]);
+
 	if (!data) {
 		return <div>Unavailable</div>;
 	}
 
-	let backstory = DOMPurify.sanitize(data.backstory || "");
-	let apperance = DOMPurify.sanitize(data.appearance || "");
-	// TODO: escape this:
 	return (
 		<>
 			<h3>Backstory</h3>
