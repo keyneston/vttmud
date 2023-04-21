@@ -730,7 +730,7 @@ function RollDistributionChart({ data }: { data: DowntimeEntry[] }) {
 			{
 				label: "Rolls",
 				data: rollRate,
-				backgroundColor: ["#0288D1", "#689F38", "#FBC02D", "#D32F2F"],
+				backgroundColor: ["#0288D1"],
 			},
 		],
 	};
