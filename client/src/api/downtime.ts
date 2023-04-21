@@ -23,6 +23,7 @@ export enum Activity {
     GatherResources = "Gather Resources",
     LearnASpell = "Learn a Spell",
     Retraining = "Retraining",
+    Other = "Other",
 }
 
 export const ActivityColors: Map<string, string> = new Map([
@@ -32,6 +33,7 @@ export const ActivityColors: Map<string, string> = new Map([
     [String(Activity.EarnIncome), "#06d6a0"],
     [String(Activity.LearnASpell), "#118ab2"],
     [String(Activity.Retraining), "#073b4c"],
+    [String(Activity.Other), "#84a59d"],
     [String(Activity.Unknown), "#ef233c"],
 ]);
 

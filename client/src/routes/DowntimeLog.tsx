@@ -461,7 +461,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 						/>
 					</div>
 					<div className="new-downtime-label-set">
-						<label htmlFor="days">Level</label>
+						<label htmlFor="days">Character Level</label>
 						<InputNumber
 							className="dt-input-width"
 							id="level"
