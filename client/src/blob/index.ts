@@ -3,6 +3,7 @@ export interface CharacterInfo {
     backstory?: string;
     appearance?: string;
     alignment?: string;
+    abilities?: { [key: string]: number };
     skills?: { [key: string]: ProficiencyRank };
 }
 
@@ -19,6 +20,30 @@ export enum Proficiency {
     Expert = 2,
     Master = 3,
     Legendary = 4,
+}
+
+export function scoreToBonus(input: number): number {
+    return Math.floor((input - 10) / 2);
+}
+
+export function calculateScores(input: { [key: string]: number }): { [key: string]: number } {
+    const results: { [key: string]: number } = {};
+    for (const k in input) {
+        const v = input[k];
+        results[k] = calculateScore(v);
+    }
+    return results;
+}
+
+export function calculateScore(input: number): number {
+    let total = 10;
+
+    if (input > 4) {
+        total += 4 * 2 + (input - 4);
+    } else {
+        total += 2 * input;
+    }
+    return total;
 }
 
 function expandSkillName(input: string): string {
@@ -94,7 +119,35 @@ export function parseBlob(input: any): CharacterInfo | undefined {
         skills[expandSkillName(k)] = expandRank(v.rank);
     });
 
-    return { name, backstory, appearance, alignment, skills };
+    const abilityBoosts: { [key: string]: number } = { str: 0, con: 0, dex: 0, wis: 0, int: 0, cha: 0 };
+
+    input.items.forEach((v: any) => {
+        if (v?.system?.boosts) {
+            for (const b in v.system.boosts) {
+                if (v.system.boosts[b]?.selected) {
+                    abilityBoosts[v.system.boosts[b]?.selected] += 1;
+                }
+            }
+        }
+
+        if (v?.system?.keyAbility?.value) {
+            const value = v?.system?.keyAbility?.value;
+            if (value.length > 0) {
+                abilityBoosts[value[0]] += 1;
+            }
+        }
+    });
+
+    if (input?.system?.build?.abilities?.boosts) {
+        const boosts = input.system.build.abilities.boosts;
+        for (const v in boosts) {
+            boosts[v].forEach((x: string) => {
+                abilityBoosts[x] += 1;
+            });
+        }
+    }
+
+    return { name, backstory, appearance, alignment, skills, abilities: calculateScores(abilityBoosts) };
 }
 
 export {};
