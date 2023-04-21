@@ -14,7 +14,11 @@ type Entry = {
 const logEntries: Entry[] = [
 	{
 		date: dayjs("2023-04-21"),
-		tasks: ["Added Roll Distribution chart to downtime log", "Added 'Other' activity to downtime"],
+		tasks: [
+			"Added Roll Distribution chart to downtime log",
+			"Added 'Other' activity to downtime",
+			"Rudimentary parsing of JSON files",
+		],
 	},
 	{
 		date: dayjs("2023-04-20"),

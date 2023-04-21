@@ -1,13 +1,17 @@
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, ReactNode, Fragment } from "react";
 import { Character, fetchCharacter, uploadAvatar } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
+import { parseBlob, CharacterInfo } from "../blob";
 
 import { Button } from "primereact/button";
+import { Card } from "primereact/card";
 import { FileUpload } from "primereact/fileupload";
+import { Panel } from "primereact/panel";
 import { Slider } from "primereact/slider";
+import { TabView, TabPanel } from "primereact/tabview";
 
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "../helpers/crop";
@@ -91,6 +95,10 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 		<i className="pi pi-image cs-avatar-missing" style={{ fontSize: "8rem", color: "white" }} />
 	);
 
+	const parsedBlob = useMemo(() => {
+		return parseBlob(character.blob);
+	}, [character.blob]);
+
 	const avatar = (
 		<img
 			className="cs-avatar"
@@ -142,6 +150,18 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 						{"Server: "}
 						{character?.server?.name ?? "unknown"}
 					</h3>
+				</div>
+				<div className="cs-tab-menu">
+					<Card>
+						<TabView>
+							<TabPanel header="Stats">
+								<StatsPanel data={parsedBlob} />
+							</TabPanel>
+							<TabPanel header="Details">
+								<DetailsPanel data={parsedBlob} />
+							</TabPanel>
+						</TabView>
+					</Card>
 				</div>
 
 				{showCropper && (
@@ -245,6 +265,56 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 					</div>
 				</div>
 			</div>
+		</>
+	);
+}
+
+interface PanelProps {
+	data: CharacterInfo | undefined;
+}
+
+function StatsPanel({ data }: PanelProps) {
+	if (!data) {
+		// TODO: put something better here.
+		return <div>Unavailable</div>;
+	}
+
+	const rows: ReactNode[] = [];
+	for (const s in data?.skills) {
+		rows.push(
+			<Fragment key={`skill-${s}`}>
+				<tr>
+					<td>{s}</td>
+					<td>{data.skills[s].name}</td>
+				</tr>
+			</Fragment>
+		);
+	}
+
+	return (
+		<>
+			<table>
+				<thead>
+					<tr>
+						<th>Skill</th>
+						<th>Proficiency</th>
+					</tr>
+				</thead>
+				<tbody>{rows}</tbody>
+			</table>
+		</>
+	);
+}
+
+function DetailsPanel({ data }: PanelProps) {
+	if (!data) {
+		return <div>Unavailable</div>;
+	}
+	// TODO: escape this:
+	return (
+		<>
+			<Panel header="Background">{data.backstory}</Panel>
+			<Panel header="Appearance">{data.appearance}</Panel>
 		</>
 	);
 }
