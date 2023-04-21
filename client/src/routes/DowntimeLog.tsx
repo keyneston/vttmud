@@ -107,6 +107,7 @@ const activities = [
 	Activity.GatherResources,
 	Activity.LearnASpell,
 	Activity.Retraining,
+	Activity.Other,
 ];
 
 const assuranceBodyTemplate = (rowData: DowntimeEntry) => {
@@ -639,6 +640,7 @@ function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 			Activity.Craft,
 			Activity.Perform,
 			Activity.GatherResources,
+			Activity.Other,
 			"Unknown",
 		],
 		datasets: [
@@ -650,6 +652,7 @@ function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 					activityCounts[Activity.Craft],
 					activityCounts[Activity.Perform],
 					activityCounts[Activity.GatherResources],
+					activityCounts[Activity.Other],
 					activityCounts[Activity.Unknown],
 				],
 				backgroundColor: [
@@ -659,6 +662,7 @@ function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 					ActivityColors.get(Activity.Craft),
 					ActivityColors.get(Activity.Perform),
 					ActivityColors.get(Activity.GatherResources),
+					ActivityColors.get(Activity.Other),
 					ActivityColors.get(Activity.Unknown),
 				],
 			},
