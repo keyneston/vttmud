@@ -32,6 +32,10 @@ import { subDate, formatDate } from "../date";
 import { craftDC } from "../pf2e/income";
 import "./DowntimeLog.scss";
 
+const chartWidth = 20;
+const chartPanelWidth = 23;
+const chartGap = 2;
+
 const calculateSuccess = function (r: DowntimeEntry): number {
 	var level = 2;
 
@@ -327,6 +331,7 @@ export default function DowntimeLog() {
 			<div className="dt-charts">
 				<ActivityPieChart data={data || []} />
 				<SuccessRatePieChart data={data || []} />
+				<RollDistributionChart data={data || []} />
 			</div>
 		</div>
 	);
@@ -661,8 +666,13 @@ function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 	};
 
 	return (
-		<Panel header="Activity Type" style={{ width: "23rem" }}>
-			<Chart type="pie" data={chartData} className="" style={{ width: "20rem", height: "20rem" }} />
+		<Panel header="Activity Type" style={{ width: `${chartPanelWidth}rem` }}>
+			<Chart
+				type="pie"
+				data={chartData}
+				className=""
+				style={{ width: `${chartWidth}rem`, height: `${chartWidth}rem` }}
+			/>
 		</Panel>
 	);
 }
@@ -688,8 +698,61 @@ function SuccessRatePieChart({ data }: { data: DowntimeEntry[] }) {
 	};
 
 	return (
-		<Panel header="Success Rate" style={{ width: "23rem" }}>
-			<Chart type="pie" data={chartData} className="" style={{ width: "20rem", height: "20rem" }} />
+		<Panel header="Success Rate" style={{ width: `${chartPanelWidth}rem` }}>
+			<Chart
+				type="pie"
+				data={chartData}
+				className=""
+				style={{ width: `${chartWidth}rem`, height: `${chartWidth}rem` }}
+			/>
+		</Panel>
+	);
+}
+
+function RollDistributionChart({ data }: { data: DowntimeEntry[] }) {
+	const rollRate = useMemo(() => {
+		var rollRate: number[] = Array.from({ length: 20 }, () => 0);
+		data.forEach((x) => {
+			if (!x.roll || x.assurance || x.roll === 0) {
+				return;
+			}
+
+			rollRate[x.roll - 1] += 1;
+		});
+		return rollRate;
+	}, [data]);
+
+	var chartData = {
+		labels: Array.from({ length: 20 }, (_, i) => {
+			return i + 1;
+		}),
+		datasets: [
+			{
+				label: "Rolls",
+				data: rollRate,
+				backgroundColor: ["#0288D1", "#689F38", "#FBC02D", "#D32F2F"],
+			},
+		],
+	};
+
+	const options = {
+		scales: {
+			y: {
+				beginAtZero: true,
+			},
+		},
+	};
+
+	return (
+		<Panel header="Roll Distribution" style={{ width: `${chartPanelWidth * 2 + chartGap}rem` }}>
+			{/* width is equal to 2x normal width, plus 2rem for the gap */}
+			<Chart
+				type="bar"
+				options={options}
+				data={chartData}
+				className=""
+				style={{ width: `${chartWidth * 2 + chartGap}rem`, height: `${chartWidth}rem` }}
+			/>
 		</Panel>
 	);
 }
