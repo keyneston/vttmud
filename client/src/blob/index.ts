@@ -1,5 +1,6 @@
 export interface CharacterInfo {
     name: string;
+    level: number;
     backstory?: string;
     appearance?: string;
     alignment?: string;
@@ -20,6 +21,32 @@ export enum Proficiency {
     Expert = 2,
     Master = 3,
     Legendary = 4,
+}
+
+export enum Skill {
+    Acrobatics = "acr",
+    Arcane = "arc",
+    Athletics = "ath",
+    Crafting = "cra",
+    Deception = "dec",
+    Diplomacy = "dip",
+    Intimidation = "itm",
+    Medicine = "med",
+    Nature = "nat",
+    Occultism = "occ",
+    Performance = "prf",
+    Religion = "rel",
+    Society = "soc",
+    Stealth = "ste",
+    Survival = "sur",
+    Thievery = "thi",
+    Unknown = "unk",
+}
+
+export interface SkillInfo {
+    name: string;
+    shortName: string;
+    ability: string;
 }
 
 export function scoreToBonus(input: number): number {
@@ -46,42 +73,82 @@ export function calculateScore(input: number): number {
     return total;
 }
 
-function expandSkillName(input: string): string {
+function expandSkillName(input: string): Skill {
     switch (input) {
         case "acr":
-            return "Acrobatics";
+            return Skill.Acrobatics;
         case "arc":
-            return "Arcane";
+            return Skill.Arcane;
         case "ath":
-            return "Athletics";
+            return Skill.Athletics;
         case "cra":
-            return "Crafting";
+            return Skill.Crafting;
         case "dec":
-            return "Deception";
+            return Skill.Deception;
         case "dip":
-            return "Diplomacy";
+            return Skill.Diplomacy;
         case "itm":
-            return "Intimidation";
+            return Skill.Intimidation;
         case "med":
-            return "Medicine";
+            return Skill.Medicine;
         case "nat":
-            return "Nature";
+            return Skill.Nature;
         case "occ":
-            return "Occultism";
+            return Skill.Occultism;
         case "prf":
-            return "Performance";
+            return Skill.Performance;
         case "rel":
-            return "Religion";
+            return Skill.Religion;
         case "soc":
-            return "Society";
+            return Skill.Society;
         case "ste":
-            return "Stealth";
+            return Skill.Stealth;
         case "sur":
-            return "Survival";
+            return Skill.Survival;
         case "thi":
-            return "Thievery";
+            return Skill.Thievery;
         default:
-            return "Unknown";
+            console.log(`Unknown skill: ${input}`);
+            return Skill.Unknown;
+    }
+}
+
+export function getSkillInfo(skill: Skill): SkillInfo {
+    switch (skill) {
+        case Skill.Acrobatics:
+            return { shortName: "acr", name: "Acrobatics", ability: "dex" };
+        case Skill.Arcane:
+            return { shortName: "arc", name: "Arcane", ability: "int" };
+        case Skill.Athletics:
+            return { shortName: "ath", name: "Athletics", ability: "str" };
+        case Skill.Crafting:
+            return { shortName: "cra", name: "Crafting", ability: "int" };
+        case Skill.Deception:
+            return { shortName: "dec", name: "Deception", ability: "cha" };
+        case Skill.Diplomacy:
+            return { shortName: "dip", name: "Diplomacy", ability: "cha" };
+        case Skill.Intimidation:
+            return { shortName: "itm", name: "Intimidation", ability: "cha" };
+        case Skill.Medicine:
+            return { shortName: "med", name: "Medicine", ability: "wis" };
+        case Skill.Nature:
+            return { shortName: "nat", name: "Nature", ability: "wis" };
+        case Skill.Occultism:
+            return { shortName: "occ", name: "Occultism", ability: "int" };
+        case Skill.Performance:
+            return { shortName: "prf", name: "Performance", ability: "cha" };
+        case Skill.Religion:
+            return { shortName: "rel", name: "Religion", ability: "wis" };
+        case Skill.Society:
+            return { shortName: "soc", name: "Society", ability: "int" };
+        case Skill.Stealth:
+            return { shortName: "ste", name: "Stealth", ability: "dex" };
+        case Skill.Survival:
+            return { shortName: "sur", name: "Survival", ability: "wis" };
+        case Skill.Thievery:
+            return { shortName: "thi", name: "Thievery", ability: "dex" };
+        default:
+            return { shortName: "unk", name: "Unknown", ability: "con" };
     }
 }
 
@@ -104,10 +171,11 @@ function expandRank(rank: number): ProficiencyRank {
 
 export function parseBlob(input: any): CharacterInfo | undefined {
     if (!input) {
-        return { name: "" };
+        return { name: "", level: 0 };
     }
 
     const name = input?.name ?? "";
+    const level = input?.system?.details?.level?.value;
     const backstory = input?.system?.details?.biography?.backstory;
     const appearance = input?.system?.details?.biography?.appearance;
     const alignment = input?.system?.details?.alignment?.value;
@@ -147,7 +215,7 @@ export function parseBlob(input: any): CharacterInfo | undefined {
         }
     }
 
-    return { name, backstory, appearance, alignment, skills, abilities: calculateScores(abilityBoosts) };
+    return { name, backstory, appearance, alignment, skills, abilities: calculateScores(abilityBoosts), level };
 }
 
 export {};

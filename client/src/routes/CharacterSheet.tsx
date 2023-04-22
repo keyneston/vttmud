@@ -4,7 +4,7 @@ import { useState, useCallback, useMemo, ReactNode, Fragment } from "react";
 import { Character, fetchCharacter, uploadAvatar } from "../api/characters";
 import { money2string } from "../api/items";
 import { CDN, MaximumImageSize } from "../constants";
-import { parseBlob, CharacterInfo } from "../blob";
+import { parseBlob, CharacterInfo, getSkillInfo, SkillInfo, Skill, ProficiencyRank, scoreToBonus } from "../blob";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -274,21 +274,61 @@ interface PanelProps {
 }
 
 function StatsPanel({ data }: PanelProps) {
+	function calculateBonus(args: {
+		level: number;
+		skillInfo: SkillInfo;
+		prof: ProficiencyRank;
+		abilities: any;
+	}): number {
+		var bonus = 0;
+		if (args.prof.id > 0) {
+			bonus = args.level;
+		}
+
+		bonus += args.prof.bonus;
+		const ability = args.abilities[args.skillInfo.ability];
+		if (!ability) {
+			console.log(`Can't find ability for ${args.skillInfo.name}: ${args.abilities}`);
+			return bonus;
+		}
+		bonus += scoreToBonus(ability);
+		return bonus;
+	}
+
+	const rows: ReactNode[] = useMemo(() => {
+		if (!data) return [];
+
+		const rows: ReactNode[] = [];
+		for (const s in data?.skills) {
+			const skillInfo = getSkillInfo(s as Skill);
+			const prof = data?.skills[s];
+			const bonus = calculateBonus({
+				level: data.level,
+				skillInfo: skillInfo,
+				prof: prof,
+				abilities: data.abilities,
+			});
+
+			rows.push(
+				<Fragment key={`skill-${s}`}>
+					<tr>
+						<td>{skillInfo.name}</td>
+						<td>{skillInfo.ability.toUpperCase()}</td>
+						<td>{data.skills[s].name}</td>
+						<td>
+							{bonus >= 0 ? "+" : ""}
+							{bonus}
+						</td>
+					</tr>
+				</Fragment>
+			);
+		}
+		return rows;
+	}, [data]);
+
 	if (!data) {
 		// TODO: put something better here.
 		return <div>Unavailable</div>;
-	}
-
-	const rows: ReactNode[] = [];
-	for (const s in data?.skills) {
-		rows.push(
-			<Fragment key={`skill-${s}`}>
-				<tr>
-					<td>{s}</td>
-					<td>{data.skills[s].name}</td>
-				</tr>
-			</Fragment>
-		);
 	}
 
 	return (
@@ -297,7 +337,9 @@ function StatsPanel({ data }: PanelProps) {
 				<thead>
 					<tr>
 						<th>Skill</th>
+						<th>Ability</th>
 						<th>Proficiency</th>
+						<th>Modifier</th>
 					</tr>
 				</thead>
 				<tbody>{rows}</tbody>
