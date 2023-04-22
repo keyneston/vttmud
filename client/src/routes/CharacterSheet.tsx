@@ -299,13 +299,12 @@ function StatsPanel({ data }: PanelProps) {
 		if (!data) return [];
 
 		const rows: ReactNode[] = [];
-		for (const s in data?.skills) {
+		data?.skills?.forEach((prof, s) => {
 			const skillInfo = getSkillInfo(s as Skill);
-			const prof = data?.skills[s];
 			const bonus = calculateBonus({
 				level: data.level,
 				skillInfo: skillInfo,
-				prof: prof,
+				prof: prof || { id: 0, name: "", bonus: 0 },
 				abilities: data.abilities,
 			});
 
@@ -314,7 +313,7 @@ function StatsPanel({ data }: PanelProps) {
 					<tr>
 						<td>{skillInfo.name}</td>
 						<td>{skillInfo.ability.toUpperCase()}</td>
-						<td>{data.skills[s].name}</td>
+						<td>{data?.skills?.get(s as Skill)?.name}</td>
 						<td>
 							{bonus >= 0 ? "+" : ""}
 							{bonus}
@@ -322,7 +321,7 @@ function StatsPanel({ data }: PanelProps) {
 					</tr>
 				</Fragment>
 			);
-		}
+		});
 		return rows;
 	}, [data]);
 
@@ -333,6 +332,7 @@ function StatsPanel({ data }: PanelProps) {
 
 	return (
 		<>
+			<h3>This data is experimental and likely incorrect, please rely on foundry.</h3>
 			<table>
 				<thead>
 					<tr>

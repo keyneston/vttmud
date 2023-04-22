@@ -5,7 +5,7 @@ export interface CharacterInfo {
     appearance?: string;
     alignment?: string;
     abilities?: { [key: string]: number };
-    skills?: { [key: string]: ProficiencyRank };
+    skills?: Map<string, ProficiencyRank>;
 }
 
 export type ProficiencyRank = {
@@ -74,7 +74,7 @@ export function calculateScore(input: number): number {
 }
 
 function expandSkillName(input: string): Skill {
-    switch (input) {
+    switch (String(input).trim()) {
         case "acr":
             return Skill.Acrobatics;
         case "arc":
@@ -108,7 +108,7 @@ function expandSkillName(input: string): Skill {
         case "thi":
             return Skill.Thievery;
         default:
-            console.log(`Unknown skill: ${input}`);
+            console.log(`expandSkillName: Unknown skill: ${input}`);
             return Skill.Unknown;
     }
 }
@@ -148,6 +148,7 @@ export function getSkillInfo(skill: Skill): SkillInfo {
         case Skill.Thievery:
             return { shortName: "thi", name: "Thievery", ability: "dex" };
         default:
+            console.log(`getSkillInfo: unknown skill: ${skill}`);
             return { shortName: "unk", name: "Unknown", ability: "con" };
     }
 }
@@ -180,31 +181,14 @@ export function parseBlob(input: any): CharacterInfo | undefined {
     const appearance = input?.system?.details?.biography?.appearance;
     const alignment = input?.system?.details?.alignment?.value;
 
-    const skills: { [key: string]: ProficiencyRank } = {};
+    const skills: Map<string, ProficiencyRank> = new Map();
     const rawSkills = new Map(Object.entries(input?.system?.skills));
 
     rawSkills.forEach((v: any, k: string) => {
-        skills[expandSkillName(k)] = expandRank(v.rank);
+        skills.set(expandSkillName(k), expandRank(v.rank));
     });
 
     const abilityBoosts: { [key: string]: number } = { str: 0, con: 0, dex: 0, wis: 0, int: 0, cha: 0 };
-
-    input.items.forEach((v: any) => {
-        if (v?.system?.boosts) {
-            for (const b in v.system.boosts) {
-                if (v.system.boosts[b]?.selected) {
-                    abilityBoosts[v.system.boosts[b]?.selected] += 1;
-                }
-            }
-        }
-
-        if (v?.system?.keyAbility?.value) {
-            const value = v?.system?.keyAbility?.value;
-            if (value.length > 0) {
-                abilityBoosts[value[0]] += 1;
-            }
-        }
-    });
 
     if (input?.system?.build?.abilities?.boosts) {
         const boosts = input.system.build.abilities.boosts;
@@ -214,6 +198,39 @@ export function parseBlob(input: any): CharacterInfo | undefined {
             });
         }
     }
+
+    // Handle changes from 'items'
+    input.items.forEach((v: any) => {
+        // Check for boosts
+        if (v?.system?.boosts) {
+            for (const b in v.system.boosts) {
+                if (v.system.boosts[b]?.selected) {
+                    abilityBoosts[v.system.boosts[b]?.selected] += 1;
+                }
+            }
+        }
+
+        // Check for key ability score
+        if (v?.system?.keyAbility?.value) {
+            const value = v?.system?.keyAbility?.value;
+            if (value.length > 0) {
+                abilityBoosts[value[0]] += 1;
+            }
+        }
+
+        // Check for background skills
+        if (v?.system?.trainedSkills?.value) {
+            const value = v?.system?.trainedSkills?.value;
+            const skillName = expandSkillName(value);
+            const current = skills.get(skillName);
+
+            if (current) {
+                skills.set(skillName, expandRank(current!.id + 1));
+            } else {
+                skills.set(skillName, expandRank(1));
+            }
+        }
+    });
 
     return { name, backstory, appearance, alignment, skills, abilities: calculateScores(abilityBoosts), level };
 }
