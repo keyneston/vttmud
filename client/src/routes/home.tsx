@@ -14,7 +14,10 @@ type Entry = {
 const logEntries: Entry[] = [
 	{
 		date: dayjs("2023-04-22"),
-		tasks: ["Now displays (partially accurate) skill modifiers based upon uploaded JSON file"],
+		tasks: [
+			"Now displays (partially accurate) skill modifiers based upon uploaded JSON file",
+			"Fixed bug in how negative monetary amounts are recorded",
+		],
 	},
 	{
 		date: dayjs("2023-04-21"),

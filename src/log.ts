@@ -11,7 +11,7 @@ export const appendLogEndpoint = async (req: Request, res: Response) => {
     var data = await prisma.characterLogEntry.create({
         data: {
             characterID: parseInt(req.params.id),
-            gold: (req.body.spend ? -1 : 1) * req.body.gold + req.body.silver / 10 + req.body.copper / 100,
+            gold: req.body.gold,
             experience: req.body.experience,
             description: req.body.description,
         },
