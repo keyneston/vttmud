@@ -239,6 +239,25 @@ export function parseBlob(input: any): CharacterInfo | undefined {
                 skills.set(skillName, expandRank(1));
             }
         }
+
+        if (v?.system?.rules) {
+            const rules = v?.system?.rules;
+            rules.forEach((r: any) => {
+                var match = r?.path?.match(/system\.skills\.([a-z]+)\.rank/);
+                if (!match || match.length < 2) {
+                    return;
+                }
+
+                const skillName = expandSkillName(match[1]);
+                if (skillName === Skill.Unknown) {
+                    return;
+                }
+
+                if (r.mode === "upgrade") {
+                    skills.set(skillName, expandRank(r.value));
+                }
+            });
+        }
     });
 
     return { name, backstory, appearance, alignment, skills, abilities: calculateScores(abilityBoosts), level };
