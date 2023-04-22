@@ -108,7 +108,6 @@ function expandSkillName(input: string): Skill {
         case "thi":
             return Skill.Thievery;
         default:
-            console.log(`expandSkillName: Unknown skill: ${input}`);
             return Skill.Unknown;
     }
 }
@@ -148,7 +147,6 @@ export function getSkillInfo(skill: Skill): SkillInfo {
         case Skill.Thievery:
             return { shortName: "thi", name: "Thievery", ability: "dex" };
         default:
-            console.log(`getSkillInfo: unknown skill: ${skill}`);
             return { shortName: "unk", name: "Unknown", ability: "con" };
     }
 }
@@ -185,7 +183,11 @@ export function parseBlob(input: any): CharacterInfo | undefined {
     const rawSkills = new Map(Object.entries(input?.system?.skills));
 
     rawSkills.forEach((v: any, k: string) => {
-        skills.set(expandSkillName(k), expandRank(v.rank));
+        const skillName = expandSkillName(k);
+        if (skillName === Skill.Unknown) {
+            return;
+        }
+        skills.set(skillName, expandRank(v.rank));
     });
 
     const abilityBoosts: { [key: string]: number } = { str: 0, con: 0, dex: 0, wis: 0, int: 0, cha: 0 };
@@ -221,7 +223,14 @@ export function parseBlob(input: any): CharacterInfo | undefined {
         // Check for background skills
         if (v?.system?.trainedSkills?.value) {
             const value = v?.system?.trainedSkills?.value;
+            if (value === "") {
+                return;
+            }
             const skillName = expandSkillName(value);
+            if (skillName === Skill.Unknown) {
+                return;
+            }
+
             const current = skills.get(skillName);
 
             if (current) {
