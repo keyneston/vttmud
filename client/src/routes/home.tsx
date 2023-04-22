@@ -88,7 +88,7 @@ function Changelog({ data }: { data: Entry[] }) {
 		<Panel header="Changelog">
 			<ul>
 				{data.map((e: any): ReactNode => {
-					return <FormatEntry entry={e} />;
+					return <FormatEntry key={e.date} entry={e} />;
 				})}
 			</ul>
 		</Panel>
@@ -100,8 +100,8 @@ function FormatEntry({ entry }: { entry: Entry }) {
 		<Fragment key={`changelog-${entry.date.format("yyyy-mm-DD")}`}>
 			<li>{entry.date.format("MMM Do")}</li>
 			<ul>
-				{entry.tasks.map((t) => {
-					return <li>{t}</li>;
+				{entry.tasks.map((t, i) => {
+					return <li key={i}>{t}</li>;
 				})}
 			</ul>
 		</Fragment>
