@@ -47,10 +47,20 @@ export async function fetchCharacter(id: string | number): Promise<Character> {
 }
 
 export async function updateLog(data: CharacterLogEntry): Promise<CharacterLogEntry> {
+    var gold =
+        (data.spend ? -1 : 1) *
+        (Math.abs(data.gold || 0) + Math.abs(data.silver || 0) / 10 + Math.abs(data.copper || 0) / 100);
+
+    const _data = { ...data, gold, silver: null, copper: null };
+
+    console.log({
+        _data,
+    });
+
     return await fetch(`/api/v1/character/${data.characterID}/log`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(_data),
     }).then((d) => {
         return d.json();
     });

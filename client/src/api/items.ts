@@ -29,11 +29,13 @@ export function sumGold(...inputs: Gold[]): Gold {
 }
 
 export function money2string(i: number): string {
-    var gold = Math.floor(i);
-    var silver = Math.floor(Math.round(i * 10) % 10);
-    var copper = Math.floor(Math.round(i * 100) % 10);
+    var abs = Math.abs(i);
+    var gold = Math.floor(abs);
+    var silver = Math.floor(Math.round(abs * 10) % 10);
+    var copper = Math.floor(Math.round(abs * 100) % 10);
+    var negative = i < 0 ? "-" : "";
 
-    return `${gold} gp ${silver} sp ${copper} cp`;
+    return `${negative}${gold} gp ${silver} sp ${copper} cp`;
 }
 
 export function simplifyGold(input: Gold): number {

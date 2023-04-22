@@ -192,7 +192,7 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 
 			setVisible(false);
 			formik.resetForm();
-			navigate(`/character/${id}/log`);
+			setVisible(false);
 		},
 	});
 
