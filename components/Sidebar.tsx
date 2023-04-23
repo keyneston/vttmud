@@ -11,6 +11,9 @@ import styles from "./Sidebar.module.scss";
 
 export function Sidebar() {
 	const [ccVisible, setCCVisible] = useState(false);
+	const [showLoggedIn, setShowLoggedIn] = useState(false);
+
+	useEffect(() => setShowLoggedIn(loggedIn()));
 
 	const { isLoading, error, data } = useQuery({
 		queryKey: ["listCharacters"],
@@ -46,7 +49,7 @@ export function Sidebar() {
 							/>
 						</Link>
 					</div>
-					{loggedIn() && (
+					{showLoggedIn && (
 						<div>
 							<Link
 								className={styles.sidebar_link}
@@ -81,7 +84,7 @@ export function Sidebar() {
 							/>
 						</Link>
 					</div>
-					{loggedIn() ? (
+					{showLoggedIn ? (
 						<div>
 							<Link className={styles.sidebar_link} href="/api/v1/logout">
 								<Button
@@ -112,7 +115,7 @@ export function Sidebar() {
 				</div>
 			</div>
 			{charSections}
-			{loggedIn() && <CharacterCreation visible={ccVisible} setVisible={setCCVisible} />}
+			{showLoggedIn && <CharacterCreation visible={ccVisible} setVisible={setCCVisible} />}
 		</div>
 	);
 }
