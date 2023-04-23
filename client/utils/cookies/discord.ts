@@ -1,6 +1,4 @@
-import Cookies from "universal-cookie";
-
-const cookies = new Cookies();
+import { getCookie, hasCookie } from "cookies-next";
 
 export const DiscordUserCookie = "discord-user";
 export const DiscordGuildsCookie = "discord-guilds";
@@ -34,7 +32,7 @@ export interface DiscordUser {
 }
 
 export function discordUser(): DiscordUser | null {
-    var c = cookies.get(DiscordUserCookie);
+    var c = getCookie(DiscordUserCookie);
     if (!c) return null;
     c = c.replace(/^([sj]:)+/, "").replace(/\..*$/, "");
 

@@ -15,7 +15,7 @@ function NavBar() {
 	useEffect(() => {
 		setAvatarStyle(loggedIn() ? {} : { backgroundColor: "#2196F3", color: "#ffffff" });
 		setImage(avatarImage());
-	});
+	}, []);
 
 	return (
 		<>

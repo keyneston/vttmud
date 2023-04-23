@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { listCharacters, Character } from "../api/characters";
 import CharacterCreation from "../components/CharacterCreation";
 import { loggedIn } from "../utils/cookies/discord";
@@ -83,7 +83,7 @@ export function Sidebar() {
 					</div>
 					{loggedIn() ? (
 						<div>
-							<Link className={styles.sidebar_link} href="/logout">
+							<Link className={styles.sidebar_link} href="/api/v1/logout">
 								<Button
 									icon="pi pi-sign-out"
 									tooltip="Logout"
@@ -97,7 +97,7 @@ export function Sidebar() {
 						</div>
 					) : (
 						<div>
-							<Link className={styles.sidebar_link} href="/login">
+							<Link className={styles.sidebar_link} href="/api/v1/login">
 								<Button
 									icon="pi pi-sign-in"
 									tooltip="Login"
@@ -112,7 +112,7 @@ export function Sidebar() {
 				</div>
 			</div>
 			{charSections}
-			<CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
+			{loggedIn() && <CharacterCreation visible={ccVisible} setVisible={setCCVisible} />}
 		</div>
 	);
 }
