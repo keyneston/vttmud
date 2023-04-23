@@ -1,4 +1,4 @@
-import { loggedIn } from "../cookies/discord";
+import { loggedIn } from "../utils/cookies/discord";
 
 export interface Character {
     id: number;

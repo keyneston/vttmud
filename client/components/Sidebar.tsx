@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { listCharacters, Character } from "../api/characters";
-import CharacterCreation from "../components/CharacterCreation";
-import { loggedIn } from "../cookies/discord";
+// TODO: (next)
+// import CharacterCreation from "../components/CharacterCreation";
+import { loggedIn } from "../utils/cookies/discord";
 import { Button } from "primereact/button";
-import { Link } from "react-router-dom";
-import { CharacterAvatar } from "../components/Avatar";
+import Link from "next/link";
+import { CharacterAvatar } from "../components/CharacterAvatar";
 
-import "./Sidebar.scss";
+import styles from "./Sidebar.module.scss";
 
 export function Sidebar() {
 	const [ccVisible, setCCVisible] = useState(false);
@@ -30,12 +31,12 @@ export function Sidebar() {
 	}
 
 	return (
-		<div className="sidebar-root">
-			<div className="sidebar-section">
+		<div className={styles.sidebar_root}>
+			<div className={styles.sidebar_section}>
 				<h3>General</h3>
-				<div className="sidebar-section-items">
+				<div className={styles.sidebar_section_items}>
 					<div>
-						<Link className="sidebar-link" to="/">
+						<Link className={styles.sidebar_link} href="/">
 							<Button
 								icon="pi pi-home"
 								tooltip="Home"
@@ -49,12 +50,12 @@ export function Sidebar() {
 					{loggedIn() && (
 						<div>
 							<Link
-								className="sidebar-link"
+								className={styles.sidebar_link}
 								onClick={(e: any) => {
 									e.preventDefault();
 									setCCVisible(true);
 								}}
-								to="/"
+								href="/"
 							>
 								<Button
 									icon="pi pi-user-plus"
@@ -69,7 +70,7 @@ export function Sidebar() {
 						</div>
 					)}
 					<div>
-						<Link className="sidebar-link" to="/templates">
+						<Link className={styles.sidebar_link} href="/templates">
 							<Button
 								icon="pi pi-sliders-h"
 								tooltip="Templates"
@@ -83,7 +84,7 @@ export function Sidebar() {
 					</div>
 					{loggedIn() ? (
 						<div>
-							<Link className="sidebar-link" to="/logout">
+							<Link className={styles.sidebar_link} href="/logout">
 								<Button
 									icon="pi pi-sign-out"
 									tooltip="Logout"
@@ -97,7 +98,7 @@ export function Sidebar() {
 						</div>
 					) : (
 						<div>
-							<Link className="sidebar-link" to="/login">
+							<Link className={styles.sidebar_link} href="/login">
 								<Button
 									icon="pi pi-sign-in"
 									tooltip="Login"
@@ -112,7 +113,8 @@ export function Sidebar() {
 				</div>
 			</div>
 			{charSections}
-			<CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
+			{/* <CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
+			 */}
 		</div>
 	);
 }
@@ -120,14 +122,14 @@ export function Sidebar() {
 function CharacterSection({ char }: { char: Character }) {
 	return (
 		<>
-			<div className="sidebar-section">
-				<div className="sidebar-section-header">
+			<div className={styles.sidebar_section}>
+				<div className={styles.sidebar_section_header}>
 					<CharacterAvatar character={char} />
 					<div>{char.name}</div>
 				</div>
-				<div className="sidebar-character-items">
-					<div className="sidebar-sublink">
-						<Link className="sidebar-link" to={`/character/${char.id}/`}>
+				<div className={styles.sidebar_character_items}>
+					<div className={styles.sidebar_sublink}>
+						<Link className={styles.sidebar_link} href={`/character/${char.id}/`}>
 							<Button
 								icon="pi pi-id-card"
 								tooltip="Character Sheet"
@@ -139,8 +141,11 @@ function CharacterSection({ char }: { char: Character }) {
 							/>
 						</Link>
 					</div>
-					<div className="sidebar-sublink">
-						<Link className="sidebar-link" to={`/character/${char.id}/log`}>
+					<div className={styles.sidebar_sublink}>
+						<Link
+							className={styles.sidebar_link}
+							href={`/character/${char.id}/log`}
+						>
 							<Button
 								icon="pi pi-book"
 								tooltip="Log"
@@ -152,8 +157,11 @@ function CharacterSection({ char }: { char: Character }) {
 							/>
 						</Link>
 					</div>
-					<div className="sidebar-sublink">
-						<Link className="sidebar-link" to={`/character/${char.id}/downtime`}>
+					<div className={styles.sidebar_sublink}>
+						<Link
+							className={styles.sidebar_link}
+							href={`/character/${char.id}/downtime`}
+						>
 							<Button
 								icon="pi pi-moon"
 								tooltip="Downtime"

@@ -6,26 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "./root.scss";
 
-const checkDomain = () => {
-	const domain = process.env.REACT_APP_DOMAIN;
-	if (!domain) {
-		return;
-	}
-
-	var proto = window.location.protocol;
-	var hostname = window.location.host;
-	var urlWithoutPort = `${proto}//${hostname}`;
-
-	if (domain !== urlWithoutPort) {
-		window.location.replace(window.location.href.replace(urlWithoutPort, domain));
-	}
-};
-
 const queryClient = new QueryClient();
 
 export default function Root() {
-	checkDomain();
-
 	return (
 		<>
 			<div className="root">
@@ -36,7 +19,7 @@ export default function Root() {
 						</div>
 						<Sidebar />
 						<div className="content">
-							<Outlet />
+							<Component {...pageProps} />
 						</div>
 						<ReactQueryDevtools initialIsOpen={false} />
 					</QueryClientProvider>
