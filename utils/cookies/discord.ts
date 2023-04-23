@@ -32,7 +32,7 @@ export interface DiscordUser {
 }
 
 export function discordUser(): DiscordUser | null {
-    var c = getCookie(DiscordUserCookie);
+    var c = getCookie(DiscordUserCookie) || "{}";
     if (!c) return null;
     c = c.replace(/^([sj]:)+/, "").replace(/\..*$/, "");
 

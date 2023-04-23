@@ -1,6 +1,18 @@
+import { loggedIn } from "../utils/cookies/discord";
+import { Character } from "../types/characters";
+
 export async function fetchCharacter(id: string | number): Promise<Character> {
     const resp = await fetch(`/api/v1/character/${id}`);
     return resp.json();
+}
+
+export async function listCharacters(): Promise<Character[]> {
+    if (!loggedIn()) {
+        return [];
+    }
+
+    const results = await fetch("/api/v1/characters").then((d) => d.json());
+    return results;
 }
 
 export async function updateLog(data: CharacterLogEntry): Promise<CharacterLogEntry> {

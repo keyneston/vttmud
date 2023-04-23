@@ -1,12 +1,17 @@
+import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { Character } from "../../types/characters";
-import { loggedIn } from "../../utils/cookies/discord";
+import { getCookie } from "cookies-next";
 
-export default async function listCharacters(): Promise<Character[]> {
-    if (!loggedIn()) {
-        return [];
-    }
+const prisma = new PrismaClient();
 
-    const results = await fetch("/api/v1/characters").then((d) => d.json());
-    return results;
+export default async function listCharacters(req: Request, res: Response) {
+    const user = JSON.parse(getCookie("discord-user", { req, res }));
+
+    var result = await prisma.character.findMany({
+        where: {
+            owner: user.id,
+        },
+    });
+
+    res.json(result);
 }

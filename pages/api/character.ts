@@ -93,15 +93,3 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
 
     res.json(ret);
 };
-
-export const listCharacters = async (req: Request, res: Response) => {
-    const user = req.signedCookies["discord-user"];
-
-    var result = await prisma.character.findMany({
-        where: {
-            owner: user.id,
-        },
-    });
-
-    res.json(result);
-};
