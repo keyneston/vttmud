@@ -2,7 +2,7 @@ import { Gold } from "../api/items";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
 
-import "./GoldEntry.scss";
+import styles from "./GoldEntry.module.scss";
 
 export interface GoldEntryProp {
 	value: Gold;
@@ -12,8 +12,8 @@ export interface GoldEntryProp {
 export function GoldEntry({ value, setValue }: GoldEntryProp) {
 	return (
 		<>
-			<div className="ge-box">
-				<div className="ge-set">
+			<div className={styles.ge_box}>
+				<div className={styles.ge_set}>
 					<SelectButton
 						id="spend"
 						options={["-", "+"]}
@@ -25,12 +25,12 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 						style={{ height: "3rem", gridArea: "2 / 1" }}
 					/>
 				</div>
-				<div className="ge-set">
-					<label className="ge-label" htmlFor="gold">
+				<div className={styles.ge_set}>
+					<label className={styles.ge_label} htmlFor="gold">
 						<h3>Gold</h3>
 					</label>
 					<InputNumber
-						className="ge-input"
+						className={styles.ge_input}
 						id="gold"
 						showButtons
 						value={value.gold}
@@ -40,12 +40,12 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 						}}
 					/>
 				</div>
-				<div className="ge-set">
-					<label className="ge-label" htmlFor="silver">
+				<div className={styles.ge_set}>
+					<label className={styles.ge_label} htmlFor="silver">
 						<h3>Silver</h3>
 					</label>
 					<InputNumber
-						className="ge-input"
+						className={styles.ge_input}
 						id="silver"
 						showButtons
 						value={value.silver}
@@ -56,12 +56,12 @@ export function GoldEntry({ value, setValue }: GoldEntryProp) {
 					/>
 				</div>
 
-				<div className="ge-set">
-					<label className="ge-label" htmlFor="copper">
+				<div className={styles.ge_set}>
+					<label className={styles.ge_label} htmlFor="copper">
 						<h3>Copper</h3>
 					</label>
 					<InputNumber
-						className="ge-input"
+						className={styles.ge_input}
 						id="copper"
 						showButtons
 						value={value.copper}

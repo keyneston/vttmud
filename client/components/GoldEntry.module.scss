@@ -1,21 +1,21 @@
-.ge-box {
+.ge_box {
 	width: 100%;
 	display: flex;
 	gap: 10px;
 }
 
-.ge-input > input {
+.ge_input > input {
 	max-width: 8rem;
 	height: 3rem;
 	align-content: center;
 }
 
-.ge-set {
+.ge_set {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
 }
 
-.ge-label {
+.ge_label {
 	text-align: center;
 }

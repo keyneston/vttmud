@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { listCharacters, Character } from "../api/characters";
-// TODO: (next)
-// import CharacterCreation from "../components/CharacterCreation";
+import CharacterCreation from "../components/CharacterCreation";
 import { loggedIn } from "../utils/cookies/discord";
 import { Button } from "primereact/button";
 import Link from "next/link";
@@ -113,8 +112,7 @@ export function Sidebar() {
 				</div>
 			</div>
 			{charSections}
-			{/* <CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
-			 */}
+			<CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
 		</div>
 	);
 }

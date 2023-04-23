@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormik, FormikValues, FormikErrors } from "formik";
-import { useNavigate } from "react-router-dom";
+import { redirect } from 'next/navigation';
 import { GoldEntry } from "./GoldEntry";
 import { Gold } from "../api/items";
 import { listServers, Server } from "../api/characters";
@@ -12,7 +12,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 
-import "./CharacterCreation.scss";
+import styles from "./CharacterCreation.module.scss";
 
 export default function CharacterCreation({
 	visible = false,
@@ -22,7 +22,6 @@ export default function CharacterCreation({
 	setVisible: (x: boolean) => void;
 }) {
 	const queryClient = useQueryClient();
-	const navigate = useNavigate();
 	const [money, setMoney] = useState<Gold>({ spend: false });
 	const [server, setServer] = useState<Server>({ id: 0, name: "", discordID: "" });
 
@@ -86,7 +85,7 @@ export default function CharacterCreation({
 			queryClient.invalidateQueries(["listCharacters"]);
 
 			setVisible(false);
-			navigate(`/character/${results.id}`);
+			redirect(`/character/${results.id}`);
 
 			formik.resetForm();
 		},
@@ -111,8 +110,8 @@ export default function CharacterCreation({
 				}}
 			>
 				<form onSubmit={formik.handleSubmit} className="p-fluid">
-					<div className="cc-grid">
-						<div className="cc-left-top">
+					<div className={styles.cc_grid}>
+						<div className={styles.cc_left_top}>
 							<span className="p-float-label p-input-icon-right">
 								<InputText
 									id="character_name"
@@ -123,8 +122,8 @@ export default function CharacterCreation({
 								{getFormErrorMessage("character_name")}
 							</span>
 						</div>
-						<div className="cc-center"></div>
-						<div className="cc-right">
+						<div className={styles.cc_center}></div>
+						<div className={styles.cc_right}>
 							<Dropdown
 								id="server"
 								name="server"
@@ -140,7 +139,7 @@ export default function CharacterCreation({
 							<div>{getFormErrorMessage("server")}</div>
 						</div>
 
-						<div className="cc-left-center">
+						<div className={styles.cc_left_center}>
 							<h2>Initial Money</h2>
 							<GoldEntry
 								value={money}
@@ -153,8 +152,8 @@ export default function CharacterCreation({
 								}}
 							/>
 						</div>
-						<div className="cc-middle-middle">
-							<div className="cc-exp-entry">
+						<div className={styles.cc_middle_middle}>
+							<div className={styles.cc_exp_entry}>
 								<div>
 									<h2>Initial Experience</h2>
 								</div>
@@ -190,9 +189,9 @@ export default function CharacterCreation({
 							</div>
 						</div>
 
-						<div className="cc-right-bottom">
+						<div className={styles.cc_right_bottom}>
 							<Button
-								className="flex-end"
+								className="flex_end"
 								label="Save"
 								severity="success"
 								type="submit"
