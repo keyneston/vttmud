@@ -6,7 +6,7 @@
 	padding-top: 15px;
 }
 
-.success-counter-set {
+.success_counter_set {
 	grid-column: 1/3;
 	display: grid;
 	grid-template-columns: 25% 25% 25% 25%;
@@ -14,11 +14,11 @@
 	text-align: center;
 }
 
-.success-counter > input {
+.success_counter > input {
 	width: 4rem;
 }
 
-.success-counter-label {
+.success_counter_label {
 	align-self: center;
 	font-weight: 900;
 	padding-top: 10px;

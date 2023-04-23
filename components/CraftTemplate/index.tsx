@@ -1,20 +1,25 @@
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar } from "primereact/calendar";
-import { InputText } from "primereact/inputtext";
-import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
-import { AutoComplete } from "primereact/autocomplete";
-import { Panel } from "primereact/panel";
-import { Divider } from "primereact/divider";
-import { MinItemLevel, MaxItemLevel } from "../constants";
-import { simplifyGold, Item } from "../api/items";
-import { subDate, formatDate } from "../date";
-import { formulaCost, craftDC } from "../pf2e/income";
 
-import "./CraftTemplate.css";
+import { AutoComplete } from "primereact/autocomplete";
+import { Calendar } from "primereact/calendar";
+import { Divider } from "primereact/divider";
+import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber";
+import { InputText } from "primereact/inputtext";
+import { Panel } from "primereact/panel";
+
+import { MinItemLevel, MaxItemLevel } from "../../utils/constants";
+import { formulaCost, craftDC } from "../../utils/pf2e/income";
+import { simplifyGold, Item } from "../../api/items";
+import { subDate, formatDate } from "../../utils/date";
+
+import styles from "./index.module.scss";
 
 function emptyPerson(id: number): CraftPerson {
-	const character_name = localStorage.getItem(`character_name_${id}`) || "";
+	var character_name = "";
+	if (typeof window !== "undefined") {
+		character_name = localStorage.getItem(`character_name_${id}`) || "";
+	}
 	return { name: character_name, days: 1, endDate: new Date() };
 }
 
@@ -28,10 +33,12 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 		emptyPerson(2),
 		emptyPerson(3),
 	]);
-	const [peopleCount, setPeopleCount] = useState<number>(() => {
+	const [peopleCount, setPeopleCount] = useState<number>(0);
+
+	useEffect(() => {
 		const value = localStorage.getItem("craft_template_people_count");
-		return parseInt(value || "0");
-	});
+		setPeopleCount(parseInt(value || "0"));
+	}, []);
 
 	useEffect(() => {
 		localStorage.setItem("character_name_0", people[0].name);
@@ -53,11 +60,11 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 			<Output people={people.slice(0, peopleCount)} level={level} itemCount={itemCount} item={item} />
 
 			<Divider />
-			<div className="ct-box card">
-				<div className="ct-label-set">
+			<div className={`${styles.ct_box} ${styles.card}`}>
+				<div className={styles.ct_label_set}>
 					<label htmlFor="people-count">Number of Workers</label>
 					<InputNumber
-						className="ct-input-people-count"
+						className={styles.ct_input_people_count}
 						id="people-count"
 						min={1}
 						max={4}
@@ -78,10 +85,10 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 				<div>
 					<ItemAutoComplete item={item} setLevel={setLevel} setItem={setItem} />
 				</div>
-				<div className="ct-label-set">
+				<div className={styles.ct_label_set}>
 					<label htmlFor="level">Item Level</label>
 					<InputNumber
-						className="ct-input"
+						className={styles.ct_input}
 						value={level}
 						onValueChange={(e) => setLevel(e.value || 0)}
 						min={MinItemLevel}
@@ -129,19 +136,19 @@ function CraftPersonTemplate({
 }) {
 	return (
 		<>
-			<div className="ct-label-set">
+			<div className={styles.ct_label_set}>
 				<label htmlFor={`${id}-character`}>Character Name</label>
 				<InputText
-					className="ct-input"
+					className={styles.ct_input}
 					id={`${id}-character`}
 					value={value.name}
 					onChange={(e) => setValue({ ...value, name: e.target.value })}
 				/>
 			</div>
-			<div className="ct-label-set">
+			<div className={styles.ct_label_set}>
 				<label htmlFor={`${id}-endDate`}>End Date</label>
 				<Calendar
-					className="ct-input"
+					className={styles.ct_input}
 					value={value.endDate}
 					onChange={(e) => {
 						let d = Array.isArray(e.value) ? e.value[0] : e.value;
@@ -150,10 +157,10 @@ function CraftPersonTemplate({
 					id={`${id}-endDate`}
 				/>
 			</div>
-			<div className="ct-label-set">
+			<div className={styles.ct_label_set}>
 				<label htmlFor={`${id}-days`}>Number of Days</label>
 				<InputNumber
-					className="ct-input"
+					className={styles.ct_input}
 					value={value.days}
 					onValueChange={(e) => setValue({ ...value, days: e.value || 0 })}
 					min={0}
@@ -233,10 +240,10 @@ function ItemCount({
 	}
 
 	return (
-		<div className="ct-label-set">
+		<div className={styles.ct_label_set}>
 			<label htmlFor="itemCount">Item Count</label>
 			<InputNumber
-				className="ct-input"
+				className={styles.ct_input}
 				value={itemCount}
 				onChange={(e) => setItemCount(e.value || 1)}
 				id="itemCount"
@@ -267,10 +274,10 @@ function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 	const itemsDB: Item[] = data || [];
 
 	return (
-		<div className="ct-label-set">
+		<div className={styles.ct_label_set}>
 			<label htmlFor="item">Item</label>
 			<AutoComplete
-				className="ct-input"
+				className={styles.ct_input}
 				id="item"
 				value={item}
 				suggestions={searchEntries || undefined}
@@ -318,21 +325,21 @@ function ItemInformation({ item, level, itemCount }: ItemInformationProps) {
 	var formula = formulaCost(level);
 
 	return (
-		<div className="box">
-			<div className="template-label">
+		<div className={styles.box}>
+			<div className={styles.template_label}>
 				<label>Item Cost</label>
 			</div>
-			<div className="template-value">
+			<div className={styles.template_value}>
 				{itemCount > 1 ? `${itemCount} x ` : ""} {itemCost} gp
 			</div>
-			<div className="template-label">
+			<div className={styles.template_label}>
 				<label>Formula Cost</label>
 			</div>
-			<div className="template-value">{formula} gp</div>
-			<div className="template-label">
+			<div className={styles.template_value}>{formula} gp</div>
+			<div className={styles.template_label}>
 				<label>Total Cost</label>
 			</div>
-			<div className="template-value">
+			<div className={styles.template_value}>
 				{itemCost * itemCount} + {formula} = {itemCost * itemCount + formulaCost(level)} gp
 			</div>
 		</div>

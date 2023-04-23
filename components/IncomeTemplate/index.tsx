@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { Panel } from "primereact/panel";
 import { InputText } from "primereact/inputtext";
 import { Divider } from "primereact/divider";
 import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
-import { subDate, formatDate } from "../date";
 import { Dropdown } from "primereact/dropdown";
-import { getLevel } from "../pf2e/income";
-import "./incomeTemplate.scss";
 
-const mutliplierKey = "earn_income_multiplier";
+import { subDate, formatDate } from "../../utils/date";
+import { getLevel } from "../../utils/pf2e/income";
+
+import styles from "./index.module.scss";
+
+const multiplierKey = "earn_income_multiplier";
 const levelKey = "earn_income_level";
 const proficiencyKey = "character_proficiency";
 const descriptionKey = "earn_income_description";
@@ -21,27 +24,31 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 	const [critSuccess, setCritSuccess] = useState<number>(0);
 	const [failure, setFailure] = useState<number>(0);
 	const [critFailure, setCritFailure] = useState<number>(0);
-	const [multiplier, setMultiplier] = useState<number>(() => {
-		const multiplier = localStorage.getItem(mutliplierKey);
-		return parseInt(multiplier || "1") || 1;
-	});
-	const [proficiency, setProficiency] = useState<string>(() => {
-		const character_proficiency = localStorage.getItem(proficiencyKey);
-		return character_proficiency || "Untrained";
-	});
-	const [description, setDescription] = useState<string>(() => {
-		const item = localStorage.getItem(descriptionKey);
-		return item || "";
-	});
-	const [level, setLevel] = useState<number>(() => {
-		const earn_income_level = localStorage.getItem(levelKey);
-		return parseInt(earn_income_level || "1") || 1;
-	});
+	const [multiplier, setMultiplier] = useState<number>(1);
+	const [proficiency, setProficiency] = useState<string>("Untrained");
+	const [description, setDescription] = useState<string>("");
+	const [level, setLevel] = useState<number>(1);
 
-	localStorage.setItem(proficiencyKey, proficiency);
-	localStorage.setItem(levelKey, `${level}`);
-	localStorage.setItem(mutliplierKey, `${multiplier}`);
-	localStorage.setItem(descriptionKey, description);
+	useEffect(() => {
+		const multiplier = localStorage.getItem(multiplierKey);
+		setMultiplier(parseInt(multiplier || "1"));
+
+		const character_proficiency = localStorage.getItem(proficiencyKey);
+		setProficiency(character_proficiency || "Untrained");
+
+		const description = localStorage.getItem(descriptionKey);
+		setDescription(description || "");
+
+		const earn_income_level = localStorage.getItem(levelKey);
+		setLevel(parseInt(earn_income_level || "1"));
+	}, []);
+
+	if (typeof window !== "undefined") {
+		localStorage.setItem(proficiencyKey, proficiency);
+		localStorage.setItem(levelKey, `${level}`);
+		localStorage.setItem(multiplierKey, `${multiplier}`);
+		localStorage.setItem(descriptionKey, description);
+	}
 
 	return (
 		<Panel header="Earn Income Template">
@@ -67,7 +74,7 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 				})}
 			/>
 			<Divider />
-			<div className="box card">
+			<div className={styles.box}>
 				<span className="p-float-label">
 					<InputText
 						id="character"
@@ -138,24 +145,24 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 					/>
 					<label htmlFor="multiplier">Multiplier</label>
 				</span>
-				<div className="success-counter-set">
+				<div className={styles.success_counter_set}>
 					<div>
-						<label htmlFor="critSuccess" className="success-counter-label">
+						<label htmlFor="critSuccess" className={styles.success_counter_label}>
 							Critical Success
 						</label>
 					</div>
 					<div>
-						<label htmlFor="success" className="success-counter-label">
+						<label htmlFor="success" className={styles.success_counter_label}>
 							Success
 						</label>
 					</div>
 					<div>
-						<label htmlFor="failure" className="success-counter-label">
+						<label htmlFor="failure" className={styles.success_counter_label}>
 							Failure
 						</label>
 					</div>
 					<div>
-						<label htmlFor="critFailure" className="success-counter-label">
+						<label htmlFor="critFailure" className={styles.success_counter_label}>
 							Critical Failure
 						</label>
 					</div>
@@ -181,7 +188,7 @@ function SuccessCounter({ id, value, setValue }: { id: string; value: number; se
 	return (
 		<div className="card flex justify-content-center">
 			<InputNumber
-				className="success-counter"
+				className={styles.success_counter}
 				value={value}
 				onValueChange={(e) => setValue(e.value || 0)}
 				min={0}
