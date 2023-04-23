@@ -1,5 +1,6 @@
 import React from "react";
 import { loginAction, logoutAction } from "./routes/login";
+import { NavBar } from "../components/NavBar";
 
 import "./_app.scss";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -16,6 +17,7 @@ import "primeicons/primeicons.css";
 export default function App({ Component, pageProps }) {
 	return (
 		<React.StrictMode>
+			<NavBar></NavBar>
 			<Component {...pageProps} />
 		</React.StrictMode>
 	);

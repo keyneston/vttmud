@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { Panel } from "primereact/panel";
 import { Fragment, ReactNode } from "react";
-//import "./index.scss";
+import "./index.module.css";
 
 dayjs.extend(advancedFormat);
 

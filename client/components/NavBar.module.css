@@ -49,12 +49,12 @@ button.avatar {
   border-color: black;
 }
 
-.navbar-divider {
+.navbar_divider {
   height: 2px;
   background-color: black;
 }
 
-.navbar-left {
+.navbar_left {
   padding: 10px;
   float: left;
   height: 100%;
@@ -62,7 +62,7 @@ button.avatar {
   text-align: left;
 }
 
-.navbar-right {
+.navbar_right {
   padding: 10px;
   float: right;
   height: 100%;
