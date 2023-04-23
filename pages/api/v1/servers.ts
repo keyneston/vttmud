@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { StatusError } from "./error";
+import { StatusError } from "../error";
 import { oauth2 } from "./login";
 import { PrismaClient } from "@prisma/client";
-import { redisClient } from "./serve";
+import { redisClient } from "../serve";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +19,7 @@ const upsertStaticServers = async () => {
 // make sure the servers list is accurate at boot
 upsertStaticServers();
 
-export const listServersEndpoint = async (req: Request, res: Response, next: any) => {
+export default async function listServersEndpoint(req: Request, res: Response, next: any) {
     const discord = req.signedCookies["discord"];
     const user = req.signedCookies["discord-user"];
 
@@ -62,4 +62,4 @@ export const listServersEndpoint = async (req: Request, res: Response, next: any
     } catch (e: any) {
         return next(new StatusError("Internal Server Error", 500, e.message));
     }
-};
+}

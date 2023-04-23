@@ -28,3 +28,4 @@ yarn-error.log*
 
 /client/public/*.db.json
 foundryvtt-pf2e
+.next

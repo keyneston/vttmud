@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextRequest, NextResponse } from "next/server";
 import DiscordOauth2 from "discord-oauth2";
 
 if (

@@ -1,3 +1,5 @@
+export {};
+/* 
 import express, { Request, Response } from "express";
 import path from "path";
 
@@ -50,3 +52,4 @@ function registerRestrictedRoutes(app: express.Application) {
 }
 
 export { registerRotues };
+*/
