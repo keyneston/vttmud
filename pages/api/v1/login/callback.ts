@@ -27,14 +27,15 @@ export default async function callbackEndpoint(req: NextRequest, res: NextRespon
             grantType: "authorization_code",
         });
 
-        setCookie("discord", response, {
+        setCookie("discord", JSON.stringify(response), {
             sameSite: true,
             req,
             res,
+            path: "/",
         });
 
         let user = await oauth2.getUser(response.access_token);
-        setCookie("discord-user", user, { signed: true, sameSite: true, req, res });
+        setCookie("discord-user", JSON.stringify(user), { path: "/", signed: true, sameSite: true, req, res });
     } catch (e: any) {
         res.status(500).json({ error: e.message, description: e?.response?.error_description });
         return;

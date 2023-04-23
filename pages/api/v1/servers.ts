@@ -1,8 +1,19 @@
-import { Request, Response } from "express";
+import { NextRequest, NextResponse } from "next/server";
 import { StatusError } from "../error";
 import { oauth2 } from "./login";
 import { PrismaClient } from "@prisma/client";
-import { redisClient } from "../serve";
+import { getCookie } from "cookies-next";
+import { createClient } from "redis";
+
+export let redisClient = createClient({
+    url: process.env.REDIS_URL,
+});
+
+(async () => {
+    redisClient.on("error", (error) => console.error(`Error : ${error}`));
+
+    await redisClient.connect();
+})();
 
 const prisma = new PrismaClient();
 
@@ -20,13 +31,13 @@ const upsertStaticServers = async () => {
 upsertStaticServers();
 
 export default async function listServersEndpoint(req: Request, res: Response, next: any) {
-    const discord = req.signedCookies["discord"];
-    const user = req.signedCookies["discord-user"];
+    const discord = getCookie("discord", { req, res });
+    const user = getCookie("discord-user", { req, res });
 
     var isCached = false;
 
     if (!discord) {
-        return next(new StatusError("Unauthorized", 403));
+        throw new StatusError("Unauthorized", 403);
     }
 
     let guilds;
@@ -60,6 +71,6 @@ export default async function listServersEndpoint(req: Request, res: Response, n
         });
         res.json(servers);
     } catch (e: any) {
-        return next(new StatusError("Internal Server Error", 500, e.message));
+        throw new StatusError("Internal Server Error", 500, e.message);
     }
 }

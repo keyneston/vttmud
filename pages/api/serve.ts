@@ -1,3 +1,4 @@
+/*
 import "./env";
 import express, { Express, Request, Response } from "express";
 import path from "path";
@@ -39,3 +40,4 @@ registerRotues(app);
 
 app.use(errorMiddleware);
 app.listen(port, () => console.log(`vttmud-backend listening on port ${port}!`));
+*/
