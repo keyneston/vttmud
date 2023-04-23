@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@prisma/client": "^4.13.0",
     "@tanstack/react-query": "^4.29.3",
     "@tanstack/react-query-devtools": "^4.29.3",
     "@testing-library/jest-dom": "^5.16.5",
@@ -29,6 +30,7 @@
     "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-easy-crop": "^4.7.4",
+    "redis": "^4.6.5",
     "sass": "^1.60.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
@@ -37,6 +39,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
+    "generate": "npx prisma generate",
     "test": "next test"
   },
   "eslintConfig": {

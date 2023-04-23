@@ -31,8 +31,8 @@ const upsertStaticServers = async () => {
 upsertStaticServers();
 
 export default async function listServersEndpoint(req: Request, res: Response, next: any) {
-    const discord = getCookie("discord", { req, res });
-    const user = getCookie("discord-user", { req, res });
+    const discord = JSON.parse(getCookie("discord", { req, res }));
+    const user = JSON.parse(getCookie("discord-user", { req, res }));
 
     var isCached = false;
 
