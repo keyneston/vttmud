@@ -26,18 +26,28 @@ FROM debian:bullseye-slim
 
 LABEL fly_launch_runtime="nodejs"
 
-COPY --from=builder /usr/local/node /usr/local/node
-COPY --from=builder /app/build/ /app
-COPY --from=builder /app/client/build /app/public/
-COPY --from=builder /app/prisma /app/prisma
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# necessary to run node-pg-migrate
-COPY --from=builder /app/node_modules /app/node_modules 
-
+USER nextjs
 WORKDIR /app
 ENV NODE_ENV production
 ENV PATH /usr/local/node/bin:$PATH
 
+COPY --from=builder /usr/local/node /usr/local/node
+COPY --from=builder /app/public ./public
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
 RUN npx prisma generate
 
-CMD [ "node", "./serve.ts" ]
+EXPOSE 3000
+ENV PORT 3000
+
+CMD ["node", "server.js"]
+
