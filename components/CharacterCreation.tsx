@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormik, FormikValues, FormikErrors } from "formik";
 import { redirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { GoldEntry } from "./GoldEntry";
 import { Gold } from "../api/items";
 import { listServers, Server } from "../api/characters";
@@ -21,6 +22,7 @@ export default function CharacterCreation({
 	visible: boolean;
 	setVisible: (x: boolean) => void;
 }) {
+		const router = useRouter();
 	const queryClient = useQueryClient();
 	const [money, setMoney] = useState<Gold>({ spend: false });
 	const [server, setServer] = useState<Server>({ id: 0, name: "", discordID: "" });
@@ -84,8 +86,8 @@ export default function CharacterCreation({
 
 			queryClient.invalidateQueries(["listCharacters"]);
 
+			router.push(`/character/${results.id}`);
 			setVisible(false);
-			redirect(`/character/${results.id}`);
 
 			formik.resetForm();
 		},
