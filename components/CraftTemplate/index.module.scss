@@ -1,0 +1,50 @@
+.crafting_template {
+	max-width: 300px;
+	padding: 10px;
+}
+
+#template_output {
+	border: 5px;
+	border-color: black;
+	text-align: left;
+	align-content: left;
+}
+
+.template_label {
+	text-align: left;
+	font-weight: bold;
+}
+
+.template_value {
+	text-align: right;
+}
+
+.ct_box {
+	width: 90%;
+	display: flex;
+	flex: 1 1 calc(100% / 6);
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 25px 2em;
+	padding-top: 15px;
+}
+
+.ct_input {
+	max-width: 10rem;
+}
+
+.ct_input > input {
+	max-width: 10rem;
+}
+
+/* special case people-count because it has buttons on the side */
+.ct_input_people_count > input {
+	max-width: 4rem;
+}
+
+.ct_label_set {
+	min-width: 10rem;
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+}

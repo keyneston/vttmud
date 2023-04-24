@@ -11,23 +11,19 @@ run-backend:
 	npm run watch
 
 clean:
-	rm -rf client/build/*
 	rm -rf build/*
 
-build: clean build-client build-server
-
-build-client:
-	cd client && npm run build
-
-build-server: generate
+build: clean 
+	npm i
 	npm run build
+
 
 foundry_dir:
 	test -d $(FOUNDRY_DIR) || git clone --depth=1 https://github.com/foundryvtt/pf2e.git $(FOUNDRY_DIR)
 
 items.db.json:
 	cd $(FOUNDRY_DIR) && git pull --ff-only
-	cat $(FOUNDRY_DIR)/packs/data/equipment.db/* | jq -s '[.[] | {id: ."_id", name: .name, level: .system.level.value, cost: {gold: .system.price.value.gp, silver: .system.price.value.sp, copper: .system.price.value.sp}, traits: .system.traits, type: .type}]' > ./client/public/items.db.json
+	cat $(FOUNDRY_DIR)/packs/data/equipment.db/* | jq -s '[.[] | {id: ."_id", name: .name, level: .system.level.value, cost: {gold: .system.price.value.gp, silver: .system.price.value.sp, copper: .system.price.value.sp}, traits: .system.traits, type: .type}]' > ./public/items.db.json
 
 deploy:
 	flyctl deploy

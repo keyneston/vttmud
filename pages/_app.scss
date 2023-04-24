@@ -1,0 +1,44 @@
+@use "primereact/resources/themes/lara-light-indigo/theme";
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+		"Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: var(--surface-50);
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+body {
+}
+
+.root {
+	text-align: left;
+	display: grid;
+	grid-auto-columns: 19rem 40% 40% calc(20% - 19rem);
+	grid-auto-rows: 20px content 20px;
+	height: 100%;
+}
+
+.header {
+	grid-column: span 4;
+}
+
+.content {
+	grid-column: 2 / 4;
+	gap: 20px 2em;
+	padding: 20px;
+	width: 100%;
+}
+
+.centerLeft {
+	grid-column: 2;
+}
+
+.centerRight {
+	grid-column: 3;
+}

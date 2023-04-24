@@ -1,0 +1,51 @@
+.cc_left_top {
+	padding-top: 1.5rem;
+	text-align: center;
+}
+
+.cc_grid {
+	display: grid;
+	grid-template-columns: 3fr 2fr;
+	grid-template-rows: 5rem 15rem 3rem;
+	column-gap: 3rem;
+	row-gap: 1rem;
+}
+
+.cc_left_center {
+	grid-column: 1;
+	grid-row: 2;
+	text-align: center;
+}
+
+.cc_middle_middle {
+	grid-area: 2 / 2;
+}
+
+.cc_right {
+	padding-top: 1.5rem;
+	grid-area: 1/2;
+}
+
+.cc_right_bottom {
+	grid-column: 2;
+	grid-row: 3;
+	text-align: center;
+	display: flex;
+	flex-direction: row;
+	margin-top: auto;
+	float: right;
+
+	button {
+		max-width: 6rem;
+	}
+}
+
+.flex_end {
+	align-self: flex-end;
+}
+
+.cc_exp_entry {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}

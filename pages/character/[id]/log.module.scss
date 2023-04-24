@@ -1,0 +1,35 @@
+.character_log {
+	grid-column: 2 span 2;
+	width: 100%;
+}
+
+.log_header {
+	display: grid;
+	width: 100%;
+	padding-bottom: 1rem;
+}
+
+.log_header_right {
+	grid-column: 3;
+	float: right;
+	text-align: right;
+}
+
+.log_header_left {
+	grid-column: 1;
+	float: left;
+	text-align: left;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.new_entry {
+	width: 90%;
+	padding-top: 20px;
+	height: 90%;
+	gap: 25px 2em;
+}
+
+.le_gold_entry {
+}
