@@ -8,6 +8,7 @@ import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber
 import { InputText } from "primereact/inputtext";
 import { Panel } from "primereact/panel";
 
+import useLocalStorage from "../../utils/useLocalStorage";
 import { MinItemLevel, MaxItemLevel } from "../../utils/constants";
 import { formulaCost, craftDC } from "../../utils/pf2e/income";
 import { simplifyGold, Item } from "../../api/items";
@@ -33,20 +34,14 @@ function CraftTemplate({ name, setName }: { name: string; setName: (name: string
 		emptyPerson(2),
 		emptyPerson(3),
 	]);
-	const [peopleCount, setPeopleCount] = useState<number>(0);
-
-	useEffect(() => {
-		const value = localStorage.getItem("craft_template_people_count");
-		setPeopleCount(parseInt(value || "0"));
-	}, []);
+	const [peopleCount, setPeopleCount] = useLocalStorage<number>("craft_template_people_count", 0);
 
 	useEffect(() => {
 		localStorage.setItem("character_name_0", people[0].name);
 		localStorage.setItem("character_name_1", people[1].name);
 		localStorage.setItem("character_name_2", people[2].name);
 		localStorage.setItem("character_name_3", people[3].name);
-		localStorage.setItem("craft_template_people_count", peopleCount.toString());
-	}, [people, peopleCount]);
+	}, [people]);
 
 	const updatePerson = (id: number): ((i: CraftPerson) => void) => {
 		return (i: CraftPerson) => {

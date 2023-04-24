@@ -7,6 +7,7 @@ import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 
+import useLocalStorage from "../../utils/useLocalStorage";
 import { subDate, formatDate } from "../../utils/date";
 import { getLevel } from "../../utils/pf2e/income";
 
@@ -24,31 +25,10 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 	const [critSuccess, setCritSuccess] = useState<number>(0);
 	const [failure, setFailure] = useState<number>(0);
 	const [critFailure, setCritFailure] = useState<number>(0);
-	const [multiplier, setMultiplier] = useState<number>(1);
-	const [proficiency, setProficiency] = useState<string>("Untrained");
-	const [description, setDescription] = useState<string>("");
-	const [level, setLevel] = useState<number>(1);
-
-	useEffect(() => {
-		const multiplier = localStorage.getItem(multiplierKey);
-		setMultiplier(parseInt(multiplier || "1"));
-
-		const character_proficiency = localStorage.getItem(proficiencyKey);
-		setProficiency(character_proficiency || "Untrained");
-
-		const description = localStorage.getItem(descriptionKey);
-		setDescription(description || "");
-
-		const earn_income_level = localStorage.getItem(levelKey);
-		setLevel(parseInt(earn_income_level || "1"));
-	}, []);
-
-	if (typeof window !== "undefined") {
-		localStorage.setItem(proficiencyKey, proficiency);
-		localStorage.setItem(levelKey, `${level}`);
-		localStorage.setItem(multiplierKey, `${multiplier}`);
-		localStorage.setItem(descriptionKey, description);
-	}
+	const [multiplier, setMultiplier] = useLocalStorage<number>(multiplierKey, 1);
+	const [proficiency, setProficiency] = useLocalStorage<string>(proficiencyKey, "Untrained");
+	const [description, setDescription] = useLocalStorage<string>(descriptionKey, "");
+	const [level, setLevel] = useLocalStorage<number>(levelKey, 1);
 
 	return (
 		<Panel header="Earn Income Template">
