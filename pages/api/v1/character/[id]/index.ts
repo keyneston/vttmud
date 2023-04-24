@@ -1,41 +1,20 @@
-import { Request, Response } from "express";
-import { StatusError } from "./error";
-import { PrismaClient } from "@prisma/client";
-import { getCharacter } from "./model";
+import { NextRequest, NextResponse } from "next/server";
+import { StatusError } from "../../../../../utils/error";
+import { getCharacter } from "../../../../../model/";
+import { prisma } from "../../../../../utils/db";
+import { getCookie } from "cookies-next";
 
-const prisma = new PrismaClient();
-
-export const characterCreationEndpoint = async (req: Request, res: Response) => {
-    const user = req.signedCookies["discord-user"];
-    if (!user) {
-        res.status(403);
-        res.json({ error: "unauthorized" });
-        return;
+export default function handle(req: NextRequest, res: NextResponse, next: any) {
+    if (req.method === "POST") {
+        return characterCreationEndpoint(req, res);
+    } else {
+        return characterEndpoint(req, res);
     }
+}
 
-    var results = await prisma.character.create({
-        data: {
-            owner: user.id,
-            name: req.body.character_name ?? "",
-            serverID: req.body.server.id,
-        },
-    });
-    await prisma.characterLogEntry.create({
-        data: {
-            characterID: results.id,
-            gold: req.body.gold,
-            description: "Character Creation",
-            experience: req.body.experience,
-        },
-    });
-
-    res.json(results);
-    return;
-};
-
-export const characterEndpoint = async (req: Request, res: Response, next: any) => {
-    const user = req.signedCookies["discord-user"];
-    const id = parseInt(req.params.id);
+export const characterEndpoint = async (req: NextRequest, res: NextResponse, next: any) => {
+    const user = JSON.parse(getCookie("discord-user", { req, res }));
+    const id = parseInt(req.query.id);
 
     var result = await getCharacter(id);
 
@@ -92,4 +71,32 @@ export const characterEndpoint = async (req: Request, res: Response, next: any) 
     }
 
     res.json(ret);
+};
+
+export const characterCreationEndpoint = async (req: NextRequest, res: NextResponse) => {
+    const user = JSON.parse(getCookie("discord-user", { req, res }));
+    if (!user) {
+        res.status(403);
+        res.json({ error: "unauthorized" });
+        return;
+    }
+
+    var results = await prisma.character.create({
+        data: {
+            owner: user.id,
+            name: req.body.character_name ?? "",
+            serverID: req.body.server.id,
+        },
+    });
+    await prisma.characterLogEntry.create({
+        data: {
+            characterID: results.id,
+            gold: req.body.gold,
+            description: "Character Creation",
+            experience: req.body.experience,
+        },
+    });
+
+    res.json(results);
+    return;
 };

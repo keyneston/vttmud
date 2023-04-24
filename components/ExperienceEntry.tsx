@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
-import "./ExperienceEntry.scss";
+import styles from "./ExperienceEntry.module.scss";
 
 export interface ExperienceEntryProps {
 	value: number;
@@ -12,7 +12,7 @@ export function ExperienceEntry({ value, onChange }: ExperienceEntryProps) {
 	const [posExp, setPosExp] = useState<string>("+");
 
 	return (
-		<div className="ee-box">
+		<div className={styles.ee_box}>
 			<SelectButton
 				options={["-", "+"]}
 				unselectable={false}
@@ -24,7 +24,7 @@ export function ExperienceEntry({ value, onChange }: ExperienceEntryProps) {
 			<div>
 				<span className="p-float-label">
 					<InputNumber
-						className="exp-input"
+						className={styles.exp_input}
 						id="exp"
 						min={0}
 						step={250}

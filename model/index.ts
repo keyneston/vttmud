@@ -1,6 +1,5 @@
-import Prisma, { PrismaClient } from "@prisma/client";
+import { prisma } from "../utils/db"
 
-const prisma = new PrismaClient();
 
 export async function getCharacter(id: number): Promise<Prisma.Character | null> {
     return await prisma.character.findUnique({

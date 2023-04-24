@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { StatusError } from "../error";
+import { StatusError } from "../../../utils/error";
 import { oauth2 } from "./login";
 import { PrismaClient } from "@prisma/client";
 import { getCookie } from "cookies-next";

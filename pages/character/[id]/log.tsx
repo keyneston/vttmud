@@ -1,14 +1,14 @@
+import { useRouter } from "next/router";
 import { useFormik, FormikValues, FormikErrors } from "formik";
-import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { ReactNode } from "react";
-import { money2string, Gold } from "../api/items";
-import { updateLog, getLog, CharacterLogEntry, fetchCharacter } from "../api/characters";
-import { GoldEntry } from "../components/GoldEntry";
-import { ExperienceEntry } from "../components/ExperienceEntry";
-import { changeLogEntry } from "../api/characters";
-import { CharacterAvatar } from "../components/Avatar";
+import { money2string, Gold } from "../../../api/items";
+import { updateLog, getLog, CharacterLogEntry, fetchCharacter } from "../../../api/characters";
+import { GoldEntry } from "../../../components/GoldEntry";
+import { ExperienceEntry } from "../../../components/ExperienceEntry";
+import { changeLogEntry } from "../../../api/characters";
+import { CharacterAvatar } from "../../../components/CharacterAvatar";
 
 import { DataTable, DataTableRowEditCompleteEvent } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -17,7 +17,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 
-import "./CharacterLog.scss";
+import "./log.module.scss";
 
 const goldEditor = (options: any) => {
 	return (
@@ -46,11 +46,11 @@ const experienceEditor = (options: any) => {
 };
 
 export default function CharacterLog() {
-	const urlParams = useParams();
+	const params = useRouter().query;
 	const queryClient = useQueryClient();
 	const [visible, setVisible] = useState(false);
 
-	const id = parseInt(urlParams.id || "0");
+	const id = parseInt(params.id || "0");
 
 	const { data } = useQuery({
 		queryKey: ["character", id, "log"],
@@ -169,7 +169,6 @@ export default function CharacterLog() {
 
 function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolean) => void }) {
 	const [money, setMoney] = useState<Gold>({ spend: false });
-	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const formik = useFormik({
