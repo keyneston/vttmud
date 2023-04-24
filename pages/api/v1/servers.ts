@@ -4,6 +4,7 @@ import { oauth2 } from "./login";
 import { PrismaClient } from "@prisma/client";
 import { getCookie } from "cookies-next";
 import { createClient } from "redis";
+import { prisma } from "../../../utils/db";
 
 export let redisClient = createClient({
     url: process.env.REDIS_URL,
@@ -14,8 +15,6 @@ export let redisClient = createClient({
 
     await redisClient.connect();
 })();
-
-const prisma = new PrismaClient();
 
 const upsertStaticServers = async () => {
     let results = await prisma.server.createMany({

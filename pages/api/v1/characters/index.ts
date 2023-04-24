@@ -1,8 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getCookie } from "cookies-next";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../../../utils/db";
 
 export default async function listCharacters(req: Request, res: Response) {
     const user = JSON.parse(getCookie("discord-user", { req, res }));
