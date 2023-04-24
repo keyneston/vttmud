@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { CraftTemplate } from "../../components/CraftTemplate";
 import { IncomeTemplate } from "../../components/IncomeTemplate";
+import useLocalStorage from "../../utils/useLocalStorage";
 
 import styles from "./index.module.scss";
 
 export default function Templates() {
-	const [name, setName] = useState<string>("");
-
-	useEffect(() => {
-		const character_name = localStorage.getItem("character_name");
-		setName(character_name || "");
-	}, []);
+	const [name, setName] = useLocalStorage<string>("character_name", "");
 
 	return (
 		<>

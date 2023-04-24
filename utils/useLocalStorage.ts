@@ -6,7 +6,11 @@ export default function useLocalStorage<T>(key: string, fallbackValue: T) {
     const [value, setValue] = useState(fallbackValue);
     useMount(() => {
         const stored = localStorage.getItem(key);
-        setValue(stored ? JSON.parse(stored) : fallbackValue);
+        try {
+            setValue(stored ? JSON.parse(stored) : fallbackValue);
+        } catch (e) {
+            setValue(fallbackValue)
+        }
     }, [fallbackValue, key]);
 
     useUpdateEffect(() => {
