@@ -1,11 +1,11 @@
-.cs-root {
+.cs_root {
 	display: grid;
 	min-width: 55rem;
 	grid-template-rows: 1fr 3fr;
 	grid-template-columns: 1fr 2fr 1fr;
 }
 
-.cs-tab-menu {
+.cs_tab_menu {
 	grid-row: 2;
 	grid-column: 1 / 3;
 }
@@ -15,7 +15,7 @@ img.cs-avatar {
 	width: 20rem;
 }
 
-.cs-button-collection {
+.cs_button_collection {
 	margin: 1rem;
 	display: flex;
 	flex-direction: column;
@@ -24,19 +24,19 @@ img.cs-avatar {
 	gap: 0.5rem;
 }
 
-.justify-stretch {
+.justify_stretch {
 	align-self: stretch;
 }
 
-.justify-start {
+.justify_start {
 	margin-right: auto;
 }
 
-.justify-end {
+.justify_end {
 	margin-left: auto;
 }
 
-.cs-avatar-holder {
+.cs_avatar_holder {
 	margin: 1rem;
 	border: 0.5rem solid;
 	border-radius: 2rem;
@@ -50,7 +50,7 @@ img.cs-avatar {
 	overflow: hidden;
 }
 
-.crop-container {
+.crop_container {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -60,7 +60,7 @@ img.cs-avatar {
 	z-index: 1000;
 }
 
-.controls-background {
+.controls_background {
 	position: absolute;
 	left: 0;
 	width: 100%;
@@ -85,7 +85,7 @@ img.cs-avatar {
 	padding: 22px 0px;
 }
 
-.zoom-range {
+.zoom_range {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	height: 2px;
@@ -95,7 +95,7 @@ img.cs-avatar {
 	width: 100%;
 }
 
-.zoom-range::-moz-range-thumb {
+.zoom_range::-moz-range-thumb {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	border: 1px solid #3f51b5;
@@ -106,7 +106,7 @@ img.cs-avatar {
 	transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-.zoom-range::-webkit-slider-thumb {
+.zoom_range::-webkit-slider-thumb {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	border: 1px solid #3f51b5;
