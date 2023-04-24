@@ -2,7 +2,7 @@ import { Fragment, useState, useMemo, useReducer } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { classNames } from "primereact/utils";
 import { useFormik, FormikValues, FormikErrors } from "formik";
-import { useParams } from "react-router-dom";
+import { useRouter } from "next/router";
 
 import { Button } from "primereact/button";
 import { Calendar } from "primereact/calendar";
@@ -24,13 +24,13 @@ import {
 	DowntimeEntry,
 	Activity,
 	ActivityColors,
-} from "../api/downtime";
+} from "../../../api/downtime";
 
-import { CharacterAvatar } from "../components/Avatar";
-import { fetchCharacter, calculateLevel } from "../api/characters";
-import { subDate, formatDate } from "../date";
-import { craftDC } from "../pf2e/income";
-import "./DowntimeLog.scss";
+import { CharacterAvatar } from "../../../components/CharacterAvatar";
+import { fetchCharacter, calculateLevel } from "../../../api/characters";
+import { subDate, formatDate } from "../../../utils/date";
+import { craftDC } from "../../../utils/pf2e/income";
+import styles from "./downtime.module.scss";
 
 const chartWidth = 20;
 const chartPanelWidth = 23;
@@ -134,7 +134,7 @@ const textEditor = (options: any) => {
 			type="text"
 			value={options.value}
 			onChange={(e: any) => options.editorCallback(e.target.value)}
-			className="dt-input-width"
+			className={styles.dt_input_width}
 		/>
 	);
 };
@@ -144,7 +144,7 @@ const numberEditor = (options: any) => {
 		<InputNumber
 			value={options.value}
 			onValueChange={(e: any) => options.editorCallback(e.value)}
-			className="dt-input-width"
+			className={styles.dt_input_width}
 		/>
 	);
 };
@@ -156,7 +156,7 @@ const levelEditor = (options: any) => {
 			max={20}
 			min={1}
 			onValueChange={(e: any) => options.editorCallback(e.value)}
-			className="dt-input-width"
+			className={styles.dt_input_width}
 		/>
 	);
 };
@@ -207,7 +207,7 @@ export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
 
 	const queryClient = useQueryClient();
-	const urlParams = useParams();
+	const urlParams = useRouter().query;
 	const id: number = parseInt(urlParams.id || "0");
 
 	const entries = useQuery({
@@ -246,16 +246,16 @@ export default function DowntimeLog() {
 	};
 
 	return (
-		<div className="downtime-root">
-			<div className="downtime-header">
-				<div className="downtime-header-left">
+		<div className={styles.downtime_root}>
+			<div className={styles.downtime_header}>
+				<div className={styles.downtime_header_left}>
 					<CharacterAvatar character={character?.data} />
 					<p>
 						<b>Downtime Remaining: </b>
 						{downtimeRemaining(character)}
 					</p>
 				</div>
-				<div className="downtime-header-right">
+				<div className={styles.downtime_header_right}>
 					<Button
 						severity="success"
 						icon="pi pi-plus"
@@ -329,7 +329,7 @@ export default function DowntimeLog() {
 					/>
 				</DataTable>
 			</Panel>
-			<div className="dt-charts">
+			<div className={styles.dt_charts}>
 				<ActivityPieChart data={data || []} />
 				<SuccessRatePieChart data={data || []} />
 				<RollDistributionChart data={data || []} />
@@ -356,7 +356,7 @@ type FormikDowntimeEntry = {
 function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 	const [, forceUpdate] = useReducer((x) => x + 1, 0);
 	const queryClient = useQueryClient();
-	const urlParams = useParams();
+	const urlParams = useRouter().query;
 	const id: number = parseInt(urlParams.id || "0");
 
 	const char = useQuery({
@@ -436,8 +436,8 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 			onHide={() => setVisible(false)}
 		>
 			<form onSubmit={formik.handleSubmit}>
-				<div className="new-downtime-entry-root">
-					<div className="new-downtime-label-set">
+				<div className={styles.new_downtime_entry_root}>
+					<div className={styles.new_downtime_label_set}>
 						<label htmlFor="end-date">End Date</label>
 						<Calendar
 							style={{ width: "8rem" }}
@@ -449,10 +449,10 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							}}
 						/>
 					</div>
-					<div className="new-downtime-label-set">
+					<div className={styles.new_downtime_label_set}>
 						<label htmlFor="days">Days</label>
 						<InputNumber
-							className="dt-input-width"
+							className={styles.dt_input_width}
 							id="days"
 							value={formik.values.days}
 							onChange={(e) => formik.setFieldValue("days", e?.value ?? 1)}
@@ -461,10 +461,10 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							showButtons
 						/>
 					</div>
-					<div className="new-downtime-label-set">
+					<div className={styles.new_downtime_label_set}>
 						<label htmlFor="days">Character Level</label>
 						<InputNumber
-							className="dt-input-width"
+							className={styles.dt_input_width}
 							id="level"
 							value={formik.values.level}
 							onChange={(e) => formik.setFieldValue("level", e?.value ?? 1)}
@@ -473,10 +473,10 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							showButtons
 						/>
 					</div>
-					<div className="new-downtime-label-set">
+					<div className={styles.new_downtime_label_set}>
 						<label htmlFor="dc">DC</label>
 						<InputNumber
-							className="dt-input-width"
+							className={styles.dt_input_width}
 							id="dc"
 							value={formik.values.dc}
 							onChange={(e) => formik.setFieldValue("dc", e.value ?? 20)}
@@ -484,7 +484,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							showButtons
 						/>
 					</div>
-					<div className="new-downtime-label-set">
+					<div className={styles.new_downtime_label_set}>
 						<label htmlFor="activity">Activity</label>
 						<Dropdown
 							id="activity"
@@ -498,12 +498,12 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							style={{ width: "12rem" }}
 						/>
 					</div>
-					<div className="new-downtime-label-set">
+					<div className={styles.new_downtime_label_set}>
 						<label htmlFor="bonus">Bonus</label>
 						<InputNumber
 							id="bonus"
 							showButtons
-							className="dt-input-width"
+							className={styles.dt_input_width}
 							onChange={(e) => {
 								formik.values.entries.forEach(
 									(_, i) =>
@@ -515,10 +515,10 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							}}
 						/>
 					</div>
-					<div className="new-downtime-label-set">
+					<div className={styles.new_downtime_label_set}>
 						<label htmlFor="details">Additional Details</label>
 						<InputText
-							className="dt-input-width"
+							className={styles.dt_input_width}
 							id="details"
 							value={formik.values.details}
 							onChange={(e) =>
@@ -540,7 +540,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 						);
 					})}
 
-					<div className="new-dt-bottom-right">
+					<div className={styles.new_dt_bottom_right}>
 						<Button
 							label="Record"
 							type="submit"
@@ -577,9 +577,9 @@ function PerDayEntry({
 	}
 
 	return (
-		<div className="new-downtime-per-day-entry">
+		<div className={styles.new_downtime_per_day_entry}>
 			<h3>Day {formatDate(subDate(endDate, id))}</h3>
-			<div className="new-downtime-label-set">
+			<div className={styles.new_downtime_label_set}>
 				<label htmlFor={`${id}-assurance`}>Assurance</label>
 				<InputSwitch
 					id={`${id}-assurance`}
@@ -590,10 +590,10 @@ function PerDayEntry({
 					}}
 				/>
 			</div>
-			<div className="new-downtime-label-set">
+			<div className={styles.new_downtime_label_set}>
 				<label htmlFor="roll">Roll</label>
 				<InputNumber
-					className="dt-input-width"
+					className={styles.dt_input_width}
 					id="roll"
 					value={value.roll}
 					onChange={(e) => {
@@ -606,10 +606,10 @@ function PerDayEntry({
 					disabled={value.assurance}
 				/>
 			</div>
-			<div className="new-downtime-label-set">
+			<div className={styles.new_downtime_label_set}>
 				<label htmlFor={`${id}-bonus`}>Bonus</label>
 				<InputNumber
-					className="dt-input-width"
+					className={styles.dt_input_width}
 					id={`${id}-bonus`}
 					value={value.bonus}
 					onChange={(e) => {

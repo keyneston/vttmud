@@ -1,17 +1,17 @@
-.downtime-header {
+.downtime_header {
 	flex-flow: row wrap;
 	display: flex;
 	padding-bottom: 1rem;
 }
 
-.downtime-header-right {
+.downtime_header_right {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-end;
 	width: 50%;
 }
 
-.downtime-header-left {
+.downtime_header_left {
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
@@ -21,38 +21,38 @@
 	align-self: center;
 }
 
-.new-downtime-entry-root {
+.new_downtime_entry_root {
 	display: flex;
 	flex-flow: row wrap;
 	gap: 1.5rem;
 }
 
-.new-downtime-label-set {
+.new_downtime_label_set {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
 
-.new-downtime-per-day-entry {
+.new_downtime_per_day_entry {
 	display: flex;
 	flex-direction: row;
 	gap: 1.5rem;
 	padding-right: 8rem;
 }
 
-.dt-input-width > input {
+.dt_input_width > input {
 	max-width: 4rem;
 }
 
-.dt-charts {
+.dt_charts {
 	padding-top: 2rem;
 	display: flex;
 	flex-flow: row wrap;
 	gap: 2rem;
 }
 
-.new-dt-bottom-right {
+.new_dt_bottom_right {
 	display: flex;
 	flex-flow: row-reverse wrap;
 	width: 100%;
