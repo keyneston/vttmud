@@ -1,21 +1,21 @@
-.character-log {
+.character_log {
 	grid-column: 2 span 2;
 	width: 100%;
 }
 
-.log-header {
+.log_header {
 	display: grid;
 	width: 100%;
 	padding-bottom: 1rem;
 }
 
-.log-header-right {
+.log_header_right {
 	grid-column: 3;
 	float: right;
 	text-align: right;
 }
 
-.log-header-left {
+.log_header_left {
 	grid-column: 1;
 	float: left;
 	text-align: left;
@@ -24,12 +24,12 @@
 	gap: 1rem;
 }
 
-.new-entry {
+.new_entry {
 	width: 90%;
 	padding-top: 20px;
 	height: 90%;
 	gap: 25px 2em;
 }
 
-.le-gold-entry {
+.le_gold_entry {
 }

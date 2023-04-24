@@ -17,7 +17,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 
-import "./log.module.scss";
+import styles from "./log.module.scss";
 
 const goldEditor = (options: any) => {
 	return (
@@ -94,14 +94,14 @@ export default function CharacterLog() {
 
 	return (
 		<>
-			<div className="log-header">
-				<div className="log-header-left">
+			<div className={styles.log_header}>
+				<div className={styles.log_header_left}>
 					<CharacterAvatar character={character.data} />
 					<p>
 						<strong>Gold:</strong> {money2string(character?.data?.gold || 0)}
 					</p>
 				</div>
-				<div className="log-header-right">
+				<div className={styles.log_header_right}>
 					<Button
 						icon="pi pi-plus"
 						severity="success"
@@ -112,7 +112,7 @@ export default function CharacterLog() {
 				</div>
 			</div>
 
-			<div className="character-log">
+			<div className={styles.character_log}>
 				<Dialog
 					header="Log New Income/Expense"
 					visible={visible}
@@ -126,7 +126,7 @@ export default function CharacterLog() {
 				</Dialog>
 
 				<DataTable
-					className="character-log"
+					className={styles.character_log}
 					value={logEntries}
 					tableStyle={{ minWidth: "50rem" }}
 					stripedRows
@@ -197,10 +197,10 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 
 	return (
 		<>
-			<div className="new-entry">
+			<div className={styles.new_entry}>
 				<form onSubmit={formik.handleSubmit}>
-					<div className="field">
-						<span className="p-float-label">
+					<div className={styles.field}>
+						<span className={styles.p_float_label}>
 							<InputText
 								id="description"
 								style={{ width: "100%" }}
@@ -210,7 +210,7 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 							<label htmlFor="description">Description</label>
 						</span>
 					</div>
-					<div className="le-gold-entry">
+					<div className={styles.le_gold_entry}>
 						<GoldEntry
 							value={money}
 							setValue={(g: Gold) => {
@@ -222,7 +222,7 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 							}}
 						/>
 					</div>
-					<div className="le-experience-entry">
+					<div className={styles.le_experience_entry}>
 						<ExperienceEntry
 							value={formik.values.experience}
 							onChange={(value) => {
