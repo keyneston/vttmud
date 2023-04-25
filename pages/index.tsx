@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { Panel } from "primereact/panel";
 import { Fragment, ReactNode } from "react";
-import "./index.module.css";
+import styles from "./index.module.css";
 
 dayjs.extend(advancedFormat);
 
@@ -77,7 +77,7 @@ const logEntries: Entry[] = [
 
 export default function Home() {
 	return (
-		<div className="home-root">
+		<div className={styles.home_root}>
 			<Panel header="Welcome">
 				<p>
 					Welcome to VTTMud. This site is a work in progress. Please contact{" "}

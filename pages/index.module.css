@@ -1,4 +1,4 @@
-.home-root {
+.home_root {
 	display: flex;
 	flex-flow: column wrap;
 	gap: 2rem;
