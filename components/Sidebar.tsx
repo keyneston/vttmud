@@ -6,6 +6,7 @@ import { loggedIn } from "../utils/cookies/discord";
 import { Button } from "primereact/button";
 import Link from "next/link";
 import { CharacterAvatar } from "../components/CharacterAvatar";
+import Conditional from "../components/Conditional"
 
 import styles from "./Sidebar.module.scss";
 
@@ -49,7 +50,7 @@ export function Sidebar() {
 							/>
 						</Link>
 					</div>
-					{showLoggedIn && (
+						<Conditional show={showLoggedIn}>
 						<div>
 							<Link
 								className={styles.sidebar_link}
@@ -70,7 +71,7 @@ export function Sidebar() {
 								/>
 							</Link>
 						</div>
-					)}
+								</Conditional>
 					<div>
 						<Link className={styles.sidebar_link} href="/templates">
 							<Button
@@ -115,7 +116,9 @@ export function Sidebar() {
 				</div>
 			</div>
 			{charSections}
-			{showLoggedIn && <CharacterCreation visible={ccVisible} setVisible={setCCVisible} />}
+			<Conditional show={showLoggedIn}>
+					<CharacterCreation visible={ccVisible} setVisible={setCCVisible}/>
+			</Conditional>
 		</div>
 	);
 }
