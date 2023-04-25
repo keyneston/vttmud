@@ -3,6 +3,7 @@ import { StatusError } from "../../../../../utils/error";
 import { getCharacter } from "../../../../../model/";
 import { prisma } from "../../../../../utils/db";
 import { getCookie } from "cookies-next";
+import dayjs from "dayjs";
 
 export default function handle(req: NextRequest, res: NextResponse, next: any) {
     if (req.method === "GET") {
@@ -24,30 +25,7 @@ export const characterEndpoint = async (req: NextRequest, res: NextResponse, nex
     }
 
     var ret: { [key: string]: any } = { ...result };
-
-    try {
-        var d = new Date();
-        d.setDate(new Date().getDate() - 7);
-
-        var downtime = await prisma.downtimeEntry.findMany({
-            where: {
-                characterID: result.id,
-                date: {
-                    gte: d,
-                },
-                NOT: {
-                    activity: {
-                        contains: "Learn a Spell",
-                        mode: "insensitive",
-                    },
-                },
-            },
-        });
-        var days = 7 - downtime.length;
-        ret.remainingDowntime = days >= 0 ? days : 0;
-    } catch (e: any) {
-        ret.remainingDowntime = 0;
-    }
+    ret.remainingDowntime = await getDowntime(id);
 
     try {
         var sums = await prisma.characterLogEntry.aggregate({
@@ -70,3 +48,38 @@ export const characterEndpoint = async (req: NextRequest, res: NextResponse, nex
 
     res.json(ret);
 };
+
+export async function getDowntime(id: number): number {
+    try {
+        var downtime = await prisma.downtimeEntry.findMany({
+            where: {
+                characterID: id,
+                date: {
+                    gte: dayjs().subtract(7, "days").toDate(),
+                },
+                AND: [
+                    {
+                        NOT: {
+                            activity: {
+                                contains: "Learn a Spell",
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                    {
+                        NOT: {
+                            activity: {
+                                contains: "Other",
+                                mode: "insensitive",
+                            },
+                        },
+                    },
+                ],
+            },
+        });
+        return 7 - downtime.length;
+    } catch (e: any) {
+        console.log({ e });
+        return 0;
+    }
+}
