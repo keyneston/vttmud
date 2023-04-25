@@ -14,9 +14,7 @@ type Entry = {
 const logEntries: Entry[] = [
 	{
 		date: dayjs("2023-04-25"),
-		tasks: [
-			"Ignore 'Other' entries when calculating remaining downtime",
-		],
+		tasks: ["Ability to delete characters", "Ignore 'Other' entries when calculating remaining downtime"],
 	},
 	{
 		date: dayjs("2023-04-22"),

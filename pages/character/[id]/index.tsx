@@ -1,21 +1,16 @@
 import { useRouter } from "next/router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useCallback, useMemo, ReactNode, Fragment } from "react";
-import { Character, fetchCharacter, uploadAvatar } from "api/characters";
+import { router } from "next/router";
+import * as api from "api/characters";
+import Conditional from "components/Conditional";
 import { money2string } from "api/items";
 import { CDN, MaximumImageSize } from "utils/constants";
-import {
-	parseBlob,
-	CharacterInfo,
-	getSkillInfo,
-	SkillInfo,
-	Skill,
-	ProficiencyRank,
-	scoreToBonus,
-} from "utils/blob";
+import { parseBlob, CharacterInfo, getSkillInfo, SkillInfo, Skill, ProficiencyRank, scoreToBonus } from "utils/blob";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { FileUpload } from "primereact/fileupload";
 import { Slider } from "primereact/slider";
 import { TabView, TabPanel } from "primereact/tabview";
@@ -31,11 +26,11 @@ export default function CharacterSheet() {
 	const queryClient = useQueryClient();
 
 	const urlParams = useRouter().query;
-
 	var id: number = parseInt(urlParams.id || "0");
+
 	const { isLoading, data } = useQuery({
 		queryKey: ["character", id],
-		queryFn: () => fetchCharacter(id),
+		queryFn: () => api.fetchCharacter(id),
 		cacheTime: 10 * 60 * 1000,
 		staleTime: 5 * 60 * 1000,
 	});
@@ -46,10 +41,32 @@ export default function CharacterSheet() {
 		style: { display: "flex" },
 	};
 
+	const accept = () => {
+		console.log(`deleting character: ${id}`);
+		queryClient.invalidateQueries(["listCharacters"]);
+		queryClient.invalidateQueries(["character", id]);
+		api.deleteCharacter(id).then(() => {
+			router.push("/");
+		});
+	};
+
+	const reject = () => {};
+
+	const confirmDelete = () => {
+		confirmDialog({
+			message: `Are you sure you want to delete ${data.name}?`,
+			header: "Conrim Character Deletion",
+			icon: "pi pi-exclamation-triangle",
+			accept,
+			reject,
+		});
+	};
+
 	return (
 		<div className={styles.cs_root + " " + styles.justify_end}>
 			{isLoading && "Loading"} {data && <DisplayCharacter character={data} edit={edit} />}
 			<div className={styles.cs_button_collection + " " + styles.justify_end}>
+				<ConfirmDialog />
 				<Button
 					className={styles.cs_edit_button}
 					label={edit ? "Save" : "Edit"}
@@ -91,19 +108,43 @@ export default function CharacterSheet() {
 						a.click();
 					}}
 				/>
+				<Conditional show={edit}>
+					<Button
+						icon="pi pi-image"
+						severity="info"
+						label="Change Avatar"
+						onClick={async (e) => {
+							var input = document.createElement("input");
+							input.setAttribute("type", "file");
+							input.setAttribute("accept", "image/*");
+							input.addEventListener("change", () => {
+								if (!input.files) {
+									return;
+								}
+
+								setSrc(URL.createObjectURL(input!.files[0]));
+								setShowCropper(true);
+							});
+							input.click();
+						}}
+					/>
+					<Button
+						onClick={confirmDelete}
+						icon="pi pi-times"
+						label="Delete Character"
+						severity="danger"
+					/>
+				</Conditional>
 			</div>
 		</div>
 	);
 }
 
-function DisplayCharacter({ character, edit }: { character: Character; edit: boolean }) {
+function DisplayCharacter({ character, edit }: { character: api.Character; edit: boolean }) {
 	const [showCropper, setShowCropper] = useState<boolean>(false);
 	const [src, setSrc] = useState<string>("");
 	const imageMissing = (
-		<i
-			className={"pi pi-image " + styles.cs_avatar_missing}
-			style={{ fontSize: "8rem", color: "white" }}
-		/>
+		<i className={"pi pi-image " + styles.cs_avatar_missing} style={{ fontSize: "8rem", color: "white" }} />
 	);
 
 	const parsedBlob = useMemo(() => {
@@ -128,27 +169,6 @@ function DisplayCharacter({ character, edit }: { character: Character; edit: boo
 							{(character.avatar && avatar) || imageMissing}
 						</div>
 					</div>
-					{edit && (
-						<Button
-							icon="pi pi-image"
-							severity="info"
-							label="Change Avatar"
-							onClick={async (e) => {
-								var input = document.createElement("input");
-								input.setAttribute("type", "file");
-								input.setAttribute("accept", "image/*");
-								input.addEventListener("change", () => {
-									if (!input.files) {
-										return;
-									}
-
-									setSrc(URL.createObjectURL(input!.files[0]));
-									setShowCropper(true);
-								});
-								input.click();
-							}}
-						/>
-					)}
 				</div>
 				<div className={styles.cs_headline_info}>
 					<h1>{character.name}</h1>
@@ -265,7 +285,7 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 								);
 								const fileRes = await fetch(croppedSrc);
 								const blob = await fileRes.blob();
-								await uploadAvatar(id, blob);
+								await api.uploadAvatar(id, blob);
 								queryClient.invalidateQueries(["character", id]);
 								queryClient.invalidateQueries(["listCharacters"]);
 

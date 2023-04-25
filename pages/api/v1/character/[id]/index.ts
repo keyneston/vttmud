@@ -1,27 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { StatusError } from "utils/error";
-import { getCharacter } from "model/";
+import * as model from "model";
 import { prisma } from "utils/db";
 import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
 
-export default function handle(req: NextRequest, res: NextResponse, next: any) {
-    if (req.method === "GET") {
-        return characterEndpoint(req, res);
+export default function handle(req: NextRequest, res: NextResponse) {
+    switch (req.method) {
+        case "GET":
+            return characterEndpoint(req, res);
+        case "DELETE":
+            return deleteCharacter(req, res);
     }
 }
 
-export const characterEndpoint = async (req: NextRequest, res: NextResponse, next: any) => {
+export const characterEndpoint = async (req: NextRequest, res: NextResponse) => {
     const user = JSON.parse(getCookie("discord-user", { req, res }));
     const id = parseInt(req.query.id);
 
-    var result = await getCharacter(id);
+    var result = await model.getCharacter(id);
 
     if (result == null) {
-        return next(new StatusError("Not Found", 404));
+        throw new StatusError("Not Found", 404);
     }
     if (result.owner != user.id) {
-        return next(new StatusError("unauthorized", 403));
+        throw new StatusError("unauthorized", 403);
     }
 
     var ret: { [key: string]: any } = { ...result };
@@ -83,3 +86,12 @@ export async function getDowntime(id: number): number {
         return 0;
     }
 }
+
+export const deleteCharacter = async (req: NextRequest, res: NextResponse) => {
+    const user = JSON.parse(getCookie("discord-user", { req, res }));
+    const id = parseInt(req.query.id);
+
+    await model.deleteCharacter(user.id, id);
+
+    res.status(200).json({ status: 200 });
+};

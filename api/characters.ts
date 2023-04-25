@@ -71,4 +71,10 @@ export async function uploadAvatar(id: number, file: Blob) {
     return value;
 }
 
-export {};
+export async function deleteCharacter(id: number) {
+    var value = await fetch(`/api/v1/character/${id}/`, {
+        method: "DELETE",
+    }).then((resp) => resp.json());
+
+    return value;
+}
