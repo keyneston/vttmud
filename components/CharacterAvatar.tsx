@@ -1,7 +1,7 @@
-import { Character } from "../api/characters";
-import { CDN } from "../utils/constants";
+import { Character } from "api/characters";
+import { CDN } from "utils/constants";
 import { Avatar } from "primereact/avatar";
-import { getColor } from "../utils/colors";
+import { getColor } from "utils/colors";
 
 export type AvatarProps = {
 	character: Character | undefined;

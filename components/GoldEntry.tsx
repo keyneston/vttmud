@@ -1,4 +1,4 @@
-import { Gold } from "../api/items";
+import { Gold } from "api/items";
 import { InputNumber } from "primereact/inputnumber";
 import { SelectButton } from "primereact/selectbutton";
 

@@ -1,5 +1,5 @@
-import { loggedIn } from "../utils/cookies/discord";
-import { Character } from "../types/characters";
+import { loggedIn } from "utils/cookies/discord";
+import { Character } from "types/characters";
 
 export async function fetchCharacter(id: string | number): Promise<Character> {
     const resp = await fetch(`/api/v1/character/${id}`);

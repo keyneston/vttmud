@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "../../../../utils/db";
+import { prisma } from "utils/db";
 import { getCookie } from "cookies-next";
 
 export default async function characterCreationEndpoint(req: NextRequest, res: NextResponse) {

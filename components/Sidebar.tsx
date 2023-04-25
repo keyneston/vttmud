@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { listCharacters, Character } from "../api/characters";
-import CharacterCreation from "../components/CharacterCreation";
-import { loggedIn } from "../utils/cookies/discord";
+import { listCharacters, Character } from "api/characters";
+import CharacterCreation from "components/CharacterCreation";
+import { loggedIn } from "utils/cookies/discord";
 import { Button } from "primereact/button";
 import Link from "next/link";
-import { CharacterAvatar } from "../components/CharacterAvatar";
-import Conditional from "../components/Conditional"
+import { CharacterAvatar } from "components/CharacterAvatar";
+import Conditional from "components/Conditional";
 
 import styles from "./Sidebar.module.scss";
 
@@ -50,7 +50,7 @@ export function Sidebar() {
 							/>
 						</Link>
 					</div>
-						<Conditional show={showLoggedIn}>
+					<Conditional show={showLoggedIn}>
 						<div>
 							<Link
 								className={styles.sidebar_link}
@@ -71,7 +71,7 @@ export function Sidebar() {
 								/>
 							</Link>
 						</div>
-								</Conditional>
+					</Conditional>
 					<div>
 						<Link className={styles.sidebar_link} href="/templates">
 							<Button
@@ -117,7 +117,7 @@ export function Sidebar() {
 			</div>
 			{charSections}
 			<Conditional show={showLoggedIn}>
-					<CharacterCreation visible={ccVisible} setVisible={setCCVisible}/>
+				<CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
 			</Conditional>
 		</div>
 	);

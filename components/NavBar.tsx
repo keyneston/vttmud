@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useRef, useEffect, useState } from "react";
-import { loggedIn, avatarImage } from "../utils/cookies/discord";
+import { loggedIn, avatarImage } from "utils/cookies/discord";
 
 import { Avatar } from "primereact/avatar";
 import { Toast } from "primereact/toast";

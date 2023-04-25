@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { loginAction, logoutAction } from "./routes/login";
-import { NavBar } from "../components/NavBar";
-import { Sidebar } from "../components/Sidebar";
+import { NavBar } from "components/NavBar";
+import { Sidebar } from "components/Sidebar";
 import { CookiesProvider } from "react-cookie";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";

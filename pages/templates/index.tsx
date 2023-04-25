@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { CraftTemplate } from "../../components/CraftTemplate";
-import { IncomeTemplate } from "../../components/IncomeTemplate";
-import useLocalStorage from "../../utils/useLocalStorage";
+import { CraftTemplate } from "components/CraftTemplate";
+import { IncomeTemplate } from "components/IncomeTemplate";
+import useLocalStorage from "utils/useLocalStorage";
 
 import styles from "./index.module.scss";
 

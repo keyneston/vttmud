@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { StatusError } from "../../../utils/error";
+import { StatusError } from "utils/error";
 import { oauth2 } from "./login";
 import { PrismaClient } from "@prisma/client";
 import { getCookie } from "cookies-next";
 import { createClient } from "redis";
-import { prisma } from "../../../utils/db";
+import { prisma } from "utils/db";
 
 export let redisClient = createClient({
     url: process.env.REDIS_URL,

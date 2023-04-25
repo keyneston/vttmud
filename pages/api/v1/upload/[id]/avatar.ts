@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import { S3 } from "@aws-sdk/client-s3";
-import { getCharacter, setAvatar, setJSON } from "../../../../../model";
+import { getCharacter, setAvatar, setJSON } from "model";
 import { getCookie } from "cookies-next";
-import { StatusError } from "../../../../../utils/error";
-import IFile from "../../../../types/ifile";
+import { StatusError } from "utils/error";
+import IFile from "types/ifile";
 
 import path from "path";
 const s3Bucket = process.env.S3_BUCKET || "";

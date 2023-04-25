@@ -7,9 +7,9 @@ import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
 import { Dropdown } from "primereact/dropdown";
 
-import useLocalStorage from "../../utils/useLocalStorage";
-import { subDate, formatDate } from "../../utils/date";
-import { getLevel } from "../../utils/pf2e/income";
+import useLocalStorage from "utils/useLocalStorage";
+import { subDate, formatDate } from "utils/date";
+import { getLevel } from "utils/pf2e/income";
 
 import styles from "./index.module.scss";
 

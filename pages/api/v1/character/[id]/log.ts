@@ -1,6 +1,6 @@
-import { prisma } from "../../../../../utils/db";
+import { prisma } from "utils/db";
 import { NextRequest, NextResponse } from "next/server";
-import { StatusError } from "../../../../../utils/error";
+import { StatusError } from "utils/error";
 import { getCookie } from "cookies-next";
 import { Character, CharacterLogEntry, Money } from "./types";
 

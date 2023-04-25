@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { StatusError } from "../../../../../utils/error";
-import { getCharacter } from "../../../../../model/";
-import { prisma } from "../../../../../utils/db";
+import { StatusError } from "utils/error";
+import { getCharacter } from "model/";
+import { prisma } from "utils/db";
 import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
 

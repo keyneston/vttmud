@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useCallback, useMemo, ReactNode, Fragment } from "react";
-import { Character, fetchCharacter, uploadAvatar } from "../../../api/characters";
-import { money2string } from "../../../api/items";
-import { CDN, MaximumImageSize } from "../../../utils/constants";
+import { Character, fetchCharacter, uploadAvatar } from "api/characters";
+import { money2string } from "api/items";
+import { CDN, MaximumImageSize } from "utils/constants";
 import {
 	parseBlob,
 	CharacterInfo,
@@ -12,7 +12,7 @@ import {
 	Skill,
 	ProficiencyRank,
 	scoreToBonus,
-} from "../../../utils/blob";
+} from "utils/blob";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -21,7 +21,7 @@ import { Slider } from "primereact/slider";
 import { TabView, TabPanel } from "primereact/tabview";
 
 import Cropper from "react-easy-crop";
-import { getCroppedImg } from "../../../utils/crop";
+import { getCroppedImg } from "utils/crop";
 import DOMPurify from "dompurify";
 
 import styles from "./index.module.scss";

@@ -8,11 +8,11 @@ import { InputNumber, InputNumberValueChangeEvent } from "primereact/inputnumber
 import { InputText } from "primereact/inputtext";
 import { Panel } from "primereact/panel";
 
-import useLocalStorage from "../../utils/useLocalStorage";
-import { MinItemLevel, MaxItemLevel } from "../../utils/constants";
-import { formulaCost, craftDC } from "../../utils/pf2e/income";
-import { simplifyGold, Item } from "../../api/items";
-import { subDate, formatDate } from "../../utils/date";
+import useLocalStorage from "utils/useLocalStorage";
+import { MinItemLevel, MaxItemLevel } from "utils/constants";
+import { formulaCost, craftDC } from "utils/pf2e/income";
+import { simplifyGold, Item } from "api/items";
+import { subDate, formatDate } from "utils/date";
 
 import styles from "./index.module.scss";
 

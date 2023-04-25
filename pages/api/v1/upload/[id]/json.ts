@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import multer from "multer";
-import { getCharacter, setAvatar, setJSON } from "../../../../../model";
-import { StatusError } from "../../../../../utils/error";
+import { getCharacter, setAvatar, setJSON } from "model";
+import { StatusError } from "utils/error";
 import { getCookie } from "cookies-next";
 import path from "path";
-import IFile from "../../../../types/ifile";
+import IFile from "types/ifile";
 
 const memoryStorage = multer.memoryStorage(),
     uploadMemory = multer({

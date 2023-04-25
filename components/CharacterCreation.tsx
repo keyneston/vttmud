@@ -4,8 +4,8 @@ import { useFormik, FormikValues, FormikErrors } from "formik";
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { GoldEntry } from "./GoldEntry";
-import { Gold } from "../api/items";
-import { listServers, Server } from "../api/characters";
+import { Gold } from "api/items";
+import { listServers, Server } from "api/characters";
 
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";

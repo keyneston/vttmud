@@ -3,12 +3,12 @@ import { useFormik, FormikValues, FormikErrors } from "formik";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { ReactNode } from "react";
-import { money2string, Gold } from "../../../api/items";
-import { updateLog, getLog, CharacterLogEntry, fetchCharacter } from "../../../api/characters";
-import { GoldEntry } from "../../../components/GoldEntry";
-import { ExperienceEntry } from "../../../components/ExperienceEntry";
-import { changeLogEntry } from "../../../api/characters";
-import { CharacterAvatar } from "../../../components/CharacterAvatar";
+import { money2string, Gold } from "api/items";
+import { updateLog, getLog, CharacterLogEntry, fetchCharacter } from "api/characters";
+import { GoldEntry } from "components/GoldEntry";
+import { ExperienceEntry } from "components/ExperienceEntry";
+import { changeLogEntry } from "api/characters";
+import { CharacterAvatar } from "components/CharacterAvatar";
 
 import { DataTable, DataTableRowEditCompleteEvent } from "primereact/datatable";
 import { Column } from "primereact/column";

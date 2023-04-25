@@ -24,12 +24,12 @@ import {
 	DowntimeEntry,
 	Activity,
 	ActivityColors,
-} from "../../../api/downtime";
+} from "api/downtime";
 
-import { CharacterAvatar } from "../../../components/CharacterAvatar";
-import { fetchCharacter, calculateLevel } from "../../../api/characters";
-import { subDate, formatDate } from "../../../utils/date";
-import { craftDC } from "../../../utils/pf2e/income";
+import { CharacterAvatar } from "components/CharacterAvatar";
+import { fetchCharacter, calculateLevel } from "api/characters";
+import { subDate, formatDate } from "utils/date";
+import { craftDC } from "utils/pf2e/income";
 import styles from "./downtime.module.scss";
 
 const chartWidth = 20;

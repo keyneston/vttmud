@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { StatusError } from "../../../../../utils/error";
+import { StatusError } from "utils/error";
 import { DowntimeEntry } from "@prisma/client";
-import { prisma } from "../../../../../utils/db";
+import { prisma } from "utils/db";
 import { getCookie } from "cookies-next";
 
 export default async function handler(req: NextRequest, res: NextResponse) {
