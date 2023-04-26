@@ -152,10 +152,10 @@ function CharacterSection({ char }: { char: Character }) {
 						>
 							<Button
 								icon="pi pi-book"
-								tooltip="Log"
+								tooltip="Experience and Money"
 								rounded
 								outlined
-								aria-label="Log"
+								aria-label="Experience and Money"
 								severity="info"
 								size="large"
 							/>

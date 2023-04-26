@@ -1,8 +1,9 @@
-import { Fragment, useState, useMemo, useReducer } from "react";
+import { Fragment, useState, useMemo, useReducer, useRef } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { classNames } from "primereact/utils";
 import { useFormik, FormikValues, FormikErrors } from "formik";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
 
 import { Button } from "primereact/button";
 import { Calendar } from "primereact/calendar";
@@ -205,6 +206,7 @@ const calendarEditor = (options: any) => {
 
 export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
+	const datatable = useRef(null);
 
 	const queryClient = useQueryClient();
 	const urlParams = useRouter().query;
@@ -245,17 +247,26 @@ export default function DowntimeLog() {
 		}
 	};
 
-	return (
-		<div className={styles.downtime_root}>
-			<div className={styles.downtime_header}>
-				<div className={styles.downtime_header_left}>
-					<CharacterAvatar character={character?.data} />
-					<p>
-						<b>Downtime Remaining: </b>
-						{downtimeRemaining(character)}
-					</p>
+	const header = (
+		<div className={styles.downtime_header}>
+			<div className={styles.downtime_header_left}>
+				<CharacterAvatar character={character?.data} />
+				<p>
+					<b>Downtime Remaining: </b>
+					{downtimeRemaining(character)}
+				</p>
+			</div>
+			<div className={styles.downtime_header_right}>
+				<div>
+					<Button
+						type="button"
+						icon="pi pi-file"
+						rounded
+						onClick={() => exportCSV(false)}
+						data-pr-tooltip="CSV"
+					/>
 				</div>
-				<div className={styles.downtime_header_right}>
+				<div>
 					<Button
 						severity="success"
 						icon="pi pi-plus"
@@ -264,6 +275,11 @@ export default function DowntimeLog() {
 					/>
 				</div>
 			</div>
+		</div>
+	);
+
+	return (
+		<div className={styles.downtime_root}>
 			<NewDowntimeEntry visible={visible} setVisible={setVisible} />
 			<Panel header="Downtime Log">
 				<DataTable
@@ -277,6 +293,9 @@ export default function DowntimeLog() {
 						mutation.mutate(e.newData as DowntimeEntry);
 					}}
 					editMode="row"
+					header={header}
+					ref={datatable}
+					exportFilename={`character-log-${dayjs().format("YYYY-MM-DD")}`}
 				>
 					<Column
 						field="date"

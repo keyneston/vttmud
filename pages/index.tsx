@@ -22,10 +22,14 @@ const roadmap: RoadmapEntry[] = [
 	{ item: "Per-server character directory" },
 	{ item: "Discord integration to track player activity to allow filtering by active players" },
 	{ item: "Event organisation" },
-	{ item: "Download data as CSV" },
+	{ item: "Download data as CSV", complete: true },
 ];
 
 const logEntries: Entry[] = [
+	{
+		date: dayjs("2023-04-26"),
+		tasks: ["Added download as CSV to Wallet and Downtime logs", "Added roadmap to homepage"],
+	},
 	{
 		date: dayjs("2023-04-25"),
 		tasks: ["Ability to delete characters", "Ignore 'Other' entries when calculating remaining downtime"],
@@ -133,11 +137,21 @@ function FormatEntry({ entry }: { entry: Entry }) {
 function Roadmap({ data }: { data: RoadmapEntry[] }) {
 	return (
 		<Panel header="Roadmap" toggleable>
-			<ul>
+			<ul style={{ listStyle: "none" }}>
 				{data.map((e: any, i): ReactNode => {
 					return (
 						<Fragment key={i}>
-							<li>{e.item}</li>
+							<li>
+								<i
+									className={
+										"pi " +
+										(e.complete
+											? "pi-check mr-2"
+											: "pi-times mr-2")
+									}
+								/>{" "}
+								{e.item}
+							</li>
 						</Fragment>
 					);
 				})}

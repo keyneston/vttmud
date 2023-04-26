@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useFormik, FormikValues, FormikErrors } from "formik";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { ReactNode } from "react";
 import { money2string, Gold } from "api/items";
 import { updateLog, getLog, CharacterLogEntry, fetchCharacter } from "api/characters";
@@ -9,11 +9,13 @@ import { GoldEntry } from "components/GoldEntry";
 import { ExperienceEntry } from "components/ExperienceEntry";
 import { changeLogEntry } from "api/characters";
 import { CharacterAvatar } from "components/CharacterAvatar";
+import dayjs from "dayjs";
 
 import { DataTable, DataTableRowEditCompleteEvent } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
+import { Panel } from "primereact/panel";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 
@@ -46,6 +48,7 @@ const experienceEditor = (options: any) => {
 };
 
 export default function CharacterLog() {
+	const datatable = useRef(null);
 	const params = useRouter().query;
 	const queryClient = useQueryClient();
 	const [visible, setVisible] = useState(false);
@@ -92,16 +95,29 @@ export default function CharacterLog() {
 		queryClient.invalidateQueries(["character", id]);
 	};
 
-	return (
-		<>
-			<div className={styles.log_header}>
-				<div className={styles.log_header_left}>
-					<CharacterAvatar character={character.data} />
-					<p>
-						<strong>Gold:</strong> {money2string(character?.data?.gold || 0)}
-					</p>
+	const exportCSV = (selectionOnly) => {
+		datatable.current.exportCSV({ selectionOnly });
+	};
+
+	const header = (
+		<div className={styles.log_header}>
+			<div className={styles.log_header_left}>
+				<CharacterAvatar character={character.data} />
+				<p>
+					<strong>Gold:</strong> {money2string(character?.data?.gold || 0)}
+				</p>
+			</div>
+			<div className={styles.log_header_right}>
+				<div>
+					<Button
+						type="button"
+						icon="pi pi-file"
+						rounded
+						onClick={() => exportCSV(false)}
+						data-pr-tooltip="CSV"
+					/>
 				</div>
-				<div className={styles.log_header_right}>
+				<div>
 					<Button
 						icon="pi pi-plus"
 						severity="success"
@@ -111,57 +127,66 @@ export default function CharacterLog() {
 					/>
 				</div>
 			</div>
+		</div>
+	);
 
+	return (
+		<>
 			<div className={styles.character_log}>
-				<Dialog
-					header="Log New Income/Expense"
-					visible={visible}
-					style={{ width: "70vw" }}
-					breakpoints={{ "960px": "100vw", "641px": "120vw" }}
-					onHide={() => {
-						setVisible(false);
-					}}
-				>
-					<NewEntry id={id} setVisible={setVisible} />
-				</Dialog>
+				<Panel header="Experience and Wallet">
+					<Dialog
+						header="Log New Income/Expense"
+						visible={visible}
+						style={{ width: "70vw" }}
+						breakpoints={{ "960px": "100vw", "641px": "120vw" }}
+						onHide={() => {
+							setVisible(false);
+						}}
+					>
+						<NewEntry id={id} setVisible={setVisible} />
+					</Dialog>
 
-				<DataTable
-					className={styles.character_log}
-					value={logEntries}
-					tableStyle={{ minWidth: "50rem" }}
-					stripedRows
-					paginator
-					rows={20}
-					rowsPerPageOptions={[20, 50, 100]}
-					editMode="row"
-					dataKey="id"
-					onRowEditComplete={onRowEditComplete}
-				>
-					<Column field="date" header="Date" body={formatDate} />
-					<Column
-						field="gold"
-						header="Money"
-						body={(e) => money2string(e.gold)}
-						editor={goldEditor}
-					/>
-					<Column
-						field="experience"
-						header="Experience"
-						body={(e) => (e.experience !== 0 ? e.experience : "")}
-						editor={experienceEditor}
-					/>
-					<Column
-						field="description"
-						header="Description"
-						body={(e) => e.description}
-						editor={textEditor}
-					/>
-					<Column
-						rowEditor
-						headerStyle={{ width: "10%", minWidth: "8rem" }}
-						bodyStyle={{ textAlign: "center" }}
-					></Column>
-				</DataTable>
+					<DataTable
+						className={styles.character_log}
+						value={logEntries}
+						tableStyle={{ minWidth: "50rem" }}
+						stripedRows
+						paginator
+						rows={20}
+						rowsPerPageOptions={[20, 50, 100]}
+						editMode="row"
+						dataKey="id"
+						onRowEditComplete={onRowEditComplete}
+						header={header}
+						ref={datatable}
+						exportFilename={`character-log-${dayjs().format("YYYY-MM-DD")}`}
+					>
+						<Column field="date" header="Date" body={formatDate} />
+						<Column
+							field="gold"
+							header="Money"
+							body={(e) => money2string(e.gold)}
+							editor={goldEditor}
+						/>
+						<Column
+							field="experience"
+							header="Experience"
+							body={(e) => (e.experience !== 0 ? e.experience : "")}
+							editor={experienceEditor}
+						/>
+						<Column
+							field="description"
+							header="Description"
+							body={(e) => e.description}
+							editor={textEditor}
+						/>
+						<Column
+							rowEditor
+							headerStyle={{ width: "10%", minWidth: "8rem" }}
+							bodyStyle={{ textAlign: "center" }}
+						></Column>
+					</DataTable>
+				</Panel>
 			</div>
 		</>
 	);

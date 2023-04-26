@@ -4,22 +4,28 @@
 }
 
 .log_header {
-	display: grid;
+	display: flex;
 	width: 100%;
-	padding-bottom: 1rem;
+	gap: 2rem;
+	justify-content: space-between;
 }
 
 .log_header_right {
+	justify-content: flex-end;
+	align-items: flex-end;
+	align-content: flex-end;
+	display: flex;
 	grid-column: 3;
 	float: right;
 	text-align: right;
+	gap: 1rem;
 }
 
 .log_header_left {
-	grid-column: 1;
-	float: left;
+	align-items: flex-start;
 	text-align: left;
 	display: flex;
+	flex-flow: row wrap;
 	align-items: center;
 	gap: 1rem;
 }
