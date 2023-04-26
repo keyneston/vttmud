@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useFormik, FormikValues, FormikErrors } from "formik";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { ReactNode } from "react";
 import { money2string, Gold } from "api/items";
 import { updateLog, getLog, CharacterLogEntry, fetchCharacter } from "api/characters";
@@ -51,7 +51,13 @@ export default function CharacterLog() {
 	const datatable = useRef(null);
 	const params = useRouter().query;
 	const queryClient = useQueryClient();
+
 	const [visible, setVisible] = useState(false);
+	const [filename, setFilename] = useState("character-log");
+
+	useEffect(() => {
+		setFilename(`character-log-${dayjs().format("YYYY-MM-DD")}`);
+	});
 
 	const id = parseInt(params.id || "0");
 
@@ -159,7 +165,7 @@ export default function CharacterLog() {
 						onRowEditComplete={onRowEditComplete}
 						header={header}
 						ref={datatable}
-						exportFilename={`character-log-${dayjs().format("YYYY-MM-DD")}`}
+						exportFilename={filename}
 					>
 						<Column field="date" header="Date" body={formatDate} />
 						<Column

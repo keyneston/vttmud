@@ -1,4 +1,4 @@
-import { Fragment, useState, useMemo, useReducer, useRef } from "react";
+import { Fragment, useState, useMemo, useReducer, useRef, useEffect } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { classNames } from "primereact/utils";
 import { useFormik, FormikValues, FormikErrors } from "formik";
@@ -207,6 +207,11 @@ const calendarEditor = (options: any) => {
 export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
 	const datatable = useRef(null);
+	const [filename, setFilename] = useState("character-log");
+
+	useEffect(() => {
+		setFilename(`character-log-${dayjs().format("YYYY-MM-DD")}`);
+	});
 
 	const queryClient = useQueryClient();
 	const urlParams = useRouter().query;
@@ -295,7 +300,7 @@ export default function DowntimeLog() {
 					editMode="row"
 					header={header}
 					ref={datatable}
-					exportFilename={`character-log-${dayjs().format("YYYY-MM-DD")}`}
+					exportFilename={filename}
 				>
 					<Column
 						field="date"
