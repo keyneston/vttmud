@@ -15,7 +15,6 @@ import { DataTable, DataTableRowEditCompleteEvent } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Panel } from "primereact/panel";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 
@@ -139,60 +138,58 @@ export default function CharacterLog() {
 	return (
 		<>
 			<div className={styles.character_log}>
-				<Panel header="Experience and Wallet">
-					<Dialog
-						header="Log New Income/Expense"
-						visible={visible}
-						style={{ width: "70vw" }}
-						breakpoints={{ "960px": "100vw", "641px": "120vw" }}
-						onHide={() => {
-							setVisible(false);
-						}}
-					>
-						<NewEntry id={id} setVisible={setVisible} />
-					</Dialog>
+				<Dialog
+					header="Log New Income/Expense"
+					visible={visible}
+					style={{ width: "70vw" }}
+					breakpoints={{ "960px": "100vw", "641px": "120vw" }}
+					onHide={() => {
+						setVisible(false);
+					}}
+				>
+					<NewEntry id={id} setVisible={setVisible} />
+				</Dialog>
 
-					<DataTable
-						className={styles.character_log}
-						value={logEntries}
-						tableStyle={{ minWidth: "50rem" }}
-						stripedRows
-						paginator
-						rows={20}
-						rowsPerPageOptions={[20, 50, 100]}
-						editMode="row"
-						dataKey="id"
-						onRowEditComplete={onRowEditComplete}
-						header={header}
-						ref={datatable}
-						exportFilename={filename}
-					>
-						<Column field="date" header="Date" body={formatDate} />
-						<Column
-							field="gold"
-							header="Money"
-							body={(e) => money2string(e.gold)}
-							editor={goldEditor}
-						/>
-						<Column
-							field="experience"
-							header="Experience"
-							body={(e) => (e.experience !== 0 ? e.experience : "")}
-							editor={experienceEditor}
-						/>
-						<Column
-							field="description"
-							header="Description"
-							body={(e) => e.description}
-							editor={textEditor}
-						/>
-						<Column
-							rowEditor
-							headerStyle={{ width: "10%", minWidth: "8rem" }}
-							bodyStyle={{ textAlign: "center" }}
-						></Column>
-					</DataTable>
-				</Panel>
+				<DataTable
+					className={styles.character_log}
+					value={logEntries}
+					tableStyle={{ minWidth: "50rem" }}
+					stripedRows
+					paginator
+					rows={20}
+					rowsPerPageOptions={[20, 50, 100]}
+					editMode="row"
+					dataKey="id"
+					onRowEditComplete={onRowEditComplete}
+					header={header}
+					ref={datatable}
+					exportFilename={filename}
+				>
+					<Column field="date" header="Date" body={formatDate} />
+					<Column
+						field="gold"
+						header="Money"
+						body={(e) => money2string(e.gold)}
+						editor={goldEditor}
+					/>
+					<Column
+						field="experience"
+						header="Experience"
+						body={(e) => (e.experience !== 0 ? e.experience : "")}
+						editor={experienceEditor}
+					/>
+					<Column
+						field="description"
+						header="Description"
+						body={(e) => e.description}
+						editor={textEditor}
+					/>
+					<Column
+						rowEditor
+						headerStyle={{ width: "10%", minWidth: "8rem" }}
+						bodyStyle={{ textAlign: "center" }}
+					></Column>
+				</DataTable>
 			</div>
 		</>
 	);

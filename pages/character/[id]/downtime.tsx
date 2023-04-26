@@ -286,73 +286,61 @@ export default function DowntimeLog() {
 	return (
 		<div className={styles.downtime_root}>
 			<NewDowntimeEntry visible={visible} setVisible={setVisible} />
-			<Panel header="Downtime Log">
-				<DataTable
-					value={data}
-					tableStyle={{ minWidth: "50rem" }}
-					stripedRows
-					paginator
-					rows={20}
-					rowsPerPageOptions={[20, 50, 100]}
-					onRowEditComplete={(e: DataTableRowEditCompleteEvent) => {
-						mutation.mutate(e.newData as DowntimeEntry);
-					}}
-					editMode="row"
-					header={header}
-					ref={datatable}
-					exportFilename={filename}
-				>
-					<Column
-						field="date"
-						header="Date"
-						body={(e) => `${e.date.getMonth() + 1}/${e.date.getDate()}`}
-						editor={calendarEditor}
-					/>
-					<Column
-						field="level"
-						header="Level"
-						body={(e) => e.level}
-						editor={levelEditor}
-					/>
-					<Column
-						field="assurance"
-						header="Assurance"
-						body={assuranceBodyTemplate}
-						editor={assuranceEditor}
-					/>
-					<Column
-						field="activity"
-						header="Activity"
-						body={(e) => activityTemplate(e.activity)}
-						editor={activityEditor}
-					/>
-					<Column field="roll" header="Roll" body={(e) => e.roll} editor={numberEditor} />
-					<Column
-						field="bonus"
-						header="Bonus"
-						body={(e) => e.bonus}
-						editor={numberEditor}
-					/>
-					<Column
-						field="total"
-						header="Total"
-						body={(e) => (e.assurance ? 10 : e.roll) + e.bonus}
-					/>
-					<Column field="dc" header="DC" body={(e) => e.dc} editor={numberEditor} />
-					<Column field="result" header="Result" body={resultTemplate} />
-					<Column
-						field="details"
-						header="Additional Details"
-						body={(e) => e.details}
-						editor={textEditor}
-					/>
-					<Column
-						rowEditor
-						headerStyle={{ width: "10%", minWidth: "8rem" }}
-						bodyStyle={{ textAlign: "center" }}
-					/>
-				</DataTable>
-			</Panel>
+			<DataTable
+				value={data}
+				tableStyle={{ minWidth: "50rem" }}
+				stripedRows
+				paginator
+				rows={20}
+				rowsPerPageOptions={[20, 50, 100]}
+				onRowEditComplete={(e: DataTableRowEditCompleteEvent) => {
+					mutation.mutate(e.newData as DowntimeEntry);
+				}}
+				editMode="row"
+				header={header}
+				ref={datatable}
+				exportFilename={filename}
+			>
+				<Column
+					field="date"
+					header="Date"
+					body={(e) => `${e.date.getMonth() + 1}/${e.date.getDate()}`}
+					editor={calendarEditor}
+				/>
+				<Column field="level" header="Level" body={(e) => e.level} editor={levelEditor} />
+				<Column
+					field="assurance"
+					header="Assurance"
+					body={assuranceBodyTemplate}
+					editor={assuranceEditor}
+				/>
+				<Column
+					field="activity"
+					header="Activity"
+					body={(e) => activityTemplate(e.activity)}
+					editor={activityEditor}
+				/>
+				<Column field="roll" header="Roll" body={(e) => e.roll} editor={numberEditor} />
+				<Column field="bonus" header="Bonus" body={(e) => e.bonus} editor={numberEditor} />
+				<Column
+					field="total"
+					header="Total"
+					body={(e) => (e.assurance ? 10 : e.roll) + e.bonus}
+				/>
+				<Column field="dc" header="DC" body={(e) => e.dc} editor={numberEditor} />
+				<Column field="result" header="Result" body={resultTemplate} />
+				<Column
+					field="details"
+					header="Additional Details"
+					body={(e) => e.details}
+					editor={textEditor}
+				/>
+				<Column
+					rowEditor
+					headerStyle={{ width: "10%", minWidth: "8rem" }}
+					bodyStyle={{ textAlign: "center" }}
+				/>
+			</DataTable>
 			<div className={styles.dt_charts}>
 				<ActivityPieChart data={data || []} />
 				<SuccessRatePieChart data={data || []} />
