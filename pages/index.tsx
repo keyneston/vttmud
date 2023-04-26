@@ -11,6 +11,20 @@ type Entry = {
 	tasks: string[];
 };
 
+type RoadmapEntry = {
+	complete?: boolean;
+	item: string;
+};
+
+const roadmap: RoadmapEntry[] = [
+	{ item: "Deletion of downtime entries" },
+	{ item: "Deletion of log entries" },
+	{ item: "Per-server character directory" },
+	{ item: "Discord integration to track player activity to allow filtering by active players" },
+	{ item: "Event organisation" },
+	{ item: "Download data as CSV" },
+];
+
 const logEntries: Entry[] = [
 	{
 		date: dayjs("2023-04-25"),
@@ -86,13 +100,14 @@ export default function Home() {
 				</p>
 			</Panel>
 			<Changelog data={logEntries} />
+			<Roadmap data={roadmap} />
 		</div>
 	);
 }
 
 function Changelog({ data }: { data: Entry[] }) {
 	return (
-		<Panel header="Changelog">
+		<Panel header="Changelog" toggleable>
 			<ul>
 				{data.map((e: any): ReactNode => {
 					return <FormatEntry key={e.date} entry={e} />;
@@ -112,5 +127,21 @@ function FormatEntry({ entry }: { entry: Entry }) {
 				})}
 			</ul>
 		</Fragment>
+	);
+}
+
+function Roadmap({ data }: { data: RoadmapEntry[] }) {
+	return (
+		<Panel header="Roadmap" toggleable>
+			<ul>
+				{data.map((e: any, i): ReactNode => {
+					return (
+						<Fragment key={i}>
+							<li>{e.item}</li>
+						</Fragment>
+					);
+				})}
+			</ul>
+		</Panel>
 	);
 }
