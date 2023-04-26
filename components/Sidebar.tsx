@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { listCharacters, Character } from "api/characters";
 import CharacterCreation from "components/CharacterCreation";
 import { loggedIn } from "utils/cookies/discord";
-import { Button } from "primereact/button";
 import Link from "next/link";
 import { CharacterAvatar } from "components/CharacterAvatar";
 import Conditional from "components/Conditional";
+import * as api from "api/characters";
+import { getColor } from "utils/colors";
+
+import { Avatar } from "primereact/avatar";
+import { Button } from "primereact/button";
 
 import styles from "./Sidebar.module.scss";
 
@@ -18,7 +21,7 @@ export function Sidebar() {
 
 	const { isLoading, error, data } = useQuery({
 		queryKey: ["listCharacters"],
-		queryFn: () => listCharacters(),
+		queryFn: () => api.listCharacters(),
 		cacheTime: 5 * 60 * 1000,
 		staleTime: 5 * 60 * 1000,
 	});
@@ -30,7 +33,7 @@ export function Sidebar() {
 	} else if (error) {
 		charSections = <div>Error loading character list.</div>;
 	} else {
-		charSections = data!.map((x: Character) => <CharacterSection key={`${x.id}-${x.name}`} char={x} />);
+		charSections = data!.map((x: api.Character) => <CharacterSection key={`${x.id}-${x.name}`} char={x} />);
 	}
 
 	return (
@@ -115,11 +118,61 @@ export function Sidebar() {
 					)}
 				</div>
 			</div>
-			{charSections}
 			<Conditional show={showLoggedIn}>
+				<ServersSection />
+				{charSections}
 				<CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
 			</Conditional>
 		</div>
+	);
+}
+
+function ServersSection() {
+	const { data, isFetching, isLoading, error } = useQuery({
+		queryKey: ["listServers"],
+		queryFn: () => api.listServers(),
+		placeholderData: [],
+		staleTime: 10 * 60 * 1000,
+		cacheTime: 10 * 60 * 1000,
+	});
+
+	const loaded = !isFetching && !isLoading && !error && data;
+
+	return (
+		<>
+			<Conditional show={error}>
+				<small className="p-error">Error loading servers: {error}</small>
+			</Conditional>
+			<Conditional show={loaded}>
+				{data.map((e: any, i: number) => {
+					return (
+						<div key={e.slug} className={styles.sidebar_section}>
+							<div className={styles.sidebar_section_header}>
+								<Avatar
+									size="large"
+									style={getColor(e.slug)}
+									label={e.slug[0].toUpperCase()}
+								/>
+								<div>{e.name}</div>
+							</div>
+							<div className={styles.sidebar_character_items}>
+								<div className={styles.sidebar_sublink}>
+									<Link href={`/server/${e.slug}`}>
+										<Button
+											icon="pi pi-table"
+											severity="info"
+											outlined
+											size="large"
+											rounded
+										/>
+									</Link>
+								</div>
+							</div>
+						</div>
+					);
+				})}
+			</Conditional>
+		</>
 	);
 }
 

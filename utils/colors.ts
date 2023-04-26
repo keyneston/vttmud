@@ -21,7 +21,6 @@ const colors: colorPair[] = [
     { backgroundColor: "#9c27b0", color: "#ffffff" },
     { backgroundColor: "#4caf4f", color: "#ffffff" },
     { backgroundColor: "#3772FF", color: "#ffffff" },
-    { backgroundColor: "#F038FF", color: "#ffffff" },
     { backgroundColor: "#EF709D", color: "#ffffff" },
     { backgroundColor: "#70E4EF", color: "#ffffff" },
     { backgroundColor: "#37123C", color: "#ffffff" },

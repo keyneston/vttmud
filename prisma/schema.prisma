@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["extendedWhereUnique"]
 }
 
@@ -20,8 +20,8 @@ model Character {
   DowntimeEntry     DowntimeEntry[]
   CharacterLogEntry CharacterLogEntry[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 }
 
@@ -38,8 +38,10 @@ model CharacterLogEntry {
 
 model Server {
   id        Int         @id @default(autoincrement())
-  discordID String
+  slug      String?     @unique
+  discordID String      @unique
   name      String
+  avatar    String?
   Character Character[]
 
   createdAt DateTime @default(now())

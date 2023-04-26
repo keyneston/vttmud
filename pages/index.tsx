@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { Panel } from "primereact/panel";
 import { Fragment, ReactNode } from "react";
+import { TabView, TabPanel } from "primereact/tabview";
 import styles from "./index.module.css";
 
 dayjs.extend(advancedFormat);
@@ -23,12 +24,13 @@ const roadmap: RoadmapEntry[] = [
 	{ item: "Discord integration to track player activity to allow filtering by active players" },
 	{ item: "Event organisation" },
 	{ item: "Download data as CSV", complete: true },
+	{ item: "Per-server admin tools" },
 ];
 
 const logEntries: Entry[] = [
 	{
 		date: dayjs("2023-04-26"),
-		tasks: ["Added download as CSV to Wallet and Downtime logs", "Added roadmap to homepage"],
+		tasks: ["Added download as CSV to Wallet and Downtime logs"],
 	},
 	{
 		date: dayjs("2023-04-25"),
@@ -103,21 +105,25 @@ export default function Home() {
 					on discord if you have feedback.
 				</p>
 			</Panel>
-			<Changelog data={logEntries} />
-			<Roadmap data={roadmap} />
+			<TabView>
+				<TabPanel header="Changelog">
+					<Changelog data={logEntries} />
+				</TabPanel>
+				<TabPanel header="Roadmap">
+					<Roadmap data={roadmap} />
+				</TabPanel>
+			</TabView>
 		</div>
 	);
 }
 
 function Changelog({ data }: { data: Entry[] }) {
 	return (
-		<Panel header="Changelog" toggleable>
-			<ul>
-				{data.map((e: any): ReactNode => {
-					return <FormatEntry key={e.date} entry={e} />;
-				})}
-			</ul>
-		</Panel>
+		<ul>
+			{data.map((e: any): ReactNode => {
+				return <FormatEntry key={e.date} entry={e} />;
+			})}
+		</ul>
 	);
 }
 
@@ -136,26 +142,20 @@ function FormatEntry({ entry }: { entry: Entry }) {
 
 function Roadmap({ data }: { data: RoadmapEntry[] }) {
 	return (
-		<Panel header="Roadmap" toggleable>
-			<ul style={{ listStyle: "none" }}>
-				{data.map((e: any, i): ReactNode => {
-					return (
-						<Fragment key={i}>
-							<li>
-								<i
-									className={
-										"pi " +
-										(e.complete
-											? "pi-check mr-2"
-											: "pi-times mr-2")
-									}
-								/>{" "}
-								{e.item}
-							</li>
-						</Fragment>
-					);
-				})}
-			</ul>
-		</Panel>
+		<ul style={{ listStyle: "none" }}>
+			{data.map((e: any, i): ReactNode => {
+				if (e.item === "") {
+					return;
+				}
+				return (
+					<Fragment key={i}>
+						<li>
+							<i className={"pi " + (e.complete ? "pi-check" : "pi-times")} />{" "}
+							{e.item}
+						</li>
+					</Fragment>
+				);
+			})}
+		</ul>
 	);
 }

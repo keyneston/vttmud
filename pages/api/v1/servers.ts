@@ -17,12 +17,30 @@ export let redisClient = createClient({
 })();
 
 const upsertStaticServers = async () => {
-    let results = await prisma.server.createMany({
-        data: [
-            { id: 1, discordID: "802423566196539412", name: "Covalon" },
-            { id: 2, discordID: "1079822138900492320", name: "Thistle Academy" },
-        ],
-        skipDuplicates: true,
+    let servers = [
+        { id: 1, slug: "covalon", discordID: "802423566196539412", name: "Covalon" },
+        { id: 2, slug: "thistle", discordID: "1079822138900492320", name: "Thistle Academy" },
+    ];
+
+    servers.forEach(async (e) => {
+        await prisma.server.upsert({
+            where: {
+                id: e.id,
+            },
+            update: {
+                name: e.name,
+                slug: e.slug,
+                avatar: e.avatar,
+                discordID: e.discordID,
+            },
+            create: {
+                id: e.id,
+                discordID: e.discordID,
+                name: e.name,
+                slug: e.slug,
+                avatar: e.avatar,
+            },
+        });
     });
 };
 
