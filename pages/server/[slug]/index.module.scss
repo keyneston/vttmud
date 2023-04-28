@@ -1,0 +1,11 @@
+.character_template_root {
+	width: 100%;
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.character_template_contents {
+	display: flex;
+	flex-flow: row nowrap;
+	gap: 1rem;
+}

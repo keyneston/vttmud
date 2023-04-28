@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import * as serversAPI from "api/servers";
 import { CharacterAvatar } from "components/CharacterAvatar";
+import styles from "./index.module.scss";
 
 import { Card } from "primereact/card";
 
@@ -17,15 +18,6 @@ export default function ShowServerCatalog() {
 		staleTime: 5 * 60 * 1000,
 	});
 
-	const charTemplate = (character: api.Character) => {
-		return (
-			<Card style={{ width: "100%", gap: "1rem" }}>
-				<CharacterAvatar size="xlarge" character={character} />
-				<div>{character.name}</div>
-			</Card>
-		);
-	};
-
 	let characters = [];
 	if (data) {
 		characters = data.Character;
@@ -33,7 +25,18 @@ export default function ShowServerCatalog() {
 
 	return (
 		<>
-			<DataView value={characters} itemTemplate={charTemplate} paginator rows={10} />
+			<DataView value={characters} itemTemplate={characterTemplate} paginator rows={10} />
 		</>
+	);
+}
+
+function characterTemplate(character) {
+	return (
+		<Card className={styles.character_template_root}>
+			<div className={styles.character_template_contents}>
+				<CharacterAvatar size="xlarge" character={character} />
+				<h3>{character.name}</h3>
+			</div>
+		</Card>
 	);
 }
