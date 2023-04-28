@@ -176,6 +176,9 @@ function DisplayCharacter({ character, edit }: { character: api.Character; edit:
 						Level {Math.floor(character.experience / 1000) + 1} — Exp{" "}
 						{character.experience % 1000} / 1000
 					</h3>
+					<h3>
+						{character.ancestry ?? "Other"} / {character.heritage ?? "Other"}
+					</h3>
 					<h3>{money2string(character.gold)}</h3>
 					<h3>
 						{"Server: "}

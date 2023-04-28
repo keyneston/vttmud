@@ -15,6 +15,10 @@ model Character {
   avatar String?
   blob   Json?
 
+  ancestry   String?
+  heritage   String?
+  experience Int @default(0)
+
   server            Server?             @relation(fields: [serverID], references: [id])
   serverID          Int?
   DowntimeEntry     DowntimeEntry[]

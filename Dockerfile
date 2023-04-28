@@ -20,7 +20,7 @@ RUN git config --global --add safe.directory /app/build/foundryvtt-pf2e
 COPY . .
 
 RUN make build
-RUN make items.db.json
+RUN make foundrydbs
 
 FROM debian:bullseye-slim
 

@@ -36,6 +36,9 @@ function characterTemplate(character) {
 			<div className={styles.character_template_contents}>
 				<CharacterAvatar size="xlarge" character={character} />
 				<h3>{character.name}</h3>
+				<h4>
+					{character.ancestry ?? "Other"} / {character.heritage ?? "Other"}
+				</h4>
 			</div>
 		</Card>
 	);

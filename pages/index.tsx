@@ -31,7 +31,10 @@ const roadmap: RoadmapEntry[] = [
 const logEntries: Entry[] = [
 	{
 		date: dayjs("2023-04-28"),
-		tasks: ["Start of server gallery"],
+		tasks: [
+			"Start of server gallery",
+			"Ability to set ancestry and heritage at character creation. Editing existing characters to come",
+		],
 	},
 	{
 		date: dayjs("2023-04-26"),

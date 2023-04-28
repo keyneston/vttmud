@@ -29,3 +29,17 @@ export interface Server {
     discordID: string;
     name: string;
 }
+
+export interface Ancestry {
+    id: string;
+    name: string;
+    size: string;
+    rarity: string;
+}
+
+export interface Heritge {
+    id: string;
+    name: string;
+    ancestry: { name: string; slug: string; uuid: string };
+    rarity: string;
+}

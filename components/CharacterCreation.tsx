@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { GoldEntry } from "./GoldEntry";
 import { Gold } from "api/items";
 import { listServers, Server } from "api/characters";
+import { AncestrySelector, HeritageSelector } from "components/AncestrySelector";
 
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
@@ -44,6 +45,8 @@ export default function CharacterCreation({
 			silver: 0,
 			copper: 0,
 			level: 1,
+			ancestry: { name: "" },
+			heritage: { name: "" },
 			experience: 0,
 			server: { id: 0, name: "", discordID: "" },
 		},
@@ -56,6 +59,14 @@ export default function CharacterCreation({
 
 			if (!data.server || data.server.id === 0) {
 				errors.server = "Server must be set";
+			}
+
+			if (!data.ancestry.name) {
+				errors.ancestry = "Ancestry must be set";
+			}
+
+			if (!data.heritage.name) {
+				errors.heritage = "Heritage must be set";
 			}
 
 			return errors;
@@ -72,6 +83,8 @@ export default function CharacterCreation({
 				copper: null,
 				level: null,
 				experience: exp,
+				ancestry: data.ancestry.name,
+				heritage: data.heritage.name,
 			});
 
 			const requestOptions = {
@@ -114,15 +127,46 @@ export default function CharacterCreation({
 				<form onSubmit={formik.handleSubmit} className="p-fluid">
 					<div className={styles.cc_grid}>
 						<div className={styles.cc_left_top}>
-							<span className="p-float-label p-input-icon-right">
-								<InputText
-									id="character_name"
-									value={formik.values.character_name}
-									onChange={formik.handleChange}
-								/>
-								<label htmlFor="character_name">Character Name</label>
+							<div>
+								<span className="p-float-label p-input-icon-right">
+									<InputText
+										id="character_name"
+										value={formik.values.character_name}
+										onChange={formik.handleChange}
+									/>
+									<label htmlFor="character_name">
+										Character Name
+									</label>
+								</span>
 								{getFormErrorMessage("character_name")}
-							</span>
+							</div>
+							<div className={styles.ancestry_group}>
+								<div style={{ width: "50%" }}>
+									<AncestrySelector
+										value={formik.values.ancestry}
+										setValue={(e) => {
+											formik.setFieldValue(
+												"ancestry",
+												e
+											);
+										}}
+									/>
+									{getFormErrorMessage("ancestry")}
+								</div>
+								<div style={{ width: "50%" }}>
+									<HeritageSelector
+										value={formik.values.heritage}
+										setValue={(e) => {
+											formik.setFieldValue(
+												"heritage",
+												e
+											);
+										}}
+										ancestry={formik.values.ancestry}
+									/>
+									{getFormErrorMessage("heritage")}
+								</div>
+							</div>
 						</div>
 						<div className={styles.cc_center}></div>
 						<div className={styles.cc_right}>

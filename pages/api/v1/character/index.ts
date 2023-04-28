@@ -6,7 +6,7 @@ export default async function characterCreationEndpoint(req: NextRequest, res: N
     if (req.method !== "POST") {
         res.status(400);
         res.json({ error: "Bad Request" });
-        return
+        return;
     }
 
     const user = JSON.parse(getCookie("discord-user", { req, res }));
@@ -21,6 +21,8 @@ export default async function characterCreationEndpoint(req: NextRequest, res: N
             owner: user.id,
             name: req.body.character_name ?? "",
             serverID: req.body.server.id,
+            ancestry: req?.body?.ancestry,
+            heritage: req?.body?.heritage,
         },
     });
     await prisma.characterLogEntry.create({
@@ -34,4 +36,4 @@ export default async function characterCreationEndpoint(req: NextRequest, res: N
 
     res.json(results);
     return;
-};
+}
