@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { StatusError } from "utils/error";
-import * as model from "model";
+import * as models from "models";
 import { prisma } from "utils/db";
 import { getCookie } from "cookies-next";
 import dayjs from "dayjs";
@@ -18,7 +18,7 @@ export const characterEndpoint = async (req: NextRequest, res: NextResponse) => 
     const user = JSON.parse(getCookie("discord-user", { req, res }));
     const id = parseInt(req.query.id);
 
-    var result = await model.getCharacter(id);
+    var result = await models.getCharacter(id);
 
     if (result == null) {
         throw new StatusError("Not Found", 404);
