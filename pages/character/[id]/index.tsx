@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useCallback, useMemo, ReactNode, Fragment } from "react";
+import React, { useState, useCallback, useMemo, ReactNode, Fragment } from "react";
 import { router } from "next/router";
 import * as api from "api/characters";
 import Conditional from "components/Conditional";

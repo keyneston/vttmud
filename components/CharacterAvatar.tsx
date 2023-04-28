@@ -1,3 +1,4 @@
+import React from "react";
 import { Character } from "api/characters";
 import { CDN } from "utils/constants";
 import { Avatar } from "primereact/avatar";

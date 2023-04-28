@@ -1,3 +1,4 @@
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import CharacterCreation from "components/CharacterCreation";
@@ -164,6 +165,7 @@ function ServersSection() {
 											outlined
 											size="large"
 											rounded
+											tooltip="Character Directory"
 										/>
 									</Link>
 								</div>
