@@ -1,4 +1,5 @@
 import { redisClient } from "utils/redis";
+import { oauth2 } from "utils/discord";
 
 export function hasGuild(user: any, guildID: string): boolean {
     return false;
