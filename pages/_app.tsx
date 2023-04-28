@@ -5,6 +5,7 @@ import { Sidebar } from "components/Sidebar";
 import { CookiesProvider } from "react-cookie";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Head from "next/head";
 
 import "./_app.scss";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -40,6 +41,13 @@ export default function App({ Component, pageProps }) {
 
 	return (
 		<React.StrictMode>
+			<Head>
+				<meta charset="utf-8" />
+				<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+				<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+				<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+				<link rel="manifest" href="/site.webmanifest" />
+			</Head>
 			<div className="root">
 				<CookiesProvider>
 					<QueryClientProvider client={queryClient}>
