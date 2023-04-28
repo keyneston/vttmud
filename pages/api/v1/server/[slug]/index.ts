@@ -20,7 +20,7 @@ export async function getServer(req: NextRequest, res: NextResponse) {
     }
 
     try {
-        const guilds = await getUserGuilds(user);
+        const guilds = await getUserGuilds(discord);
 
         const server = await prisma.server.findUnique({
             where: {
@@ -32,7 +32,7 @@ export async function getServer(req: NextRequest, res: NextResponse) {
         });
 
         for (const i in guilds) {
-            if (guilds[i].id == server.discordID) {
+            if (guilds[i].id == server?.discordID) {
                 return res.json(server);
             }
         }

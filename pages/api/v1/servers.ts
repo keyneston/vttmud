@@ -38,9 +38,9 @@ const upsertStaticServers = async () => {
 // make sure the servers list is accurate at boot
 upsertStaticServers();
 
-export default async function listServersEndpoint(req: Request, res: Response, next: any) {
-    const discord = JSON.parse(getCookie("discord", { req, res }));
-    const user = JSON.parse(getCookie("discord-user", { req, res }));
+export default async function listServersEndpoint(req: Request, res: Response) {
+    const discord = JSON.parse(getCookie("discord", { req, res }) || "");
+    const user = JSON.parse(getCookie("discord-user", { req, res }) || "");
 
     if (!discord) {
         throw new StatusError("Unauthorized", 403);
@@ -49,7 +49,7 @@ export default async function listServersEndpoint(req: Request, res: Response, n
     let guilds;
 
     try {
-        guilds = await server.getUserGuilds(user);
+        guilds = await server.getUserGuilds(discord);
 
         const guildIDs = guilds.map((g: any) => g.id);
         const orClauses = guildIDs.map((g: any) => {

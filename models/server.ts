@@ -24,7 +24,7 @@ export async function getUserGuilds(user: any): Guild[] {
         isCached = true;
         guilds = JSON.parse(cacheResults);
     } else {
-        guilds = await oauth2.getUserGuilds(discord.access_token);
+        guilds = await oauth2.getUserGuilds(user.access_token);
 
         await redisClient.set(redisKey, JSON.stringify(guilds), {
             EX: 3600,

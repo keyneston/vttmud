@@ -1,5 +1,4 @@
 import { NextResponse, NextRequest } from "next/server";
-import DiscordOauth2 from "discord-oauth2";
 import { setCookie } from "cookies-next";
 import { oauth2 } from "utils/discord";
 
