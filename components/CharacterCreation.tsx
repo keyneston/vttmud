@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormik, FormikValues, FormikErrors } from "formik";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/router";
 import { GoldEntry } from "./GoldEntry";
 import { Gold } from "api/items";
@@ -51,7 +50,7 @@ export default function CharacterCreation({
 			server: { id: 0, name: "", discordID: "" },
 		},
 		validate: (data) => {
-			let errors: FormikErrors<FormikValues> = {};
+			const errors: FormikErrors<FormikValues> = {};
 
 			if (!data.character_name) {
 				errors.character_name = "Character Name must not be blank";
@@ -72,10 +71,10 @@ export default function CharacterCreation({
 			return errors;
 		},
 		onSubmit: async (data) => {
-			var gold = (data.spend ? -1 : 1) * (data.gold + data.silver / 10 + data.copper / 100);
-			var exp = (data.level - 1) * 1000 + data.experience;
+			const gold = (data.spend ? -1 : 1) * (data.gold + data.silver / 10 + data.copper / 100);
+			const exp = (data.level - 1) * 1000 + data.experience;
 
-			let jData = JSON.stringify({
+			const jData = JSON.stringify({
 				...data,
 				gold: gold,
 				spend: null,
@@ -93,7 +92,7 @@ export default function CharacterCreation({
 				body: jData,
 			};
 
-			var results = await fetch("/api/v1/character", requestOptions).then((d) => {
+			const results = await fetch("/api/v1/character", requestOptions).then((d) => {
 				return d.json();
 			});
 
@@ -109,7 +108,7 @@ export default function CharacterCreation({
 	const errors: { [key: string]: any } = formik.errors;
 	const isFormFieldValid = (name: string) => !!errors[name];
 	const getFormErrorMessage = (name: string) => {
-		let error = errors[name];
+		const error = errors[name];
 
 		return isFormFieldValid(name) && <small className="p-error">{error}</small>;
 	};

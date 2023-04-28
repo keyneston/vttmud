@@ -41,13 +41,13 @@ export default async function uploadJSON(req: Request, res: Response, next: any)
         if (!req.file) {
             throw new StatusError("Internal Error", 500, "req.file doesn't exist");
         }
-        var file: IFile = req.file as IFile;
+        const file: IFile = req.file as IFile;
 
         if (!file.buffer) {
             throw new StatusError("Bad Request", 400);
         }
 
-        var results = await setJSON(id, JSON.parse(file.buffer!.toString()));
+        const results = await setJSON(id, JSON.parse(file.buffer!.toString()));
         res.json(results);
     });
 }

@@ -17,7 +17,7 @@ import { subDate, formatDate } from "utils/date";
 import styles from "./index.module.scss";
 
 function emptyPerson(id: number): CraftPerson {
-	var character_name = "";
+	let character_name = "";
 	if (typeof window !== "undefined") {
 		character_name = localStorage.getItem(`character_name_${id}`) || "";
 	}
@@ -146,7 +146,7 @@ function CraftPersonTemplate({
 					className={styles.ct_input}
 					value={value.endDate}
 					onChange={(e) => {
-						let d = Array.isArray(e.value) ? e.value[0] : e.value;
+						const d = Array.isArray(e.value) ? e.value[0] : e.value;
 						setValue({ ...value, endDate: new Date(d || "") });
 					}}
 					id={`${id}-endDate`}
@@ -178,11 +178,11 @@ function Output({
 	item: void | Item | undefined;
 	itemCount: number;
 }) {
-	var itemCountString = itemCount > 1 ? ` ${itemCount} x ` : "";
+	const itemCountString = itemCount > 1 ? ` ${itemCount} x ` : "";
 
 	const formatNames = (people: CraftPerson[]) => people.map((x) => x.name).join(", ");
 	const formatDateRange = (person: CraftPerson, wrap: boolean) => {
-		var str = "";
+		let str = "";
 		if (person.days === 1) {
 			str = `${formatDate(person.endDate)}`;
 		} else {
@@ -217,7 +217,7 @@ function ItemCount({
 	item: Item | void | undefined;
 }) {
 	const consumable = useMemo(() => {
-		var consumable = false;
+		const consumable = false;
 		if (item?.type === "custom") {
 			return true;
 		}
@@ -277,8 +277,8 @@ function ItemAutoComplete({ item, setLevel, setItem }: ItemAutoCompleteProps) {
 				value={item}
 				suggestions={searchEntries || undefined}
 				completeMethod={(e: any) => {
-					var term = e.query.toLowerCase();
-					var results = itemsDB.filter((entry) =>
+					const term = e.query.toLowerCase();
+					const results = itemsDB.filter((entry) =>
 						entry.name.toLowerCase().includes(term)
 					);
 					setSearchEntires(results);
@@ -316,8 +316,8 @@ type ItemInformationProps = {
 };
 
 function ItemInformation({ item, level, itemCount }: ItemInformationProps) {
-	var itemCost = item ? simplifyGold(item.cost) : 0;
-	var formula = formulaCost(level);
+	const itemCost = item ? simplifyGold(item.cost) : 0;
+	const formula = formulaCost(level);
 
 	return (
 		<div className={styles.box}>

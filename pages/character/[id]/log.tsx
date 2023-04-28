@@ -211,7 +211,7 @@ function NewEntry({ id, setVisible }: { id: number; setVisible: (visible: boolea
 			description: "",
 		},
 		validate: (data) => {
-			let errors: FormikErrors<FormikValues> = {};
+			const errors: FormikErrors<FormikValues> = {};
 			return errors;
 		},
 		onSubmit: async (data) => {

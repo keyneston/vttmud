@@ -2,6 +2,7 @@ import { loggedIn } from "utils/cookies/discord";
 import { Character } from "types/characters";
 
 export async function fetchCharacter(id: string | number): Promise<Character> {
+    if (!id || id === 0) return [];
     const resp = await fetch(`/api/v1/character/${id}`);
     return resp.json();
 }
@@ -42,6 +43,7 @@ export async function changeLogEntry(data: CharacterLogEntry): Promise<Character
 }
 
 export async function getLog(id: number): Promise<CharacterLogEntry[]> {
+    if (id === 0) return [];
     const resp = await fetch(`/api/v1/character/${id}/log`);
     return resp.json();
 }

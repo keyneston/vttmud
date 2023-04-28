@@ -38,13 +38,13 @@ const chartPanelWidth = 23;
 const chartGap = 2;
 
 const calculateSuccess = function (r: DowntimeEntry): number {
-	var level = 2;
+	let level = 2;
 
-	var dc = r.dc ?? 0;
-	var bonus = r.bonus ?? 0;
-	var roll = r.roll ?? 1;
+	const dc = r.dc ?? 0;
+	const bonus = r.bonus ?? 0;
+	const roll = r.roll ?? 1;
 
-	var total = (r.assurance ? 10 : roll) + bonus;
+	const total = (r.assurance ? 10 : roll) + bonus;
 	if (total >= 10 + dc) {
 		level = 4;
 	} else if (total >= dc) {
@@ -74,8 +74,8 @@ const resultTemplate = (r: DowntimeEntry) => {
 	if (!r || !r.dc || !r.bonus) {
 		return <></>;
 	}
-	var tagColor: "danger" | "warning" | "success" | "info" | null | undefined = undefined;
-	var tagLabel: string = "";
+	let tagColor: "danger" | "warning" | "success" | "info" | null | undefined = undefined;
+	let tagLabel = "";
 
 	switch (calculateSuccess(r)) {
 		case 0:
@@ -123,8 +123,8 @@ const assuranceBodyTemplate = (rowData: DowntimeEntry) => {
 };
 
 const activityTemplate = (activity: Activity) => {
-	var tagLabel = activity as string;
-	var tagColor: string = ActivityColors.get(activity) || "green";
+	const tagLabel = activity as string;
+	const tagColor: string = ActivityColors.get(activity) || "green";
 
 	return <Tag value={tagLabel} style={{ background: tagColor }} />;
 };
@@ -197,7 +197,7 @@ const calendarEditor = (options: any) => {
 			id="date"
 			value={options.value}
 			onChange={(e) => {
-				let d = Array.isArray(e.value) ? e.value[0] : e.value;
+				const d = Array.isArray(e.value) ? e.value[0] : e.value;
 				options.editorCallback(new Date(d || ""));
 			}}
 		/>
@@ -396,7 +396,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 			}),
 		},
 		validate: (data) => {
-			let errors: FormikErrors<FormikValues> = {};
+			const errors: FormikErrors<FormikValues> = {};
 
 			if (data.days > 7 || data.days < 1) {
 				errors.days = "Days must be between 1-7";
@@ -434,7 +434,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 
 	const updateEntry = (i: number): ((d: DayEntry) => void) => {
 		return (d: DayEntry): void => {
-			var _data = [...formik.values.entries];
+			const _data = [...formik.values.entries];
 			_data[i] = d;
 			formik.setFieldValue("entries", _data);
 		};
@@ -456,7 +456,7 @@ function NewDowntimeEntry({ visible, setVisible }: NewDowntimeEntryProps) {
 							id="end-date"
 							value={formik.values.endDate}
 							onChange={(e) => {
-								let d = Array.isArray(e.value) ? e.value[0] : e.value;
+								const d = Array.isArray(e.value) ? e.value[0] : e.value;
 								formik.setFieldValue("endDate", new Date(d || ""));
 							}}
 						/>
@@ -637,14 +637,14 @@ function PerDayEntry({
 
 function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 	const activityCounts = useMemo(() => {
-		var activityCounts: { [key: string]: number } = {};
+		const activityCounts: { [key: string]: number } = {};
 		data.forEach((x) => {
 			activityCounts[x.activity] = 1 + (activityCounts[x.activity] || 0);
 		});
 		return activityCounts;
 	}, [data]);
 
-	var chartData = {
+	const chartData = {
 		labels: [
 			Activity.Retraining,
 			Activity.LearnASpell,
@@ -695,15 +695,15 @@ function ActivityPieChart({ data }: { data: DowntimeEntry[] }) {
 
 function SuccessRatePieChart({ data }: { data: DowntimeEntry[] }) {
 	const successRate = useMemo(() => {
-		var successRate: number[] = [0, 0, 0, 0];
+		const successRate: number[] = [0, 0, 0, 0];
 		data.forEach((x) => {
-			var rate = calculateSuccess(x);
+			const rate = calculateSuccess(x);
 			successRate[4 - rate] += 1;
 		});
 		return successRate;
 	}, [data]);
 
-	var chartData = {
+	const chartData = {
 		labels: ["Critical Success", "Success", "Failure", "Critical Failure"],
 		datasets: [
 			{
@@ -727,7 +727,7 @@ function SuccessRatePieChart({ data }: { data: DowntimeEntry[] }) {
 
 function RollDistributionChart({ data }: { data: DowntimeEntry[] }) {
 	const rollRate = useMemo(() => {
-		var rollRate: number[] = Array.from({ length: 20 }, () => 0);
+		const rollRate: number[] = Array.from({ length: 20 }, () => 0);
 		data.forEach((x) => {
 			if (!x.roll || x.assurance || x.roll === 0) {
 				return;
@@ -738,7 +738,7 @@ function RollDistributionChart({ data }: { data: DowntimeEntry[] }) {
 		return rollRate;
 	}, [data]);
 
-	var chartData = {
+	const chartData = {
 		labels: Array.from({ length: 20 }, (_, i) => {
 			return i + 1;
 		}),

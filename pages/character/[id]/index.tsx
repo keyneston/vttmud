@@ -26,7 +26,7 @@ export default function CharacterSheet() {
 	const queryClient = useQueryClient();
 
 	const urlParams = useRouter().query;
-	var id: number = parseInt(urlParams.id || "0");
+	const id: number = parseInt(urlParams.id || "0");
 
 	const { isLoading, data } = useQuery({
 		queryKey: ["character", id],
@@ -50,15 +50,13 @@ export default function CharacterSheet() {
 		});
 	};
 
-	const reject = () => {};
-
 	const confirmDelete = () => {
 		confirmDialog({
 			message: `Are you sure you want to delete ${data.name}?`,
 			header: "Conrim Character Deletion",
 			icon: "pi pi-exclamation-triangle",
 			accept,
-			reject,
+			reject: null,
 		});
 	};
 
@@ -114,7 +112,7 @@ export default function CharacterSheet() {
 						severity="info"
 						label="Change Avatar"
 						onClick={async (e) => {
-							var input = document.createElement("input");
+							const input = document.createElement("input");
 							input.setAttribute("type", "file");
 							input.setAttribute("accept", "image/*");
 							input.addEventListener("change", () => {
@@ -242,7 +240,7 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 						<Slider
 							value={zoom}
 							onChange={(e) => {
-								let d = Array.isArray(e.value) ? e.value[0] : e.value;
+								const d = Array.isArray(e.value) ? e.value[0] : e.value;
 								setZoom(d);
 							}}
 							min={1}
@@ -257,7 +255,7 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 							id="rotation-slider"
 							value={rotation}
 							onChange={(e) => {
-								let d = Array.isArray(e.value) ? e.value[0] : e.value;
+								const d = Array.isArray(e.value) ? e.value[0] : e.value;
 								setRotation(d);
 							}}
 							min={1}
@@ -281,7 +279,7 @@ function DoCropper({ id, src, setShowCropper }: { id: number; src: string; setSh
 						<Button
 							label="Done"
 							onClick={async (e) => {
-								var croppedSrc = await getCroppedImg(
+								const croppedSrc = await getCroppedImg(
 									src,
 									croppedAreaPixels,
 									rotation
@@ -313,7 +311,7 @@ function StatsPanel({ data }: PanelProps) {
 		prof: ProficiencyRank;
 		abilities: any;
 	}): number {
-		var bonus = 0;
+		let bonus = 0;
 		if (args.prof.id > 0) {
 			bonus = args.level;
 		}
@@ -382,8 +380,8 @@ function StatsPanel({ data }: PanelProps) {
 }
 
 function DetailsPanel({ data }: PanelProps) {
-	let backstory = useMemo(() => DOMPurify.sanitize(data?.backstory || ""), [data]);
-	let apperance = useMemo(() => DOMPurify.sanitize(data?.appearance || ""), [data]);
+	const backstory = useMemo(() => DOMPurify.sanitize(data?.backstory || ""), [data]);
+	const apperance = useMemo(() => DOMPurify.sanitize(data?.appearance || ""), [data]);
 
 	if (!data) {
 		return <div>Unavailable</div>;

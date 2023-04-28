@@ -18,7 +18,7 @@ export default function handler(req: NextRequest, res: NextResponse) {
 export const appendLogEndpoint = async (req: NextRequest, res: NextResponse) => {
     const user = JSON.parse(getCookie("discord-user", { req, res }));
 
-    var data = await prisma.characterLogEntry.create({
+    const data = await prisma.characterLogEntry.create({
         data: {
             characterID: parseInt(req.query.id),
             gold: req.body.gold,
@@ -33,7 +33,7 @@ export const appendLogEndpoint = async (req: NextRequest, res: NextResponse) => 
 export const getLogEntriesEndpoint = async (req: NextRequest, res: NextResponse, next: any) => {
     const user = JSON.parse(getCookie("discord-user", { req, res }));
 
-    var data = await prisma.characterLogEntry.findMany({
+    const data = await prisma.characterLogEntry.findMany({
         where: { characterID: parseInt(req.query.id) },
         orderBy: [{ createdAt: "desc" }],
     });
@@ -48,7 +48,7 @@ export const updateLogEntryEndpoint = async (req: NextRequest, res: NextResponse
         return next(new StatusError("Bad Request", 400, "url id and body id don't match"));
     }
 
-    var character = await prisma.character.findUnique({
+    const character = await prisma.character.findUnique({
         where: {
             id: id,
         },
@@ -58,7 +58,7 @@ export const updateLogEntryEndpoint = async (req: NextRequest, res: NextResponse
         return next(new StatusError("Unauthorized", 403));
     }
 
-    var updatedEntry = await prisma.characterLogEntry.update({
+    const updatedEntry = await prisma.characterLogEntry.update({
         where: {
             id: req.body.id,
         },

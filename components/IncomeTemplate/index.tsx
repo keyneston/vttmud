@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Panel } from "primereact/panel";
 import { InputText } from "primereact/inputtext";
 import { Divider } from "primereact/divider";
@@ -17,7 +17,12 @@ const levelKey = "earn_income_level";
 const proficiencyKey = "character_proficiency";
 const descriptionKey = "earn_income_description";
 
-export default function IncomeTemplate({ name, setName }: { name: string; setName: (name: string) => void }) {
+interface IncomeTemplateProps {
+	name: string;
+	setName(name: string): void;
+}
+
+export default function IncomeTemplate({ name, setName }: IncomeTemplateProps) {
 	const [days, setDays] = useState<number>(1);
 	const [endDate, setEndDate] = useState<Date>(new Date());
 	const [success, setSuccess] = useState<number>(0);
@@ -47,7 +52,6 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 					success: success,
 					critSuccess: critSuccess,
 					failure: failure,
-					critFailure: critFailure,
 					multiplier: multiplier,
 					proficiency: proficiency,
 				})}
@@ -86,7 +90,7 @@ export default function IncomeTemplate({ name, setName }: { name: string; setNam
 						<Calendar
 							value={endDate}
 							onChange={(e) => {
-								let d = Array.isArray(e.value) ? e.value[0] : e.value;
+								const d = Array.isArray(e.value) ? e.value[0] : e.value;
 								setEndDate(new Date(d || new Date()));
 							}}
 							id="endDate"
@@ -190,7 +194,6 @@ function calcTotal({
 	success,
 	critSuccess,
 	failure,
-	critFailure,
 	proficiency,
 	multiplier,
 }: {
@@ -198,13 +201,12 @@ function calcTotal({
 	success: number;
 	critSuccess: number;
 	failure: number;
-	critFailure: number;
 	proficiency: string;
 	multiplier: number;
 }): string {
-	let data = getLevel(level);
-	let critData = getLevel(level + 1);
-	var total = 0;
+	const data = getLevel(level);
+	const critData = getLevel(level + 1);
+	let total = 0;
 
 	total += data.failed * failure;
 
@@ -255,13 +257,13 @@ function Output({
 	description: string;
 	total: string;
 }) {
-	var summaryParts: string[] = [];
+	const summaryParts: string[] = [];
 	if (critSuccess > 0) summaryParts.push(`${critSuccess} x Critical Successes`);
 	if (success > 0) summaryParts.push(`${success} x Successes`);
 	if (failure > 0) summaryParts.push(`${failure} x Failures`);
 	if (critFailure > 0) summaryParts.push(`${critFailure} x Critical Failures`);
 
-	let dc = getLevel(level).dc;
+	const dc = getLevel(level).dc;
 
 	return (
 		<p className="m-0">

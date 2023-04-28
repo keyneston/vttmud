@@ -69,9 +69,9 @@ export default async function uploadAvatar(req: Request, res: Response, next: an
         if (!req.file) {
             throw new StatusError("Internal Error", 500, "req.file doesn't exist");
         }
-        var file: IFile = req.file as IFile;
+        const file: IFile = req.file as IFile;
 
-        var results = await setAvatar(id, file.key || "");
+        const results = await setAvatar(id, file.key || "");
         res.json(results);
     });
 }

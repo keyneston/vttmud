@@ -14,7 +14,7 @@ export function CharacterAvatar({ character, size = "large" }: AvatarProps) {
 		return <Avatar size="large" shape="circle" label="U" />;
 	}
 
-	var color = getColor(character.id + character.name);
+	const color = getColor(character.id + character.name);
 	return (
 		<Avatar
 			key={`${character.id}-avatar`}

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { loginAction, logoutAction } from "./routes/login";
 import { NavBar } from "components/NavBar";
 import { Sidebar } from "components/Sidebar";
 import { CookiesProvider } from "react-cookie";
@@ -27,16 +26,16 @@ const checkDomain = () => {
 		return;
 	}
 
-	var proto = window.location.protocol;
-	var hostname = window.location.host;
-	var urlWithoutPort = `${proto}//${hostname}`;
+	const proto = window.location.protocol;
+	const hostname = window.location.host;
+	const urlWithoutPort = `${proto}//${hostname}`;
 
 	if (domain !== urlWithoutPort) {
 		window.location.replace(window.location.href.replace(urlWithoutPort, domain));
 	}
 };
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps }: { Component: any; pageProps: any }) {
 	useEffect(() => checkDomain());
 
 	return (

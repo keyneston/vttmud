@@ -4,10 +4,10 @@ import { setCookie } from "cookies-next";
 import { oauth2 } from "utils/discord";
 
 export default async function callbackEndpoint(req: NextRequest, res: NextResponse) {
-    let code = req.query.code as string;
+    const code = req.query.code as string;
 
     try {
-        let response = await oauth2.tokenRequest({
+        const response = await oauth2.tokenRequest({
             code: code,
             scope: "identify guilds",
             grantType: "authorization_code",
@@ -20,7 +20,7 @@ export default async function callbackEndpoint(req: NextRequest, res: NextRespon
             path: "/",
         });
 
-        let user = await oauth2.getUser(response.access_token);
+        const user = await oauth2.getUser(response.access_token);
         setCookie("discord-user", JSON.stringify(user), { path: "/", signed: true, sameSite: true, req, res });
     } catch (e: any) {
         res.status(500).json({ error: e.message, description: e?.response?.error_description });

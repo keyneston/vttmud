@@ -20,9 +20,9 @@ export async function getServer(req: NextRequest, res: NextResponse) {
     }
 
     try {
-        let guilds = await getUserGuilds(user);
+        const guilds = await getUserGuilds(user);
 
-        var server = await prisma.server.findUnique({
+        const server = await prisma.server.findUnique({
             where: {
                 slug: req.query.slug,
             },

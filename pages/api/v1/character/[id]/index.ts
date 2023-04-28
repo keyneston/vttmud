@@ -18,7 +18,7 @@ export const characterEndpoint = async (req: NextRequest, res: NextResponse) => 
     const user = JSON.parse(getCookie("discord-user", { req, res }));
     const id = parseInt(req.query.id);
 
-    var result = await models.getCharacter(id);
+    const result = await models.getCharacter(id);
 
     if (result == null) {
         throw new StatusError("Not Found", 404);
@@ -27,11 +27,11 @@ export const characterEndpoint = async (req: NextRequest, res: NextResponse) => 
         throw new StatusError("unauthorized", 403);
     }
 
-    var ret: { [key: string]: any } = { ...result };
+    const ret: { [key: string]: any } = { ...result };
     ret.remainingDowntime = await getDowntime(id);
 
     try {
-        var sums = await prisma.characterLogEntry.aggregate({
+        const sums = await prisma.characterLogEntry.aggregate({
             _sum: {
                 gold: true,
                 experience: true,
@@ -54,7 +54,7 @@ export const characterEndpoint = async (req: NextRequest, res: NextResponse) => 
 
 export async function getDowntime(id: number): number {
     try {
-        var downtime = await prisma.downtimeEntry.findMany({
+        const downtime = await prisma.downtimeEntry.findMany({
             where: {
                 characterID: id,
                 date: {
@@ -91,7 +91,7 @@ export const deleteCharacter = async (req: NextRequest, res: NextResponse) => {
     const user = JSON.parse(getCookie("discord-user", { req, res }));
     const id = parseInt(req.query.id);
 
-    await model.deleteCharacter(user.id, id);
+    await models.deleteCharacter(user.id, id);
 
     res.status(200).json({ status: 200 });
 };

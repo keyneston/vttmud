@@ -8,7 +8,7 @@ import redisclient from "utils/redis";
 import * as server from "models/server";
 
 const upsertStaticServers = async () => {
-    let servers = [
+    const servers = [
         { id: 1, slug: "covalon", discordID: "802423566196539412", name: "Covalon" },
         { id: 2, slug: "thistle", discordID: "1079822138900492320", name: "Thistle Academy" },
     ];
@@ -42,8 +42,6 @@ export default async function listServersEndpoint(req: Request, res: Response, n
     const discord = JSON.parse(getCookie("discord", { req, res }));
     const user = JSON.parse(getCookie("discord-user", { req, res }));
 
-    var isCached = false;
-
     if (!discord) {
         throw new StatusError("Unauthorized", 403);
     }
@@ -53,14 +51,14 @@ export default async function listServersEndpoint(req: Request, res: Response, n
     try {
         guilds = await server.getUserGuilds(user);
 
-        let guildIDs = guilds.map((g: any) => g.id);
-        let orClauses = guildIDs.map((g: any) => {
+        const guildIDs = guilds.map((g: any) => g.id);
+        const orClauses = guildIDs.map((g: any) => {
             return {
                 discordID: g,
             };
         });
 
-        var servers = await prisma.server.findMany({
+        const servers = await prisma.server.findMany({
             where: {
                 OR: [...orClauses],
             },

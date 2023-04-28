@@ -18,7 +18,7 @@ export function AncestrySelector({ value, setValue, className }: AncestrySelecto
 		staleTime: 3600 * 1000,
 	});
 
-	var _data = [...data];
+	const _data = [...data];
 	_data.push({ id: "other", name: "Other" });
 
 	return (
@@ -57,7 +57,7 @@ export function HeritageSelector({ value, setValue, ancestry, className }: Herit
 		});
 	}, [ancestry]);
 
-	var _results = [...results];
+	const _results = [...results];
 	_results.push({ id: "other", name: "Other" });
 
 	return (

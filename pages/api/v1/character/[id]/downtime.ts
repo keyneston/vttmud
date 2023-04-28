@@ -20,7 +20,7 @@ export const createDowntimeEntriesEndpoint = async (req: NextRequest, res: NextR
         const user = JSON.parse(getCookie("discord-user", { req, res }));
         const id = parseInt(req.query.id);
 
-        var character = await prisma.character.findUnique({
+        const character = await prisma.character.findUnique({
             where: {
                 id: id,
             },
@@ -30,7 +30,7 @@ export const createDowntimeEntriesEndpoint = async (req: NextRequest, res: NextR
             throw new StatusError("Unauthorized", 403);
         }
 
-        var entries = req.body;
+        let entries = req.body;
         entries = entries.map((x: DowntimeEntry) => {
             return { ...x, characterID: id, roll: x.assurance ? null : x.roll };
         });
@@ -50,7 +50,7 @@ export const getDowntimeEntriesEndpoint = async (req: NextRequest, res: NextResp
         const user = JSON.parse(getCookie("discord-user", { req, res }));
         const id = parseInt(req.query.id);
 
-        var character = await prisma.character.findUnique({
+        const character = await prisma.character.findUnique({
             where: {
                 id: id,
             },
@@ -77,9 +77,9 @@ export const updateDowntimeEntriesEndpoint = async (req: NextRequest, res: NextR
     try {
         const user = JSON.parse(getCookie("discord-user", { req, res }));
         const id = parseInt(req.query.id);
-        var entry = req.body;
+        const entry = req.body;
 
-        var character = await prisma.character.findUnique({
+        const character = await prisma.character.findUnique({
             where: {
                 id: id,
             },
@@ -89,7 +89,7 @@ export const updateDowntimeEntriesEndpoint = async (req: NextRequest, res: NextR
             throw new StatusError("Unauthorized", 403);
         }
 
-        var currentEntry = await prisma.downtimeEntry.findUnique({
+        const currentEntry = await prisma.downtimeEntry.findUnique({
             where: {
                 id: entry.id,
             },

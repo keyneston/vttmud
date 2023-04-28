@@ -16,7 +16,7 @@ export default async function characterCreationEndpoint(req: NextRequest, res: N
         return;
     }
 
-    var results = await prisma.character.create({
+    const results = await prisma.character.create({
         data: {
             owner: user.id,
             name: req.body.character_name ?? "",
