@@ -22,10 +22,6 @@ export async function updateLog(data: CharacterLogEntry): Promise<CharacterLogEn
 
     const _data = { ...data, gold, silver: null, copper: null };
 
-    console.log({
-        _data,
-    });
-
     return await fetch(`/api/v1/character/${data.characterID}/log`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

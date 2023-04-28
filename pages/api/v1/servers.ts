@@ -3,18 +3,9 @@ import { StatusError } from "utils/error";
 import { oauth2 } from "./login";
 import { PrismaClient } from "@prisma/client";
 import { getCookie } from "cookies-next";
-import { createClient } from "redis";
 import { prisma } from "utils/db";
-
-export let redisClient = createClient({
-    url: process.env.REDIS_URL,
-});
-
-(async () => {
-    redisClient.on("error", (error) => console.error(`Error : ${error}`));
-
-    await redisClient.connect();
-})();
+import redisclient from "utils/redis";
+import * as server from "models/server";
 
 const upsertStaticServers = async () => {
     let servers = [
@@ -60,21 +51,9 @@ export default async function listServersEndpoint(req: Request, res: Response, n
     let guilds;
 
     try {
-        const redisKey = `${user.id}.guilds`;
-        const cacheResults = await redisClient.get(redisKey);
-        if (cacheResults) {
-            isCached = true;
-            guilds = JSON.parse(cacheResults);
-        } else {
-            guilds = await oauth2.getUserGuilds(discord.access_token);
-
-            await redisClient.set(redisKey, JSON.stringify(guilds), {
-                EX: 3600,
-            });
-        }
+        guilds = await server.getUserGuilds(user);
 
         let guildIDs = guilds.map((g: any) => g.id);
-
         let orClauses = guildIDs.map((g: any) => {
             return {
                 discordID: g,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import multer from "multer";
-import { getCharacter, setAvatar, setJSON } from "model";
+import { getCharacter, setAvatar, setJSON } from "models";
 import { StatusError } from "utils/error";
 import { getCookie } from "cookies-next";
 import path from "path";
@@ -12,11 +12,10 @@ const memoryStorage = multer.memoryStorage(),
     });
 
 export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-    
+    api: {
+        bodyParser: false,
+    },
+};
 
 export default async function uploadJSON(req: Request, res: Response, next: any) {
     const user = JSON.parse(getCookie("discord-user", { req, res }));

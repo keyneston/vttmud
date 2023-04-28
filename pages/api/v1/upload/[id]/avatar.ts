@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import { S3 } from "@aws-sdk/client-s3";
-import { getCharacter, setAvatar, setJSON } from "model";
+import { getCharacter, setAvatar, setJSON } from "models";
 import { getCookie } from "cookies-next";
 import { StatusError } from "utils/error";
 import IFile from "types/ifile";
@@ -40,11 +40,10 @@ const upload = multer({
 });
 
 export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-    
+    api: {
+        bodyParser: false,
+    },
+};
 
 export default async function uploadAvatar(req: Request, res: Response, next: any) {
     const user = JSON.parse(getCookie("discord-user", { req, res }));
