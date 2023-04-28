@@ -29,6 +29,10 @@ const roadmap: RoadmapEntry[] = [
 
 const logEntries: Entry[] = [
 	{
+		date: dayjs("2023-04-28"),
+		tasks: ["Start of server gallery"],
+	},
+	{
 		date: dayjs("2023-04-26"),
 		tasks: ["Added download as CSV to Wallet and Downtime logs"],
 	},
