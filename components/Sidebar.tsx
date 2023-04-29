@@ -161,7 +161,11 @@ function ServersSection() {
 								</div>
 								<div className={styles.sidebar_character_items}>
 									<div className={styles.sidebar_sublink}>
-										<Link href={`/server/${e.slug}`}>
+										<Link
+											href={`/server/${encodeURIComponent(
+												e.slug
+											)}`}
+										>
 											<Button
 												icon="pi pi-table"
 												severity="info"
@@ -192,7 +196,10 @@ function CharacterSection({ char }: { char: types.Character }) {
 				</div>
 				<div className={styles.sidebar_character_items}>
 					<div className={styles.sidebar_sublink}>
-						<Link className={styles.sidebar_link} href={`/character/${char.id}/`}>
+						<Link
+							className={styles.sidebar_link}
+							href={`/character/${encodeURIComponent(char.id)}`}
+						>
 							<Button
 								icon="pi pi-id-card"
 								tooltip="Character Sheet"

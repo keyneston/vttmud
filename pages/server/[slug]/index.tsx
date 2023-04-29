@@ -8,8 +8,24 @@ import styles from "./index.module.scss";
 
 import { Card } from "primereact/card";
 
-export default function ShowServerCatalog() {
-	const slug = useRouter().query.slug;
+export async function getServerSideProps({ res, req, query }) {
+	res.setHeader("Cache-Control", "public, s-maxage=600, stale-while-revalidate=800");
+
+	return {
+		props: {
+			slug: query.slug,
+		},
+	};
+}
+
+export interface ShowServerCatalogProps {
+	slug: String;
+}
+
+export default function ShowServerCatalog({ slug }: ShowServerCatalogProps) {
+	if (!slug) {
+		slug = useRouter().query.slug;
+	}
 
 	const { isLoading, error, data } = useQuery({
 		queryKey: ["server", slug],
