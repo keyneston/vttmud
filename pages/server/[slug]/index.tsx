@@ -19,7 +19,7 @@ export async function getServerSideProps({ res, req, query }) {
 }
 
 export interface ShowServerCatalogProps {
-	slug: String;
+	slug: string;
 }
 
 export default function ShowServerCatalog({ slug }: ShowServerCatalogProps) {

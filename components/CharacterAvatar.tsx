@@ -14,11 +14,11 @@ export function CharacterAvatar({ character, size = "large" }: AvatarProps) {
 		return <Avatar size="large" shape="circle" label="U" />;
 	}
 
-	const color = getColor(character.id + character.name);
+	const color = getColor(character.id + character?.name);
 	return (
 		<Avatar
 			key={`${character.id}-avatar`}
-			label={character.name.substring(0, 1)}
+			label={character?.name?.substring(0, 1)}
 			size={size}
 			style={character.avatar ? {} : { backgroundColor: color.backgroundColor, color: color.color }}
 			image={character.avatar ? `${CDN}/${character.avatar}` : ""}

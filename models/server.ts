@@ -17,19 +17,19 @@ export interface Guild {
 export async function getUserGuilds(user: any): Guild[] {
     var isCached = false;
 
-    const redisKey = `${user.id}.guilds`;
-    const cacheResults = await redisClient.get(redisKey);
+    // const redisKey = `${user.id}.guilds`;
+    // const cacheResults = await redisClient.get(redisKey);
     let guilds = [];
-    if (cacheResults) {
-        isCached = true;
-        guilds = JSON.parse(cacheResults);
-    } else {
-        guilds = await oauth2.getUserGuilds(user.access_token);
+    // if (cacheResults) {
+    //     isCached = true;
+    //     guilds = JSON.parse(cacheResults);
+    // } else {
+    guilds = await oauth2.getUserGuilds(user.access_token);
 
-        await redisClient.set(redisKey, JSON.stringify(guilds), {
-            EX: 3600,
-        });
-    }
+    //     await redisClient.set(redisKey, JSON.stringify(guilds), {
+    //         EX: 3600,
+    //     });
+    // }
 
     return guilds;
 }

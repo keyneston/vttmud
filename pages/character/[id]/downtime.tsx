@@ -207,10 +207,10 @@ const calendarEditor = (options: any) => {
 export default function DowntimeLog() {
 	const [visible, setVisible] = useState<boolean>(false);
 	const datatable = useRef(null);
-	const [filename, setFilename] = useState("character-log");
+	const [filename, setFilename] = useState("character-downtime");
 
 	useEffect(() => {
-		setFilename(`character-log-${dayjs().format("YYYY-MM-DD")}`);
+		setFilename(`character-downtime-${dayjs().format("YYYY-MM-DD")}`);
 	});
 
 	const queryClient = useQueryClient();
@@ -250,6 +250,10 @@ export default function DowntimeLog() {
 		} else {
 			return ` ${query.data?.remainingDowntime}`;
 		}
+	};
+
+	const exportCSV = (selectionOnly) => {
+		datatable.current.exportCSV({ selectionOnly });
 	};
 
 	const header = (
