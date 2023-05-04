@@ -270,7 +270,7 @@ function Output({
 			<b>Character:</b> {name} <br />
 			<b>Description:</b> {description}
 			<br />
-			<b>Days: </b> {formatDate(subDate(endDate, days))}-{formatDate(endDate)} <br />
+			<b>Days: </b> {formatDate(subDate(endDate, days - 1))}-{formatDate(endDate)} <br />
 			<b>Attempted:</b> {proficiency} Level {level}; DC {dc}
 			<br />
 			<b>Results:</b> {summaryParts.join(", ")} <br />

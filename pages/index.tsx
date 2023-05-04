@@ -31,7 +31,10 @@ const roadmap: RoadmapEntry[] = [
 const logEntries: Entry[] = [
 	{
 		date: dayjs("2023-05-04"),
-		tasks: ["Fix download csv on downtime log page"],
+		tasks: [
+			"Fix download csv on downtime log page",
+			"Fix bug where earned income template was including one too many days",
+		],
 	},
 	{
 		date: dayjs("2023-04-28"),
