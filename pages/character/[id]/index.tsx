@@ -23,6 +23,9 @@ import styles from "./index.module.scss";
 
 export default function CharacterSheet() {
 	const [edit, setEdit] = useState(false);
+	const [src, setSrc] = useState<string>("");
+	const [showCropper, setShowCropper] = useState<boolean>(false);
+
 	const queryClient = useQueryClient();
 
 	const urlParams = useRouter().query;
@@ -62,7 +65,16 @@ export default function CharacterSheet() {
 
 	return (
 		<div className={styles.cs_root + " " + styles.justify_end}>
-			{isLoading && "Loading"} {data && <DisplayCharacter character={data} edit={edit} />}
+			{isLoading && "Loading"}{" "}
+			{data && (
+				<DisplayCharacter
+					showCropper={showCropper}
+					setShowCropper={setShowCropper}
+					src={src}
+					character={data}
+					edit={edit}
+				/>
+			)}
 			<div className={styles.cs_button_collection + " " + styles.justify_end}>
 				<ConfirmDialog />
 				<Button
@@ -138,9 +150,19 @@ export default function CharacterSheet() {
 	);
 }
 
-function DisplayCharacter({ character, edit }: { character: api.Character; edit: boolean }) {
-	const [showCropper, setShowCropper] = useState<boolean>(false);
-	const [src, setSrc] = useState<string>("");
+function DisplayCharacter({
+	character,
+	edit,
+	src,
+	showCropper,
+	setShowCropper,
+}: {
+	character: api.Character;
+	edit: boolean;
+	src: string;
+	showCropper: boolean;
+	setShowCropper: (boolean) => void;
+}) {
 	const imageMissing = (
 		<i className={"pi pi-image " + styles.cs_avatar_missing} style={{ fontSize: "8rem", color: "white" }} />
 	);

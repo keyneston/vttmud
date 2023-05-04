@@ -5,8 +5,11 @@ import { Panel } from "primereact/panel";
 import { Fragment, ReactNode } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import styles from "./index.module.css";
+import MarkdownIt from "markdown-it";
 
 dayjs.extend(advancedFormat);
+
+const md = new MarkdownIt();
 
 type Entry = {
 	date: dayjs.Dayjs;
@@ -34,6 +37,7 @@ const logEntries: Entry[] = [
 		tasks: [
 			"Fix download csv on downtime log page",
 			"Fix bug where earned income template was including one too many days",
+			"Fixed [issue#20](https://github.com/keyneston/vttmud/issues/20) where cropper wasn't displaying",
 		],
 	},
 	{
@@ -148,7 +152,7 @@ function FormatEntry({ entry }: { entry: Entry }) {
 			<li>{entry.date.format("MMM Do")}</li>
 			<ul>
 				{entry.tasks.map((t, i) => {
-					return <li key={i}>{t}</li>;
+					return <li key={i} dangerouslySetInnerHTML={{ __html: md.renderInline(t) }} />;
 				})}
 			</ul>
 		</Fragment>
@@ -166,7 +170,11 @@ function Roadmap({ data }: { data: RoadmapEntry[] }) {
 					<Fragment key={i}>
 						<li>
 							<i className={"pi " + (e.complete ? "pi-check" : "pi-times")} />{" "}
-							{e.item}
+							<span
+								dangerouslySetInnerHTML={{
+									__html: md.renderInline(e.item),
+								}}
+							/>
 						</li>
 					</Fragment>
 				);
