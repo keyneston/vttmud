@@ -126,6 +126,32 @@ export function Sidebar() {
 				{charSections}
 				<CharacterCreation visible={ccVisible} setVisible={setCCVisible} />
 			</Conditional>
+			<div className={styles.sidebar_section}>
+				<h3>Links and Contact</h3>
+				<div className={styles.sidebar_section_items}>
+					<div>
+						<Link href="https://github.com/keyneston/vttmud">
+							<Button
+								icon="pi pi-github"
+								severity="success"
+								rounded
+								outlined
+								aria-label="Github"
+							/>
+						</Link>
+					</div>
+					<div>
+						<Link href="https://discordapp.com/users/620653174469951512">
+							<Button
+								icon="pi pi-discord"
+								rounded
+								outlined
+								aria-label="Discord"
+							/>
+						</Link>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
