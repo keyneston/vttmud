@@ -68,7 +68,7 @@ export default function CharacterSheet() {
 	const formik = useFormik({
 		initialValues: {
 			ancestry: { id: "", name: "" },
-			heritage: { id: "", name: "" },
+			heritage: { id: "", name: "", ancestry: "" },
 		},
 		validate: (data) => {
 			const errors: FormikErrors<FormikValues> = {};
@@ -220,23 +220,19 @@ function DisplayCharacter({
 					</h3>
 					<Conditional show={!edit}>
 						<h3>
-							{character.ancestry ?? "Other"} /{" "}
-							{character.heritage ?? "Other"}
+							{character.ancestry ?? "Unknown"} /{" "}
+							{character.heritage ?? "Unknown"}
 						</h3>
 					</Conditional>
 					<Conditional show={edit}>
 						<div style={{ display: "flex", flexFlow: "row nowrap" }}>
 							<AncestrySelector
 								value={formik.values.ancestry}
-								setValue={(e) =>
-									formik.setFieldValue("ancestry", e.value)
-								}
+								setValue={(e) => formik.setFieldValue("ancestry", e)}
 							/>
 							<HeritageSelector
 								value={formik.values.heritage}
-								setValue={(e) =>
-									formik.setFieldValue("heritage", e.value)
-								}
+								setValue={(e) => formik.setFieldValue("heritage", e)}
 								ancestry={formik.values.ancestry}
 							/>
 						</div>
