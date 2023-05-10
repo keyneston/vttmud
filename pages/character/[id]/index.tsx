@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useFormik } from "formik";
 import React, { useState, useCallback, useMemo, ReactNode, Fragment } from "react";
 import { router } from "next/router";
 import * as api from "api/characters";
@@ -7,6 +8,7 @@ import Conditional from "components/Conditional";
 import { money2string } from "api/items";
 import { CDN, MaximumImageSize } from "utils/constants";
 import { parseBlob, CharacterInfo, getSkillInfo, SkillInfo, Skill, ProficiencyRank, scoreToBonus } from "utils/blob";
+import { AncestrySelector, HeritageSelector } from "components/AncestrySelector";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -63,6 +65,20 @@ export default function CharacterSheet() {
 		});
 	};
 
+	const formik = useFormik({
+		initialValues: {
+			ancestry: { id: "", name: "" },
+			heritage: { id: "", name: "" },
+		},
+		validate: (data) => {
+			const errors: FormikErrors<FormikValues> = {};
+			return errors;
+		},
+		onSubmit: async (data) => {
+			console.log("submit called");
+		},
+	});
+
 	return (
 		<div className={styles.cs_root + " " + styles.justify_end}>
 			{isLoading && "Loading"}{" "}
@@ -73,6 +89,7 @@ export default function CharacterSheet() {
 					src={src}
 					character={data}
 					edit={edit}
+					formik={formik}
 				/>
 			)}
 			<div className={styles.cs_button_collection + " " + styles.justify_end}>
@@ -83,7 +100,10 @@ export default function CharacterSheet() {
 					severity={edit ? "success" : "warning"}
 					icon="pi pi-user-edit"
 					style={{ height: "3rem" }}
-					onClick={(e) => {
+					onClick={async (e) => {
+						if (edit) {
+							await formik.submitForm();
+						}
 						setEdit(!edit);
 					}}
 				/>
@@ -156,12 +176,14 @@ function DisplayCharacter({
 	src,
 	showCropper,
 	setShowCropper,
+	formik,
 }: {
 	character: api.Character;
 	edit: boolean;
 	src: string;
 	showCropper: boolean;
 	setShowCropper: (boolean) => void;
+	formik: Formik;
 }) {
 	const imageMissing = (
 		<i className={"pi pi-image " + styles.cs_avatar_missing} style={{ fontSize: "8rem", color: "white" }} />
@@ -196,9 +218,29 @@ function DisplayCharacter({
 						Level {Math.floor(character.experience / 1000) + 1} — Exp{" "}
 						{character.experience % 1000} / 1000
 					</h3>
-					<h3>
-						{character.ancestry ?? "Other"} / {character.heritage ?? "Other"}
-					</h3>
+					<Conditional show={!edit}>
+						<h3>
+							{character.ancestry ?? "Other"} /{" "}
+							{character.heritage ?? "Other"}
+						</h3>
+					</Conditional>
+					<Conditional show={edit}>
+						<div style={{ display: "flex", flexFlow: "row nowrap" }}>
+							<AncestrySelector
+								value={formik.values.ancestry}
+								setValue={(e) =>
+									formik.setFieldValue("ancestry", e.value)
+								}
+							/>
+							<HeritageSelector
+								value={formik.values.heritage}
+								setValue={(e) =>
+									formik.setFieldValue("heritage", e.value)
+								}
+								ancestry={formik.values.ancestry}
+							/>
+						</div>
+					</Conditional>
 					<h3>{money2string(character.gold)}</h3>
 					<h3>
 						{"Server: "}

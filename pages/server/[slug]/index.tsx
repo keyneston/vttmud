@@ -8,12 +8,12 @@ import styles from "./index.module.scss";
 
 import { Card } from "primereact/card";
 
-export async function getServerSideProps({ res, req, query }) {
-	res.setHeader("Cache-Control", "public, s-maxage=600, stale-while-revalidate=800");
+export async function getServerSideProps(context) {
+	context.res.setHeader("Cache-Control", "public, s-maxage=600, stale-while-revalidate=800");
 
 	return {
 		props: {
-			slug: query.slug,
+			slug: context.query.slug,
 		},
 	};
 }

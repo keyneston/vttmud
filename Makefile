@@ -17,6 +17,8 @@ build: clean
 	npm i
 	npm run build
 
+lint:
+	npm run lint
 
 foundry_dir:
 	test -d $(FOUNDRY_DIR) || git clone --depth=1 https://github.com/foundryvtt/pf2e.git $(FOUNDRY_DIR)
