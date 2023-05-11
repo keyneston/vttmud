@@ -33,6 +33,12 @@ const roadmap: RoadmapEntry[] = [
 
 const logEntries: Entry[] = [
 	{
+		date: dayjs("2023-05-11"),
+		tasks: [
+			"Fix issue in how money was rounding silver values [issue#26](https://github.com/keyneston/vttmud/issues/26)",
+		],
+	},
+	{
 		date: dayjs("2023-05-04"),
 		tasks: [
 			"Fix download csv on downtime log page",
