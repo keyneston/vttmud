@@ -16,6 +16,6 @@ export const oauth2 = new DiscordOauth2({
 });
 
 export const authURL = oauth2.generateAuthUrl({
-    scope: ["identify", "guilds"],
+    scope: ["identify", "guilds", "guilds.members.read"],
     state: "foobar", // crypto.randomBytes(16).toString("hex"),
 });

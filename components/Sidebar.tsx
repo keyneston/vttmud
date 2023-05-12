@@ -134,6 +134,7 @@ export function Sidebar() {
 							<Button
 								icon="pi pi-github"
 								severity="success"
+								tooltip="Github"
 								rounded
 								outlined
 								aria-label="Github"
@@ -144,9 +145,22 @@ export function Sidebar() {
 						<Link href="https://discordapp.com/users/620653174469951512">
 							<Button
 								icon="pi pi-discord"
+								tooltip="Discord"
 								rounded
 								outlined
 								aria-label="Discord"
+							/>
+						</Link>
+					</div>
+					<div>
+						<Link href="https://github.com/keyneston/vttmud/issues/new">
+							<Button
+								icon="pi pi-times-circle"
+								severity="danger"
+								tooltip="Report Issue"
+								rounded
+								outlined
+								aria-label="Github Issues"
 							/>
 						</Link>
 					</div>

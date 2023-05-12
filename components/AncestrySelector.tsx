@@ -53,7 +53,7 @@ export function HeritageSelector({ value, setValue, ancestry, className }: Herit
 
 	const results = useMemo(() => {
 		return data.filter((e: types.Heritage) => {
-			return e.ancestry == null || e.ancestry.name === ancestry.name;
+			return e.ancestry == null || e.ancestry.name === ancestry?.name;
 		});
 	}, [ancestry]);
 
