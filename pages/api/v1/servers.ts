@@ -49,7 +49,8 @@ export default async function listServersEndpoint(req: Request, res: Response) {
     let guilds;
 
     try {
-        guilds = await server.getUserGuilds(discord);
+        // guilds = await server.getUserGuilds(discord);
+        guilds = [];
 
         const guildIDs = guilds.map((g: any) => g.id);
         const orClauses = guildIDs.map((g: any) => {

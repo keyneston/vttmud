@@ -37,6 +37,18 @@ export async function setAvatar(id: number, path: string): Promise<Prisma.Charac
     });
 }
 
+export async function updateCharacter(id: number, owner: string, data: Map<string, any>): Promise<Prisma.Character> {
+    return await prisma.character.update({
+        data: {
+            ...data,
+        },
+        where: {
+            id: id,
+            ownerID: owner,
+        },
+    });
+}
+
 export async function setJSON(id: number, blob: any): Promise<Prisma.Character> {
     return await prisma.character.update({
         data: {

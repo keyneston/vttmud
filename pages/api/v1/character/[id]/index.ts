@@ -9,6 +9,8 @@ export default function handle(req: NextRequest, res: NextResponse) {
     switch (req.method) {
         case "GET":
             return characterEndpoint(req, res);
+        case "PATCH":
+            return updateCharacter(req, res);
         case "DELETE":
             return deleteCharacter(req, res);
     }
@@ -86,6 +88,16 @@ export async function getDowntime(id: number): number {
         return 0;
     }
 }
+
+export const updateCharacter = async (req: NextRequest, res: NextResponse) => {
+    const user = JSON.parse(getCookie("discord-user", { req, res }));
+    const id = parseInt(req.query.id);
+
+    console.log({ data: req.body.data });
+    var result = await models.updateCharacter(id, user.ownerID, req.body.data);
+
+    res.json(result);
+};
 
 export const deleteCharacter = async (req: NextRequest, res: NextResponse) => {
     const user = JSON.parse(getCookie("discord-user", { req, res }));

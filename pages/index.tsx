@@ -28,10 +28,15 @@ const roadmap: RoadmapEntry[] = [
 	{ item: "Discord integration to track player activity to allow filtering by active players" },
 	{ item: "Event organisation" },
 	{ item: "Download data as CSV", complete: true },
+	{ item: "Editing of character ancestry and heritage", complete: true },
 	{ item: "Per-server admin tools" },
 ];
 
 const logEntries: Entry[] = [
+	{
+		date: dayjs("2023-05-12"),
+		tasks: ["Allow editing of character ancestry and heritage"],
+	},
 	{
 		date: dayjs("2023-05-04"),
 		tasks: [

@@ -75,7 +75,8 @@ export default function CharacterSheet() {
 			return errors;
 		},
 		onSubmit: async (data) => {
-			console.log("submit called");
+			await api.updateCharacter(id, { ancestry: data.ancestry.name, heritage: data.heritage.name });
+			queryClient.invalidateQueries(["character", id]);
 		},
 	});
 

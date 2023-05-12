@@ -32,6 +32,16 @@ export async function updateLog(data: CharacterLogEntry): Promise<CharacterLogEn
     });
 }
 
+export async function updateCharacter(id: number, data: Character): Promise<Character> {
+    return await fetch(`/api/v1/character/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data }),
+    }).then((d) => {
+        return d.json();
+    });
+}
+
 export async function changeLogEntry(data: CharacterLogEntry): Promise<CharacterLogEntry> {
     return await fetch(`/api/v1/character/${data.characterID}/log`, {
         method: "PATCH",
