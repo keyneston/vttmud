@@ -29,6 +29,7 @@ const roadmap: RoadmapEntry[] = [
 	{ item: "Event organisation" },
 	{ item: "Download data as CSV", complete: true },
 	{ item: "Per-server admin tools" },
+	{ item: "Tracking of non-money values, e.g. adamantine" },
 ];
 
 const logEntries: Entry[] = [
