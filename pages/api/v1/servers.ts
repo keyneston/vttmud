@@ -50,6 +50,7 @@ export default async function listServersEndpoint(req: Request, res: Response) {
 
     try {
         // guilds = await server.getUserGuilds(discord);
+        /*
         guilds = [];
 
         const guildIDs = guilds.map((g: any) => g.id);
@@ -58,11 +59,12 @@ export default async function listServersEndpoint(req: Request, res: Response) {
                 discordID: g,
             };
         });
+        */
 
         const servers = await prisma.server.findMany({
-            where: {
-                OR: [...orClauses],
-            },
+            // where: {
+            //     OR: [...orClauses],
+            // },
         });
         res.json(servers);
     } catch (e: any) {

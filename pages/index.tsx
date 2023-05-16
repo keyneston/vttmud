@@ -35,6 +35,10 @@ const roadmap: RoadmapEntry[] = [
 
 const logEntries: Entry[] = [
 	{
+		date: dayjs("2023-05-16"),
+		tasks: ["Don't filter servers by discord membership. This works around issues with discord API"],
+	},
+	{
 		date: dayjs("2023-05-12"),
 		tasks: ["Allow editing of character ancestry and heritage"],
 	},
